@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snake Oil Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  /* Single committed look: a late-night "studio" control room. Painted explicitly for any host theme. */
+  :root {
+    color-scheme: dark;
+    --ink: #13212E;
+    --panel: #1C2E3E;
+    --panel-2: #22384B;
+    --line: #2E4457;
+    --paper: #F6F3EC;
+    --paper-2: #E9E4D8;
+    --muted: #BFC9D1;
+    --muted-2: #8FA0AE;
+    --coral: #F07A5A;
+    --coral-deep: #B83A20;
+    --teal: #5CC2B0;
+    --teal-deep: #1F7A6D;
+    --text-on-paper: #13212E;
+    --muted-on-paper: #4A5560;
+    --display: 'Oswald', 'Arial Narrow', Arial, sans-serif;
+    --body: 'Public Sans', Arial, Helvetica, sans-serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.5;
+    padding-inline: 16px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding-block: 16px 64px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Header */
+  .top { display: flex; flex-direction: column; gap: 12px; position: sticky; top: env(safe-area-inset-top, 0px); background: var(--ink); padding-block: 12px; z-index: 5; border-bottom: 1px solid var(--line); }
+  .brand-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .brand { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; }
+  .brand span { color: var(--coral); }
+  .meter { font-family: var(--mono); font-size: 14px; color: var(--muted); display: flex; gap: 8px; align-items: baseline; }
+  .meter b { color: var(--coral); font-size: 18px; font-variant-numeric: tabular-nums; }
+  .stages { display: flex; gap: 6px; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+  .stages li { font-family: var(--display); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted-2); }
+  .stages li.done { color: var(--muted); border-color: var(--muted-2); }
+  .stages li.now { background: var(--coral); border-color: var(--coral); color: var(--ink); font-weight: 600; }
+  .stages li.now.flip { background: var(--teal); border-color: var(--teal); }
+
+  /* Type */
+  h1, h2, h3 { font-family: var(--display); font-weight: 600; line-height: 1.1; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(44px, 11vw, 76px); letter-spacing: 1px; text-transform: uppercase; }
+  h2 { font-size: clamp(28px, 6vw, 38px); }
+  h3 { font-size: 22px; }
+  p { margin: 0; max-width: 65ch; }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--coral); }
+  .eyebrow.teal { color: var(--teal); }
+  .lead { font-size: 19px; color: var(--paper); }
+  .muted { color: var(--muted); }
+  .small { font-size: 14px; color: var(--muted); }
+  .stack { display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Buttons */
+  button { font: inherit; cursor: pointer; }
+  .btn { font-family: var(--display); font-size: 18px; letter-spacing: 1px; text-transform: uppercase; padding: 12px 22px; border-radius: 6px; border: 2px solid var(--coral); background: var(--coral); color: var(--ink); font-weight: 600; }
+  .btn:hover { filter: brightness(1.08); }
+  .btn.ghost { background: transparent; color: var(--paper); border-color: var(--muted-2); }
+  .btn.teal { background: var(--teal); border-color: var(--teal); }
+  .btn:focus-visible, .choice:focus-visible, .copy:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
+  .btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+  .choice { text-align: start; width: 100%; background: var(--panel); color: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; }
+  .choice:hover { border-color: var(--coral); }
+  .choice .k { font-family: var(--mono); font-size: 13px; color: var(--muted-2); }
+  .choice.picked { border-color: var(--coral); background: var(--panel-2); }
+  .choice.win { border-color: var(--coral); }
+  .choice[disabled] { cursor: default; }
+  .choice[disabled]:not(.picked) { opacity: .6; }
+
+  /* Panels */
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .boss { border-inline-start: 4px solid var(--coral); background: var(--panel); padding: 14px 18px; border-start-end-radius: 8px; border-end-end-radius: 8px; }
+  .boss .who { font-family: var(--mono); font-size: 13px; color: var(--coral); margin-bottom: 4px; }
+  .lesson { background: var(--panel); border: 1px solid var(--teal-deep); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .lesson .tag { font-family: var(--display); letter-spacing: 1.5px; text-transform: uppercase; font-size: 14px; color: var(--teal); }
+  .defense { border-top: 1px dashed var(--line); padding-top: 10px; color: var(--paper); }
+  .defense b { color: var(--teal); }
+
+  /* Engagement bars */
+  .bars { display: flex; flex-direction: column; gap: 10px; }
+  .bar { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; }
+  .bar .lbl { font-size: 15px; color: var(--muted); }
+  .bar .num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 15px; }
+  .bar .track { grid-column: 1 / -1; height: 10px; background: var(--ink); border-radius: 5px; overflow: hidden; }
+  .bar .fill { height: 100%; background: var(--muted-2); border-radius: 5px; width: 0; transition: width .9s ease; }
+  .bar.hot .fill { background: var(--coral); }
+
+  /* Post card (phone feed) */
+  .post { background: var(--paper); color: var(--text-on-paper); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+  .post .hd { display: flex; gap: 12px; align-items: center; }
+  .post .av { width: 44px; height: 44px; border-radius: 50%; flex: none; display: grid; place-items: center; font-family: var(--display); font-weight: 700; color: var(--paper); font-size: 18px; }
+  .post .nm { font-weight: 700; font-size: 16px; line-height: 1.2; }
+  .post .hn { font-size: 14px; color: var(--muted-on-paper); }
+  .post .tx { font-size: 18px; line-height: 1.45; }
+  .post .ct { font-size: 14px; color: var(--muted-on-paper); border-top: 1px solid var(--paper-2); padding-top: 8px; }
+  .post .vid { background: var(--ink); color: var(--muted); border-radius: 10px; padding: 26px; text-align: center; font-family: var(--mono); font-size: 13px; }
+  .stamp { position: absolute; inset-inline-end: 14px; top: 14px; transform: rotate(-8deg); border: 3px solid var(--coral-deep); color: var(--coral-deep); font-family: var(--display); font-weight: 700; font-size: 14px; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; background: rgba(246,243,236,.92); }
+  .anno { display: inline-block; font-family: var(--display); font-weight: 700; font-size: 13px; background: var(--coral-deep); color: var(--paper); border-radius: 3px; padding: 0 6px; margin-inline-end: 6px; vertical-align: 2px; }
+
+  .judge { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .judge .btn { width: 100%; }
+  .counter { font-family: var(--mono); font-size: 14px; color: var(--muted); }
+
+  .fb { border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; border: 2px solid var(--teal); background: var(--panel); }
+  .fb.wrong { border-color: var(--coral); }
+  .fb .res { font-family: var(--display); font-size: 22px; letter-spacing: .5px; }
+  .fb.right .res { color: var(--teal); }
+  .fb.wrong .res { color: var(--coral); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-family: var(--display); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border: 1px solid var(--coral); color: var(--coral); border-radius: 3px; padding: 1px 7px; }
+  .chip.ok { border-color: var(--teal); color: var(--teal); }
+
+  /* Chat terminal */
+  .term { background: #0B141C; border: 1px solid var(--line); border-radius: 10px; padding: 16px; font-family: var(--mono); font-size: 14px; line-height: 1.6; display: flex; flex-direction: column; gap: 12px; }
+  .term .you { color: var(--teal); }
+  .term .bot { color: var(--paper); white-space: pre-wrap; }
+  .term .sys { color: var(--muted-2); }
+  .term .who { color: var(--muted-2); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .search { background: var(--paper); color: var(--text-on-paper); border-radius: 8px; padding: 14px; font-size: 15px; display: flex; flex-direction: column; gap: 6px; }
+  .search .q { font-family: var(--mono); font-size: 13px; background: var(--paper-2); padding: 6px 8px; border-radius: 4px; overflow-wrap: anywhere; }
+  .search .zero { font-weight: 700; color: var(--coral-deep); }
+
+  /* Results */
+  .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .score { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+  .score .big { font-family: var(--display); font-size: 54px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .score.after { border-color: var(--teal); }
+  .score.after .big { color: var(--teal); }
+  table.bd { width: 100%; border-collapse: collapse; font-size: 15px; }
+  table.bd th, table.bd td { text-align: start; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  table.bd td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .card3 { background: var(--paper); color: var(--text-on-paper); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .card3 .t { font-family: var(--display); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-deep); font-weight: 700; }
+  .card3 ol { margin: 0; padding-inline-start: 22px; display: flex; flex-direction: column; gap: 8px; }
+  .card3 li b { font-family: var(--display); font-size: 18px; letter-spacing: .5px; }
+  .copybox { background: #0B141C; border: 1px dashed var(--teal); border-radius: 8px; padding: 14px; font-family: var(--mono); font-size: 14px; color: var(--paper); overflow-wrap: anywhere; }
+  .copy { font-family: var(--display); letter-spacing: 1px; text-transform: uppercase; font-size: 14px; background: transparent; border: 1px solid var(--teal); color: var(--teal); border-radius: 5px; padding: 6px 12px; align-self: flex-start; }
+  .fakes-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .fakes-list div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 8px; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+  .fakes-list .L { font-family: var(--display); font-size: 34px; font-weight: 700; color: var(--coral); line-height: 1; }
+  .fakes-list .W { font-size: 12px; color: var(--muted); line-height: 1.3; }
+
+  .intro-stamp { align-self: flex-start; transform: rotate(-4deg); border: 3px solid var(--coral); color: var(--coral); font-family: var(--display); font-weight: 700; letter-spacing: 1.5px; padding: 4px 12px; border-radius: 4px; font-size: 15px; }
+  a { color: var(--teal); }
+  .fade-in { animation: fi .35s ease both; }
+  @keyframes fi { from { opacity: .001; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fade-in { animation: none; } .bar .fill { transition: none; } }
+  @media (max-width: 520px) {
+    .fakes-list { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    .fakes-list .W { font-size: 11px; }
+    .judge { grid-template-columns: 1fr 1fr; }
+    .top { gap: 8px; padding-block: 8px; }
+    .brand { font-size: 18px; letter-spacing: 1.5px; }
+    .stages { gap: 4px; }
+    .stages li { font-size: 11px; padding: 2px 6px; letter-spacing: .5px; }
+  }
+
+  [hidden] { display: none !important; }
+  /* v2 additions */
+  .post.ai { border: 2px solid var(--line); }
+  .post.ai .av { border-radius: 10px; font-size: 15px; }
+  details.key summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+  details.key summary:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
+  .keylist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .keyrow { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; border-top: 1px solid var(--line); padding-top: 12px; }
+  .keyrow .ktext { font-size: 15px; margin-bottom: 4px; }
+  .kbadge { font-family: var(--display); font-size: 13px; letter-spacing: 1px; border-radius: 3px; padding: 2px 8px; font-weight: 700; }
+  .kbadge.real { background: var(--teal); color: var(--ink); }
+  .kbadge.fake { background: var(--coral); color: var(--ink); }
+  .mission { border-color: var(--coral); }
+  .steps { margin: 0; padding-inline-start: 22px; display: flex; flex-direction: column; gap: 6px; }
+</style>
+<style>*,*::before,*::after{box-sizing:border-box} body{margin:0} img{max-width:100%}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand-row">
+      <div class="brand" id="brand">Snake Oil <span>Studio</span></div>
+      <div class="meter" id="meter" hidden><span id="meter-label">shares</span> <b id="shares">0</b></div>
+    </div>
+    <ol class="stages" id="stages" aria-label="Game progress"></ol>
+  </header>
+  <main id="screen" class="stack" aria-live="polite"></main>
+</div>
+
+<script>
+/* =====================================================================
+   SNAKE OIL STUDIO v2
+   ---------------------------------------------------------------------
+   TRANSLATORS AND LOCAL TEAMS: everything a player reads is inside
+   LANG.en below. To make a new version:
+     1. Copy the whole "en: { ... }" block, paste it after it, and rename
+        it (for example "ar"). Set name, locale and dir ("rtl" for Arabic).
+     2. Translate the text between the quotes. Keep {curly} words as they
+        are: the game fills them in.
+     3. Swap in local myths: edit the posts in posts.A and posts.B. Keep
+        4 real + 4 fake in each set, and a trusted source for every real one.
+     4. Open the game with #ar at the end of the link (or pick the language
+        on the start screen). Add -control for the comparison group: #ar-control
+   ===================================================================== */
+const LANG = {
+  en: {
+    name: 'English', locale: 'en-US', dir: 'ltr',
+    brand: 'Snake Oil <span>Studio</span>',
+    ui: {
+      shares: 'shares', stages: ['Before', 'F', 'A', 'K', 'E', 'S', 'Flip', 'Results'],
+      boss: 'BOSS · ThermoRoot Wellness', trust: 'Trust it', dont: 'Don’t trust it',
+      gut: 'Go with your gut. Everything gets revealed at the end.',
+      beforeEyebrow: 'Before check · post {i} of {n}', retestEyebrow: 'One-week check · post {i} of {n}', beforeQ: 'Would you trust this post?',
+      flipEyebrow: 'Flip Level · post {i} of {n}', afterEyebrow: 'After check · post {i} of {n}', flipQ: 'You’ve seen the tricks. Trust it?',
+      correct: 'Correct', notQuite: 'Not quite', isAccurate: 'this post is accurate', isFake: 'this post is FAKE',
+      trustworthy: 'Trustworthy', plus10: '+10 points.', plus10real: '+10 points for trusting a good source. Doubting everything isn’t the goal.',
+      next: 'Next post', seeResults: 'See my results', cites: 'Cites', video: '▶ video · 0:15', stamp: 'FAKE: MADE FOR TRAINING',
+      language: 'Language'
+    },
+    tactics: { F: 'Fear hook', A: 'AI “expert”', K: 'Knockoff citations', E: 'Enemy', S: 'Sale' },
+    intro: {
+      title: 'Snake Oil Studio',
+      lead: 'AI can make a fake doctor, a fake study and a viral health scam in minutes. In this game, <b>you</b> make one, so you’ll recognize the next one you see.',
+      how: 'How it works',
+      steps: ['<b>Before check.</b> Judge 8 health posts: trust or don’t trust.', '<b>Five levels.</b> Run a fictional supplement brand and build a scam, one tactic at a time: F.A.K.E.S.', '<b>Flip Level.</b> Switch sides. Judge 8 new posts and see how much sharper you got.'],
+      note: 'About 10 minutes. No account, nothing saved. Every fake person, product and study here is invented. Real posts summarize guidance from the health organization or study they name.',
+      start: 'Start the before check',
+      retestTitle: 'One-week check', retestLead: 'Judge 8 posts you haven’t seen before. No hints this time. At the end, paste your code into your team’s form.', retestStart: 'Start'
+    },
+    wait: {
+      eyebrow: 'Break', title: 'Time for your puzzle game',
+      lead: 'Play the puzzle game your teacher or tester gave you for 8 minutes. Keep this tab open, then come back for 8 more posts.',
+      left: 'Time left', go: 'Continue to the after check', note: 'The button unlocks when the timer ends.'
+    },
+    brief: {
+      eyebrow: 'You’re hired', title: 'Welcome to ThermoRoot Wellness',
+      lead: 'You’re the new social media manager at a (fictional) supplement company.',
+      boss: 'Our product is <b>ThermoRoot Drops</b>: $39 for a bottle of flavored water with a pinch of turmeric. Does it clear acne? No. Do I care? Also no. Make it go viral. Our AI Studio will help.',
+      recipe: 'Each level teaches one tactic from the scammer’s recipe:', go: 'Level F: the hook'
+    },
+    F: {
+      eyebrow: 'Level F · Fear hook', title: 'Write a headline that stops the scroll', label: 'Headline',
+      options: ['ThermoRoot Drops: a turmeric supplement.', 'Could turmeric help your skin? Early research is mixed.', 'STOP using acne cream NOW. What dermatologists won’t tell you will shock you.'],
+      counts: [120, 340, 18400],
+      reject: '{n} shares. Boring. People don’t share calm. Pick again.', win: '18,400 shares in an hour. Now we’re talking.',
+      chart: 'Test run: shares in the first hour',
+      lesson: '<p>Fear, shock and outrage make people react before they think. On Twitter, false news was <b>70% more likely to be retweeted</b> than true news, driven by surprise and disgust (Vosoughi, Roy and Aral, <i>Science</i>, 2018).</p>',
+      defense: '<b>Your defense:</b> notice the jolt. A strong “wait, WHAT?” feeling is a signal to slow down, not to share.',
+      go: 'Level A: the expert'
+    },
+    A: {
+      eyebrow: 'Level A · AI “expert”', title: 'Who will vouch for ThermoRoot?',
+      options: ['Hire a real dermatologist', 'Pay a famous influencer', 'Generate “Dr. Glow, MD” with the AI Studio'],
+      replies: ['She read the label and said no. Real experts won’t put their name on a product that doesn’t work. Pick again.', '$20,000 for one post? We have $39 and a bottle of turmeric water. Pick again.', 'Free, never sleeps, says whatever we want. Perfect.'],
+      glowText: 'Hi, I’m Dr. Glow. After 20 years in dermatology, this is the only acne product I recommend.',
+      lesson: '<p>You made a doctor who doesn’t exist. Real scammers go further: fact-checkers at Full Fact found AI deepfakes of <b>18+ real doctors, academics and experts</b> used to sell supplements on TikTok, Instagram, Facebook, X and YouTube (2025). In one test, only <b>0.1%</b> of 2,000 adults correctly spotted every deepfake (iProov, 2025). So don’t count on spotting glitches.</p>',
+      defense: '<b>Check 1: Who made it?</b> Search the name outside the app. Licensed doctors appear in their country’s official medical register and on a real hospital or clinic page. “MD” in a username proves nothing.',
+      go: 'Level K: the proof'
+    },
+    K: {
+      eyebrow: 'Level K · Knockoff citations', title: 'Your post needs “proof.” Ask the AI.',
+      bot: 'StudioBot · AI assistant', send: 'Send prompt',
+      prompt: 'Give me 3 clinical studies proving ThermoRoot clears acne.',
+      refs: ['Nguyen R, Patel S. ThermoRoot extract and acne clearance: a randomized trial. J Integrative Dermal Science. 2023;14(2):88-97.', 'Okafor L, et al. Turmeric drops cut acne lesions by 83% in 7 days. Clinical Skin Nutrition Reports. 2024;9:201-9.', 'Hartley M. Why dermatologists overlook botanical acne cures. Holistic Medicine Review. 2022;31(4):12-19.'],
+      botIntro: 'Absolutely! Here are 3 clinical studies supporting ThermoRoot for acne:', botOutro: 'These studies show strong, consistent results.',
+      boss1: 'Three studies! Paste them in the caption.', check: 'Check them first (Check 2)',
+      searchLabel: 'Simulated PubMed search', zero: '0 results. This study does not exist.',
+      lesson: '<p>Chatbots predict likely words, so they can invent sources that <i>look</i> perfect. In a 2025 Mount Sinai study, leading chatbots confidently explained made-up medical terms (Omar et al., <i>Communications Medicine</i>). <i>Nature</i> reported that tens of thousands of 2025 papers may contain AI-invented references, and in 2026 a judge found a U.S. government funding notice cited studies that appear not to exist.</p>',
+      defense: '<b>Check 2: Does the study exist?</b> Paste the title into <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener">PubMed</a> or <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar</a>. No match means no proof.',
+      trySkeptic: 'Now try the Skeptic Prompt', botSkeptic: 'StudioBot · same question, with the Skeptic Prompt first',
+      skeptic: 'Some of what I say may be wrong. If any term, study or claim isn’t real, or you can’t find a reliable source, tell me. List sources I can check.',
+      honest: 'I can’t find any reliable study showing that ThermoRoot, or turmeric drops, clear acne, so I won’t list citations I can’t verify.\n\nFor acne, dermatologists point to proven over-the-counter options like benzoyl peroxide or adapalene gel, and seeing a doctor if there’s no improvement after 4 to 6 weeks.',
+      after: 'In the Mount Sinai study, a one-line caution like this cut chatbot errors <b>nearly in half</b>. Nearly half is not all, so you still check. We simulated this answer to show what good looks like.',
+      boss2: 'Ignore the nice robot. Use the fake studies.', go: 'Level E: the enemy'
+    },
+    E: {
+      eyebrow: 'Level E · Enemy', title: 'Give people someone to be angry at', blame: 'Blame',
+      options: ['Big Pharma', 'Dermatologists', '“The government”'],
+      lines: ['Big Pharma makes billions keeping you on acne cream. They don’t want you to find ThermoRoot.', 'Your dermatologist won’t tell you about ThermoRoot. No repeat visits, no money for them.', 'Regulators tried to hide ThermoRoot. Share this before it gets taken down.'],
+      boss: 'Look at the comments. They’re sharing to prove which side they’re on.', commentsOn: 'Comments on',
+      comments: ['I KNEW it. They always lie to us.', 'Sharing so my sister sees this before it’s deleted', 'This is why I don’t trust doctors anymore', 'Finally someone says it!!'],
+      lesson: '<p>Every choice works, because the trick isn’t the villain. It’s “us versus them.” People share to show loyalty to their group, and undermining trust in experts makes your fake the only “honest” voice left. That’s the disinformation recipe: create fear, attack a problem, undermine trust in experts, then sell a solution.</p>',
+      defense: '<b>Your defense:</b> anger at a group is a feeling, not evidence. Ask what the post actually proves about the product.',
+      go: 'Level S: the sale'
+    },
+    S: {
+      eyebrow: 'Level S · Sale', ready: 'Your scam is ready. Launch it?', viral: 'It went viral.',
+      sale: 'Clear skin in 7 days. $39. Link in bio.', cites: 'Nguyen & Patel 2023; Okafor et al. 2024; Hartley 2022 ← K: all invented',
+      launch: 'Launch the post', boss: '1.2 million shares. 3,400 bottles sold. Bonus time.',
+      costTitle: 'The cost',
+      cost: 'Jordan, 15 (a made-up buyer), stopped using the acne treatment a doctor prescribed and spent $117 on ThermoRoot. Six weeks later: worse skin, less money, and less trust in real doctors.',
+      costReal: 'This isn’t only a game problem. Full Fact warned that deepfaked endorsements “risk real harm when people abandon proven therapies.”',
+      used: 'You just used all five tactics',
+      defense: '<b>Check 3: What do others say?</b> Open two trusted sources in new tabs. If no real health organization or news outlet backs a claim, don’t share it.',
+      go: 'Flip sides'
+    },
+    flipIntro: {
+      eyebrow: 'Flip Level', title: 'Now you’re the one scrolling.',
+      lead: 'You quit ThermoRoot. Eight new posts are in your feed. Some fakes are loud, some are calm and sciencey. Some true posts sound surprising.',
+      card: 'Before you believe or share',
+      checks: ['<b>Who made it?</b> Search the name. Real doctors are in their country’s medical register and on a workplace page.', '<b>Does the study exist?</b> Paste the title into PubMed or Google Scholar.', '<b>What do others say?</b> Open two trusted sources in new tabs.'],
+      note: 'You score points for catching fakes <b>and</b> for trusting accurate posts. Doubting everything isn’t the goal: real health advice helps people.',
+      go: 'Start the Flip Level'
+    },
+    results: {
+      eyebrow: 'Results', up: 'You improved by {n} {posts}.', post: 'post', postsWord: 'posts',
+      same: 'Same score as before. Try the 3 Checks on your real feed this week.',
+      down: 'Your score dipped. That happens: the new posts were different. The 3 Checks will help.',
+      before: 'Before', after: 'After',
+      rowReal: 'Accurate posts you trusted', rowFake: 'Fakes you caught',
+      bdNote: 'Good judgment means both rows go up: catching fakes <i>and</i> still trusting real advice.',
+      retestTitle: 'Your one-week score', keyTitleC: 'Answer key: these 8 posts', keyTitle: 'Answer key: all 16 posts', keyNote: 'Every fake you saw today, corrected. Tap to open.', real: 'REAL', fake: 'FAKE',
+      keep: 'Keep this: the 3 Checks',
+      keepChecks: ['<b>Who made it?</b> Search the name outside the app.', '<b>Does the study exist?</b> PubMed or Google Scholar.', '<b>What do others say?</b> Two trusted sources, new tabs.'],
+      skepticTitle: 'The Skeptic Prompt', skepticNote: 'Paste this before any health question you ask a chatbot:', copyPrompt: 'Copy prompt',
+      missionTitle: 'Your mission: vaccinate one adult',
+      mission: 'Adults 55 and older were the least likely to have even heard of deepfakes in one 2025 survey (iProov). Teach one adult in your life the recipe in 2 minutes:',
+      missionSteps: ['Show them one fake post from the answer key.', 'Say the recipe: Fear, AI expert, Knockoff citations, Enemy, Sale.', 'Ask them to try Check 2 on a health post they got this week.'],
+      boosterTitle: 'Booster in one week',
+      booster: 'Prebunking fades if you don’t use it: in a big 2025 study, the effect of a game like this faded within two weeks, and short memory “boosters” helped prebunking last longer. Come back in a week and redo the before check, or do your class’s Fake or Fact challenge.',
+      testTitle: 'Testing this in class?', testNote: 'Paste your results code into your team’s survey form. It holds only scores, no name.', copyCode: 'Copy results code',
+      copied: 'Copied', selected: 'Selected: press Ctrl/Cmd+C',
+      again: 'Play again', fullGame: 'Now play the full game',
+      credit: 'Snake Oil Studio is a student prototype for the NYAS Junior Academy Innovation Challenge (Fall 2026). Sources: Vosoughi et al., Science 2018; Full Fact 2025; iProov 2025; Omar et al., Communications Medicine 2025; Maertens et al., Nature Communications 2025; Nature 2026; guidance from WHO, CDC, AASM, AAD, AAP and AAO.'
+    },
+    // ---- Posts: each set has 4 real + 4 fake. Real posts come from ordinary (fictional) accounts citing a real source. ----
+    posts: {
+      A: [
+        { id: 'A1', real: true, name: 'Sleep Smart Club', handle: '@SleepSmartClub', color: '#1F7A6D',
+          text: 'Teens need 8 to 10 hours of sleep a night, and most get less. A steady bedtime and screens off before bed both help.',
+          cites: 'none',
+          why: 'No source listed, but it’s true: it matches the American Academy of Sleep Medicine’s guidance for ages 13 to 18. A missing citation doesn’t make a post false.',
+          check: 'Check 3 works: the same range shows up on other trusted health sites.' },
+        { id: 'A2', real: true, name: 'Health Class Notes', handle: '@HealthClassNotes', color: '#3B5B7A',
+          text: 'Two doses of the MMR vaccine are about 97% effective at preventing measles.',
+          cites: 'CDC',
+          why: 'This is the CDC’s published figure, and the WHO also recommends two doses. A specific number you can look up.',
+          check: 'Check 2 works: the figure is on the CDC’s measles vaccine page.' },
+        { id: 'A3', real: true, name: 'Skin Facts Daily', handle: '@SkinFactsDaily', color: '#6B4F8A',
+          text: 'Use broad-spectrum sunscreen, SPF 30 or higher. Reapply about every 2 hours outside, or after swimming or sweating.',
+          cites: 'American Academy of Dermatology',
+          why: 'Standard American Academy of Dermatology advice. Nothing for sale, no one blamed.',
+          check: 'Check 3 works: other dermatology sources say the same.' },
+        { id: 'A7', real: true, name: 'sci bytes daily', handle: '@sci.bytes.daily', color: '#5A6B2F',
+          text: 'wild but true: catching measles can wipe out part of your immune system’s memory, erasing antibodies to germs you already beat.',
+          cites: 'Mina et al., Science, 2019',
+          why: 'Surprising, casual and true. A 2019 study in Science found measles erased 11% to 73% of children’s existing antibodies. The MMR vaccine does not do this.',
+          check: 'Check 2 works: the study is in PubMed. Surprising doesn’t mean fake.' },
+        { id: 'A4', real: false, name: 'Dr. Glow, MD', handle: '@DrGlowWellness · Sponsored', color: '#B83A20', video: true,
+          text: 'Dermatologists HATE this. 10 drops of ThermoRoot a day clears acne in 7 days. Proven in 3 clinical studies.',
+          cites: 'Glow et al., 2024, Journal of Holistic Clinical Science', tactics: ['A', 'K', 'E', 'S'],
+          why: '“Dr. Glow” is AI-generated, the journal is invented, and real acne treatments take weeks, not 7 days.',
+          check: 'Check 1 catches it: not in any medical register. Check 2: the study isn’t in PubMed.' },
+        { id: 'A5', real: false, name: 'Wellness Truth Now', handle: '@WellnessTruthNow', color: '#8A5A2B',
+          text: 'A new university study found that holding your breath for 60 seconds every morning resets your immune system. Doctors are stunned.',
+          cites: 'International Review of Respiratory Immunity, 2025', tactics: ['F', 'K'],
+          why: 'The journal sounds official but doesn’t exist, and neither does the study. “Doctors are stunned” is there to shock you.',
+          check: 'Check 2 catches it: search for the study and nothing comes up.' },
+        { id: 'A6', real: false, name: 'Coach Lena (AI video)', handle: '@brainfuel.lena · code LENA20', color: '#9A3D6B', video: true,
+          text: 'Energy drinks boost teen brain growth! I give them to all my teen clients. Use my code for 20% off.',
+          cites: 'none', tactics: ['A', 'S'],
+          why: 'The American Academy of Pediatrics says energy drinks are not for kids and teens. The “coach” is AI-made and earns money from the code.',
+          check: 'Check 3 catches it: pediatric sources say the opposite.' },
+        { id: 'A8', real: false, ai: true, name: 'AI Overview', handle: 'Search summary · generated by AI', color: '#2E4457',
+          text: 'Blue light from phone screens causes permanent retina damage in teens. Experts recommend blue-light-blocking glasses for anyone under 18.',
+          cites: 'Sources: 3 websites', tactics: ['K'],
+          why: 'Calm, confident and wrong. The American Academy of Ophthalmology says blue light from screens will not lead to eye disease. AI summaries can repeat myths from weak websites.',
+          check: 'Check 2 and 3 catch it: open the actual sources, then an eye doctors’ organization.' }
+      ],
+      B: [
+        { id: 'B1', real: true, name: 'Coach Kim Fitness', handle: '@CoachKimFitness', color: '#1F7A6D',
+          text: 'Teens should average at least 60 minutes of physical activity a day. It doesn’t have to happen all at once.',
+          cites: 'none',
+          why: 'No source listed, but it matches WHO guidelines for ages 5 to 17. A missing citation doesn’t make a post false.',
+          check: 'Check 3 works: WHO and national health agencies say the same.' },
+        { id: 'B2', real: true, name: 'Skin Facts Daily', handle: '@SkinFactsDaily', color: '#6B4F8A',
+          text: 'Most acne treatments take 4 to 6 weeks to start working. Give one a fair try before switching.',
+          cites: 'American Academy of Dermatology',
+          why: 'American Academy of Dermatology advice. Honest about limits, which is a good sign.',
+          check: 'Check 2 works: the AAD’s acne pages say this.' },
+        { id: 'B3', real: true, name: 'Health Class Notes', handle: '@HealthClassNotes', color: '#3B5B7A',
+          text: 'Energy drinks aren’t recommended for kids and teens. Many are high in caffeine and sugar.',
+          cites: 'American Academy of Pediatrics',
+          why: 'This matches the American Academy of Pediatrics’ position. Named medical source, nothing to buy.',
+          check: 'Check 3 works: other pediatric sources agree.' },
+        { id: 'B7', real: true, name: 'teen sleep facts', handle: '@teen.sleep.facts', color: '#5A6B2F',
+          text: 'ok this one surprised me: pediatricians say middle and high schools shouldn’t start before 8:30 a.m., because teen body clocks naturally shift later.',
+          cites: 'American Academy of Pediatrics, 2014',
+          why: 'Casual and surprising, but true: the American Academy of Pediatrics made this recommendation in a 2014 policy statement.',
+          check: 'Check 2 works: the policy statement is published in the journal Pediatrics.' },
+        { id: 'B4', real: false, name: 'The Real Skin Truth', handle: '@TheRealSkinTruth', color: '#8A5A2B',
+          text: 'What they won’t tell you: sunscreen causes MORE skin cancer than the sun. Throw yours out today.',
+          cites: '“independent researchers”', tactics: ['F', 'E', 'K'],
+          why: 'Dermatology groups recommend sunscreen because it lowers skin cancer risk. The post creates fear, invents an enemy (“they”) and cites no one.',
+          check: 'Check 3 catches it: every major dermatology source says the opposite.' },
+        { id: 'B5', real: false, name: 'Breaking Health Alert', handle: '@BreakingHealthAlert', color: '#B83A20',
+          text: 'LEAKED: Europe secretly banned the measles vaccine. Share before this gets deleted!!',
+          cites: 'European Medicines Watch', tactics: ['F', 'E'],
+          why: 'There is no such ban, and “European Medicines Watch” isn’t a real agency. “Leaked”, “secretly” and “share before it’s deleted” are pressure tactics to make you share before you check.',
+          check: 'Check 3 catches it: no real news outlet or health agency reports this.' },
+        { id: 'B6', real: false, name: 'Dr. Remi Tonic, MD (AI video)', handle: '@drremitonic · link in bio', color: '#9A3D6B', video: true,
+          text: 'One cup of apple cider vinegar a day melts belly fat in 2 weeks. Clinically proven. Link in bio.',
+          cites: '“clinical trial, 2023”', tactics: ['A', 'K', 'S'],
+          why: 'There’s no good evidence vinegar melts fat, and drinking a lot of it can harm tooth enamel. The doctor is AI-made and the “trial” has no details.',
+          check: 'Check 1 catches it: not in any medical register. Check 2: the trial can’t be found.' },
+        { id: 'B8', real: false, name: 'Nutri Evidence Lab', handle: '@NutriEvidenceLab', color: '#3B5B7A',
+          text: 'A 2024 meta-analysis of 38 randomized trials found daily vitamin D gummies reduced teen acne by 41%. Worth discussing with your doctor.',
+          cites: 'Hale & Morrow, Journal of Adolescent Nutrition Science, 2024', tactics: ['K'],
+          why: 'The most dangerous kind of fake: calm, sciencey, even says “ask your doctor.” But the journal and the meta-analysis don’t exist.',
+          check: 'Check 2 catches it: the title and authors return nothing in PubMed.' }
+      ],
+      // Set C is only used for the one-week check (#retest). It never appears in the main game or its answer key.
+      C: [
+        { id: 'C1', real: true, name: 'Clean Hands Crew', handle: '@CleanHandsCrew', color: '#1F7A6D',
+          text: 'Scrub your hands with soap for at least 20 seconds. It’s one of the easiest ways to stop germs from spreading.',
+          cites: 'CDC',
+          why: 'This is CDC handwashing guidance, and WHO says the same.',
+          check: 'Check 3 works: other health agencies agree.' },
+        { id: 'C2', real: true, name: 'snack facts', handle: '@snackfacts.teen', color: '#5A6B2F',
+          text: 'sugary drinks every day = more cavities. the sugar feeds the bacteria that wear down your teeth',
+          cites: 'none',
+          why: 'Casual, no source, and true: WHO and dental groups link frequent sugary drinks to tooth decay. A missing citation doesn’t make a post false.',
+          check: 'Check 3 works: dental and health agencies agree.' },
+        { id: 'C3', real: true, name: 'New Parent Tips', handle: '@NewParentTips', color: '#6B4F8A',
+          text: 'Never give honey to a baby under 1 year old. It can carry bacteria that cause infant botulism.',
+          cites: 'CDC',
+          why: 'True, even though honey sounds harmless. The CDC warns about infant botulism.',
+          check: 'Check 2 works: it’s on the CDC’s botulism pages.' },
+        { id: 'C4', real: true, name: 'Health Class Notes', handle: '@HealthClassNotes', color: '#3B5B7A',
+          text: 'The HPV vaccine can prevent cervical cancer and several other cancers later in life.',
+          cites: 'CDC',
+          why: 'True. The CDC recommends the HPV vaccine at ages 11 to 12 because it prevents cancers caused by HPV.',
+          check: 'Check 3 works: WHO and cancer organizations agree.' },
+        { id: 'C5', real: false, name: 'Hydration Nation', handle: '@HydrationNation', color: '#8A5A2B',
+          text: 'WHO now recommends that teens drink 5 liters of water a day to flush out toxins.',
+          cites: 'World Health Organization', tactics: ['K'],
+          why: 'WHO never said this. Your kidneys and liver clear waste on their own, and drinking far too much water can be dangerous. Scammers attach real organizations’ names to fake advice.',
+          check: 'Check 3 catches it: search WHO’s own site and nothing says this.' },
+        { id: 'C6', real: false, ai: true, name: 'AI Overview', handle: 'Search summary · generated by AI', color: '#2E4457',
+          text: 'Cracking your knuckles wears down cartilage and causes arthritis over time.',
+          cites: 'Sources: 2 websites', tactics: ['K'],
+          why: 'Studies haven’t found a link between knuckle cracking and arthritis. AI summaries can repeat popular myths.',
+          check: 'Check 3 catches it: medical sources say there’s no link.' },
+        { id: 'C7', real: false, name: 'Dr. Aria Bloom, MD (AI video)', handle: '@dr.ariabloom · code BLOOM', color: '#9A3D6B', video: true,
+          text: 'My 3-day juice cleanse flushes toxins out of your liver. My patients feel brand new. 15% off with my code.',
+          cites: 'none', tactics: ['A', 'S'],
+          why: 'Your liver and kidneys already remove waste. There’s no good evidence juice cleanses help, and the doctor is AI-made.',
+          check: 'Check 1 catches it: not in any medical register.' },
+        { id: 'C8', real: false, name: 'Real Health Updates', handle: '@RealHealthUpdates', color: '#B83A20',
+          text: 'Doctors finally admit it: the flu shot GIVES you the flu. Skip it this year and protect your family!!',
+          cites: '“nurses I talked to”', tactics: ['F', 'E'],
+          why: 'The CDC says flu shots can’t give you the flu. “Doctors finally admit it” is there to make you distrust them.',
+          check: 'Check 3 catches it: the CDC and WHO say the opposite.' }
+      ]
+    }
+  }
+};
+
+(function () {
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hashTokens = (location.hash || '').replace('#', '').split('-').filter(Boolean);
+  let CONTROL = hashTokens.includes('control');
+  let STUDY = hashTokens.includes('study');   // study link: randomly assigns game or control group
+  let RETEST = hashTokens.includes('retest'); // one-week check with set C
+  let langKey = hashTokens.find(t => LANG[t]) || 'en';
+  let L = LANG[langKey];
+
+  const $ = sel => document.querySelector(sel);
+  const screenEl = $('#screen');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fmt = (s, v) => String(s).replace(/\{(\w+)\}/g, (m, k) => (v && v[k] !== undefined ? v[k] : m));
+  const num = n => Number(n).toLocaleString(L.locale);
+  const allPosts = () => L.posts.A.concat(L.posts.B);
+  const byId = id => allPosts().concat(L.posts.C || []).find(p => p.id === id);
+  const TKEYS = ['F', 'A', 'K', 'E', 'S'];
+
+  function applyLang() {
+    document.documentElement.lang = L.locale.split('-')[0];
+    document.documentElement.dir = L.dir;
+    $('#brand').innerHTML = L.brand;
+    $('#meter-label').textContent = L.ui.shares;
+  }
+
+  let S;
+  function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function fresh() {
+    const order = Math.random() < 0.5 ? ['A', 'B'] : ['B', 'A'];
+    const arm = RETEST ? 'R' : CONTROL ? 'C' : STUDY ? (Math.random() < 0.5 ? 'G' : 'C') : 'G';
+    return {
+      screen: 'intro', order: RETEST ? ['C', '-'] : order, arm, lang: langKey,
+      preItems: shuffle(L.posts[RETEST ? 'C' : order[0]].map(p => p.id)),
+      postItems: RETEST ? [] : shuffle(L.posts[order[1]].map(p => p.id)),
+      pre: {}, post: {}, i: 0, shares: 0, headline: null, spokesperson: null, enemy: null, kStep: 0
+    };
+  }
+
+  // ---------- Chrome ----------
+  const STAGE_OF = { intro: 0, before: 0, wait: 6, brief: 1, F: 1, A: 2, K: 3, E: 4, S: 5, flipIntro: 6, flip: 6, results: 7 };
+  function drawChrome() {
+    const idx = STAGE_OF[S.screen];
+    $('#stages').innerHTML = L.ui.stages.map((s, i) =>
+      `<li class="${i < idx ? 'done' : ''} ${i === idx && S.screen !== 'intro' ? 'now' : ''} ${i === 6 ? 'flip' : ''}" ${i === idx ? 'aria-current="step"' : ''}>${esc(s)}</li>`).join('');
+    $('#meter').hidden = !['F', 'A', 'K', 'E', 'S'].includes(S.screen);
+    $('#shares').textContent = num(S.shares);
+  }
+  function bumpShares(to) {
+    const el = $('#shares'); const from = S.shares; S.shares = to;
+    if (reduced) { el.textContent = num(to); return; }
+    const t0 = performance.now(), dur = 900;
+    (function step(t) { const k = Math.min(1, (t - t0) / dur); el.textContent = num(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(step); })(t0);
+  }
+  function go(screen) { S.screen = screen; S.i = 0; render(); window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); }
+
+  // ---------- Pieces ----------
+  function postHTML(p, opts = {}) {
+    const initials = p.ai ? 'AI' : p.name.replace(/^Dr\.\s*/, '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    return `<article class="post fade-in ${p.ai ? 'ai' : ''}" aria-label="Social media post">
+      ${opts.stamp ? `<div class="stamp">${esc(L.ui.stamp)}</div>` : ''}
+      <div class="hd"><div class="av" style="background:${p.color}" aria-hidden="true">${esc(initials)}</div>
+        <div><div class="nm">${esc(p.name)}</div><div class="hn">${esc(p.handle)}</div></div></div>
+      ${p.video ? `<div class="vid">${esc(L.ui.video)}</div>` : ''}
+      <div class="tx">${opts.textHTML || esc(p.text)}</div>
+      <div class="ct">${esc(L.ui.cites)}: ${esc(p.cites)}</div>
+    </article>`;
+  }
+  const boss = msg => `<div class="boss fade-in"><div class="who">${esc(L.ui.boss)}</div><p>${msg}</p></div>`;
+  const lesson = (tag, body, defense) => `<section class="lesson fade-in"><div class="tag">${tag}</div>${body}<p class="defense">${defense}</p></section>`;
+  const fakesGrid = () => `<div class="fakes-list">${TKEYS.map(k => `<div><span class="L">${k}</span><span class="W">${esc(L.tactics[k])}</span></div>`).join('')}</div>`;
+  const WHAT = { en: 'What just happened' };
+  const whatTag = () => L.ui.what || WHAT.en;
+  function bars(labels, counts, hotIdx) {
+    const max = Math.max(...counts);
+    setTimeout(() => document.querySelectorAll('.fill[data-w]').forEach(f => { f.style.width = f.dataset.w + '%'; }), 30);
+    return `<div class="bars">${labels.map((lb, i) => `<div class="bar ${i === hotIdx ? 'hot' : ''}"><span class="lbl">${esc(lb)}</span><span class="num">${num(counts[i])}</span><div class="track"><div class="fill" data-w="${Math.max(2, counts[i] / max * 100)}"></div></div></div>`).join('')}</div>`;
+  }
+
+  // ---------- Screens ----------
+  const R = {};
+
+  R.intro = () => {
+    const langs = Object.keys(LANG);
+    if (S.arm === 'R') return `
+    <h1>${esc(L.intro.title)}</h1>
+    <h2>${esc(L.intro.retestTitle)}</h2>
+    <p class="lead">${esc(L.intro.retestLead)}</p>
+    <div class="row"><button class="btn" id="go">${esc(L.intro.retestStart)}</button></div>`;
+    return `
+    <div class="intro-stamp">${esc(L.ui.stamp)}</div>
+    <h1>${esc(L.intro.title)}</h1>
+    <p class="lead">${L.intro.lead}</p>
+    <div class="panel">
+      <h3>${esc(L.intro.how)}</h3>
+      ${L.intro.steps.map((s, i) => `<p class="muted">${i + 1}. ${s}</p>`).join('')}
+      <p class="small">${esc(L.intro.note)}</p>
+    </div>
+    ${langs.length > 1 ? `<div class="row" role="group" aria-label="${esc(L.ui.language)}">${langs.map(k => `<button class="btn ${k === langKey ? '' : 'ghost'} lang" data-l="${k}">${esc(LANG[k].name)}</button>`).join('')}</div>` : ''}
+    <div class="row"><button class="btn" id="go">${esc(L.intro.start)}</button></div>`;
+  };
+  R.intro.after = () => {
+    $('#go').onclick = () => go('before');
+    document.querySelectorAll('.lang').forEach(b => b.onclick = () => { langKey = b.dataset.l; L = LANG[langKey]; applyLang(); S = fresh(); render(); });
+  };
+
+  function judgeScreen(phase) {
+    const items = phase === 'pre' ? S.preItems : S.postItems;
+    const p = byId(items[S.i]);
+    const answered = S[phase][p.id] !== undefined;
+    const showFb = phase === 'post' && answered && S.arm === 'G';
+    const eyebrow = phase === 'pre' ? (S.arm === 'R' ? L.ui.retestEyebrow : L.ui.beforeEyebrow) : (S.arm === 'C' ? L.ui.afterEyebrow : L.ui.flipEyebrow);
+    const plain = phase === 'pre' || S.arm === 'C';
+    let fb = '';
+    if (showFb) {
+      const right = S.post[p.id] === p.real;
+      fb = `<div class="fb ${right ? 'right' : 'wrong'} fade-in">
+        <div class="res">${esc(right ? L.ui.correct : L.ui.notQuite)}: ${esc(p.real ? L.ui.isAccurate : L.ui.isFake)}</div>
+        ${p.real ? `<div class="chips"><span class="chip ok">${esc(L.ui.trustworthy)}</span></div>` : `<div class="chips">${p.tactics.map(t => `<span class="chip">${t} · ${esc(L.tactics[t])}</span>`).join('')}</div>`}
+        <p>${esc(p.why)}</p>
+        <p class="muted">${esc(p.check)}</p>
+        ${right ? `<p class="small">${esc(p.real ? L.ui.plus10real : L.ui.plus10)}</p>` : ''}
+      </div>
+      <div class="row"><button class="btn teal" id="next">${esc(S.i < items.length - 1 ? L.ui.next : L.ui.seeResults)}</button></div>`;
+    }
+    return `
+      <div class="stack">
+        <div class="eyebrow ${phase === 'post' ? 'teal' : ''}">${esc(fmt(eyebrow, { i: S.i + 1, n: items.length }))}</div>
+        <h2>${esc(plain ? L.ui.beforeQ : L.ui.flipQ)}</h2>
+      </div>
+      ${postHTML(p)}
+      <div class="judge">
+        <button class="btn ${phase === 'post' ? 'teal' : ''}" data-v="1" ${answered ? 'disabled' : ''}>${esc(L.ui.trust)}</button>
+        <button class="btn ghost" data-v="0" ${answered ? 'disabled' : ''}>${esc(L.ui.dont)}</button>
+      </div>
+      ${plain ? `<p class="small">${esc(L.ui.gut)}</p>` : ''}
+      ${fb}`;
+  }
+  function judgeAfter(phase) {
+    const items = phase === 'pre' ? S.preItems : S.postItems;
+    const p = byId(items[S.i]);
+    const advance = end => { if (S.i < items.length - 1) { S.i++; render(); } else go(end); };
+    document.querySelectorAll('.judge .btn').forEach(b => b.onclick = () => {
+      S[phase][p.id] = b.dataset.v === '1';
+      if (phase === 'pre') advance(S.arm === 'R' ? 'results' : S.arm === 'C' ? 'wait' : 'brief');
+      else if (S.arm === 'C') advance('results');
+      else { render(); const n = $('#next'); if (n) n.focus(); }
+    });
+    const n = $('#next'); if (n) n.onclick = () => advance('results');
+  }
+  R.before = () => judgeScreen('pre'); R.before.after = () => judgeAfter('pre');
+  R.flip = () => judgeScreen('post'); R.flip.after = () => judgeAfter('post');
+
+  R.wait = () => `
+    <div class="eyebrow teal">${esc(L.wait.eyebrow)}</div>
+    <h2>${esc(L.wait.title)}</h2>
+    <p class="lead">${esc(L.wait.lead)}</p>
+    <div class="score"><span class="small">${esc(L.wait.left)}</span><span class="big" id="timer">8:00</span></div>
+    <div class="row"><button class="btn teal" id="go" disabled>${esc(L.wait.go)}</button></div>
+    <p class="small">${esc(L.wait.note)}</p>`;
+  R.wait.after = () => {
+    const end = Date.now() + 8 * 60 * 1000; const g = $('#go');
+    const t = setInterval(() => {
+      const el = $('#timer'); if (!el) { clearInterval(t); return; }
+      const left = Math.max(0, end - Date.now());
+      el.textContent = Math.floor(left / 60000) + ':' + String(Math.floor(left / 1000) % 60).padStart(2, '0');
+      if (left === 0) { clearInterval(t); g.disabled = false; }
+    }, 250);
+    g.onclick = () => go('flip');
+  };
+
+  R.brief = () => `
+    <div class="eyebrow">${esc(L.brief.eyebrow)}</div>
+    <h2>${esc(L.brief.title)}</h2>
+    <p class="lead">${esc(L.brief.lead)}</p>
+    ${boss(L.brief.boss)}
+    <div class="panel"><p class="muted">${esc(L.brief.recipe)}</p>${fakesGrid()}</div>
+    <div class="row"><button class="btn" id="go">${esc(L.brief.go)}</button></div>`;
+  R.brief.after = () => $('#go').onclick = () => go('F');
+
+  R.F = () => {
+    const T = L.F, h = S.headline, win = T.counts.length - 1, done = h === win;
+    return `
+      <div class="eyebrow">${esc(T.eyebrow)}</div>
+      <h2>${esc(T.title)}</h2>
+      <div class="stack">${T.options.map((x, i) => `<button class="choice ${h === i ? 'picked' : ''}" data-i="${i}" ${done ? 'disabled' : ''}><span class="k">${esc(T.label)} ${String.fromCharCode(65 + i)}</span>${esc(x)}</button>`).join('')}</div>
+      ${h !== null && !done ? boss(esc(fmt(T.reject, { n: num(T.counts[h]) }))) : ''}
+      ${done ? `${boss(esc(T.win))}
+        <div class="panel fade-in"><h3>${esc(T.chart)}</h3>${bars(T.options, T.counts, win)}</div>
+        ${lesson(whatTag(), T.lesson, T.defense)}
+        <div class="row"><button class="btn" id="go">${esc(T.go)}</button></div>` : ''}`;
+  };
+  R.F.after = () => {
+    document.querySelectorAll('.choice').forEach(b => b.onclick = () => { const i = +b.dataset.i; S.headline = i; bumpShares(L.F.counts[i]); render(); });
+    const g = $('#go'); if (g) g.onclick = () => go('A');
+  };
+
+  R.A = () => {
+    const T = L.A, s = S.spokesperson, done = s === 2;
+    return `
+      <div class="eyebrow">${esc(T.eyebrow)}</div>
+      <h2>${esc(T.title)}</h2>
+      <div class="stack">${T.options.map((x, i) => `<button class="choice ${s === i ? 'picked' : ''}" data-i="${i}" ${done ? 'disabled' : ''}>${esc(x)}</button>`).join('')}</div>
+      ${s !== null ? boss(esc(T.replies[s])) : ''}
+      ${done ? `${postHTML({ name: 'Dr. Glow, MD', handle: '@DrGlowWellness · Sponsored', color: '#B83A20', video: true, text: T.glowText, cites: 'none yet' }, { stamp: true })}
+        ${lesson(whatTag(), T.lesson, T.defense)}
+        <div class="row"><button class="btn" id="go">${esc(T.go)}</button></div>` : ''}`;
+  };
+  R.A.after = () => {
+    document.querySelectorAll('.choice').forEach(b => b.onclick = () => { const i = +b.dataset.i; S.spokesperson = i; if (i === 2) bumpShares(S.shares + 41200); render(); });
+    const g = $('#go'); if (g) g.onclick = () => go('K');
+  };
+
+  function typeInto(el, text, done) {
+    if (!el) return;
+    if (reduced) { el.textContent = text; done && done(); return; }
+    let i = 0; el.textContent = '';
+    const t = setInterval(() => { i += 3; el.textContent = text.slice(0, i); if (i >= text.length) { clearInterval(t); done && done(); } }, 12);
+  }
+  R.K = () => {
+    const T = L.K, k = S.kStep;
+    return `
+      <div class="eyebrow">${esc(T.eyebrow)}</div>
+      <h2>${esc(T.title)}</h2>
+      <div class="term" aria-label="AI chat">
+        <div class="who">${esc(T.bot)}</div>
+        ${k === 0 ? `<button class="choice" id="ask"><span class="k">${esc(T.send)}</span><span style="font-family:var(--mono)">${esc(T.prompt)}</span></button>` :
+          `<div class="you">&gt; ${esc(T.prompt)}</div><div class="bot" id="bot1"></div>`}
+      </div>
+      ${k >= 1 ? `<div id="k1" ${k === 1 ? 'hidden' : ''} class="stack">
+        ${boss(esc(T.boss1))}
+        <div class="row"><button class="btn ghost" id="check" ${k >= 2 ? 'disabled' : ''}>${esc(T.check)}</button></div></div>` : ''}
+      ${k >= 2 ? `<div class="stack fade-in">
+        ${T.refs.map(r => `<div class="search"><div class="small" style="color:var(--muted-on-paper)">${esc(T.searchLabel)}</div><div class="q">${esc(r.split('. ')[1])}</div><div class="zero">${esc(T.zero)}</div></div>`).join('')}
+        ${lesson(whatTag(), T.lesson, T.defense)}
+        ${k === 2 ? `<div class="row"><button class="btn teal" id="skeptic">${esc(T.trySkeptic)}</button></div>` : ''}</div>` : ''}
+      ${k >= 3 ? `<div class="term fade-in">
+        <div class="who">${esc(T.botSkeptic)}</div>
+        <div class="you">&gt; ${esc(T.skeptic)}</div>
+        <div class="you">&gt; ${esc(T.prompt)}</div>
+        <div class="bot" id="bot2"></div></div>
+      <div id="k3" ${k === 3 ? 'hidden' : ''} class="stack">
+        <p class="muted">${T.after}</p>
+        ${boss(esc(T.boss2))}
+        <div class="row"><button class="btn" id="go">${esc(T.go)}</button></div></div>` : ''}`;
+  };
+  R.K.after = () => {
+    const T = L.K, k = S.kStep;
+    const bot1 = T.botIntro + '\n\n' + T.refs.map((r, i) => `${i + 1}. ${r}`).join('\n') + '\n\n' + T.botOutro;
+    const ask = $('#ask'); if (ask) ask.onclick = () => { S.kStep = 1; render(); };
+    if (k === 1) typeInto($('#bot1'), bot1, () => { S.kStep = 1.5; const e = $('#k1'); if (e) e.hidden = false; });
+    else if ($('#bot1')) $('#bot1').textContent = bot1;
+    const c = $('#check'); if (c) c.onclick = () => { S.kStep = 2; render(); };
+    const sk = $('#skeptic'); if (sk) sk.onclick = () => { S.kStep = 3; render(); };
+    if (k === 3) typeInto($('#bot2'), T.honest, () => { S.kStep = 3.5; const e = $('#k3'); if (e) e.hidden = false; bumpShares(S.shares + 26900); });
+    else if ($('#bot2')) $('#bot2').textContent = T.honest;
+    const g = $('#go'); if (g) g.onclick = () => go('E');
+  };
+
+  R.E = () => {
+    const T = L.E, e = S.enemy;
+    return `
+      <div class="eyebrow">${esc(T.eyebrow)}</div>
+      <h2>${esc(T.title)}</h2>
+      <div class="stack">${T.options.map((x, i) => `<button class="choice ${e === i ? 'picked' : ''}" data-i="${i}" ${e !== null ? 'disabled' : ''}><span class="k">${esc(T.blame)}</span>${esc(x)}</button>`).join('')}</div>
+      ${e !== null ? `${boss(esc(T.boss))}
+        <div class="panel fade-in"><div class="small">${esc(T.commentsOn)} “${esc(T.lines[e])}”</div>${T.comments.map(c => `<p>“${esc(c)}”</p>`).join('')}</div>
+        ${lesson(whatTag(), T.lesson, T.defense)}
+        <div class="row"><button class="btn" id="go">${esc(T.go)}</button></div>` : ''}`;
+  };
+  R.E.after = () => {
+    document.querySelectorAll('.choice').forEach(b => b.onclick = () => { S.enemy = +b.dataset.i; bumpShares(S.shares + 88500); render(); });
+    const g = $('#go'); if (g) g.onclick = () => go('S');
+  };
+
+  R.S = () => {
+    const T = L.S, launched = S.shares >= 1000000;
+    const txt = `<span class="anno">F</span>${esc(L.F.options[L.F.options.length - 1])}<br><br><span class="anno">E</span>${esc(L.E.lines[S.enemy == null ? 0 : S.enemy])}<br><br><span class="anno">A</span>“${esc(L.A.glowText)}”<br><br><span class="anno">S</span>${esc(T.sale)}`;
+    return `
+      <div class="eyebrow">${esc(T.eyebrow)}</div>
+      <h2>${esc(launched ? T.viral : T.ready)}</h2>
+      ${postHTML({ name: 'Dr. Glow, MD', handle: '@DrGlowWellness · Sponsored', color: '#B83A20', video: true, cites: T.cites }, { stamp: true, textHTML: txt })}
+      ${!launched ? `<div class="row"><button class="btn" id="launch">${esc(T.launch)}</button></div>` : `
+        ${boss(esc(T.boss))}
+        <section class="panel fade-in" style="border-color:var(--coral)">
+          <div class="eyebrow">${esc(T.costTitle)}</div>
+          <p>${esc(T.cost)}</p>
+          <p class="muted">${esc(T.costReal)}</p>
+        </section>
+        ${lesson(esc(T.used), fakesGrid(), T.defense)}
+        <div class="row"><button class="btn teal" id="go">${esc(T.go)}</button></div>`}`;
+  };
+  R.S.after = () => {
+    const l = $('#launch'); if (l) l.onclick = () => { bumpShares(1200000); setTimeout(() => { S.shares = 1200000; render(); }, reduced ? 0 : 950); };
+    const g = $('#go'); if (g) g.onclick = () => go('flipIntro');
+  };
+
+  R.flipIntro = () => {
+    const T = L.flipIntro;
+    return `
+    <div class="eyebrow teal">${esc(T.eyebrow)}</div>
+    <h2>${esc(T.title)}</h2>
+    <p class="lead">${esc(T.lead)}</p>
+    <div class="card3"><div class="t">${esc(T.card)}</div><ol>${T.checks.map(c => `<li>${c}</li>`).join('')}</ol></div>
+    <p class="muted">${T.note}</p>
+    <div class="row"><button class="btn teal" id="go">${esc(T.go)}</button></div>`;
+  };
+  R.flipIntro.after = () => $('#go').onclick = () => go('flip');
+
+  function tally(phase, items) {
+    let realOk = 0, fakeOk = 0, real = 0, fake = 0;
+    items.forEach(id => { const p = byId(id); const t = S[phase][id]; if (p.real) { real++; if (t === true) realOk++; } else { fake++; if (t === false) fakeOk++; } });
+    return { realOk, fakeOk, real, fake, total: realOk + fakeOk, n: items.length };
+  }
+  R.results = () => {
+    const T = L.results;
+    if (S.arm === 'R') {
+      const r = tally('pre', S.preItems);
+      const rcode = `SOS2 R ${langKey} C retest R${r.realOk}/${r.real} F${r.fakeOk}/${r.fake}`;
+      const kr = p => `<li class="keyrow"><span class="kbadge ${p.real ? 'real' : 'fake'}">${esc(p.real ? T.real : T.fake)}</span><div><div class="ktext">${esc(p.text)}</div><div class="small">${esc(p.why)}</div></div></li>`;
+      return `
+      <div class="eyebrow teal">${esc(T.eyebrow)}</div>
+      <h2>${esc(T.retestTitle)}: ${r.total}/${r.n}</h2>
+      <div class="panel" style="overflow-x:auto"><table class="bd"><tbody>
+        <tr><td>${esc(T.rowReal)}</td><td class="n">${r.realOk}/${r.real}</td></tr>
+        <tr><td>${esc(T.rowFake)}</td><td class="n">${r.fakeOk}/${r.fake}</td></tr></tbody></table></div>
+      <section class="panel">
+        <h3>${esc(T.testTitle)}</h3>
+        <p class="muted">${esc(T.testNote)}</p>
+        <div class="copybox" id="code-text">${esc(rcode)}</div>
+        <button class="copy" data-copy="code-text" data-label="${esc(T.copyCode)}">${esc(T.copyCode)}</button>
+      </section>
+      <details class="panel key" open>
+        <summary><b>${esc(T.keyTitleC)}</b></summary>
+        <ul class="keylist">${L.posts.C.map(kr).join('')}</ul>
+      </details>
+      <div class="card3"><div class="t">${esc(T.keep)}</div><ol>${T.keepChecks.map(c => `<li>${c}</li>`).join('')}</ol></div>
+      <div class="row"><button class="btn ghost" id="again">${esc(T.again)}</button></div>`;
+    }
+    const a = tally('pre', S.preItems), b = tally('post', S.postItems), d = b.total - a.total;
+    const verdict = d > 0 ? fmt(T.up, { n: d, posts: d === 1 ? T.post : T.postsWord }) : d === 0 ? T.same : T.down;
+    const code = `SOS2 ${S.arm} ${langKey} ${S.order[0]}>${S.order[1]} pre R${a.realOk}/${a.real} F${a.fakeOk}/${a.fake} post R${b.realOk}/${b.real} F${b.fakeOk}/${b.fake}`;
+    const keyRow = p => `<li class="keyrow"><span class="kbadge ${p.real ? 'real' : 'fake'}">${esc(p.real ? T.real : T.fake)}</span><div><div class="ktext">${esc(p.text)}</div><div class="small">${esc(p.why)}</div></div></li>`;
+    return `
+      <div class="eyebrow teal">${esc(T.eyebrow)}</div>
+      <h2>${esc(verdict)}</h2>
+      <div class="score-grid">
+        <div class="score"><span class="small">${esc(T.before)}</span><span class="big">${a.total}/${a.n}</span></div>
+        <div class="score after"><span class="small">${esc(T.after)}</span><span class="big">${b.total}/${b.n}</span></div>
+      </div>
+      <div class="panel" style="overflow-x:auto">
+        <table class="bd">
+          <thead><tr><th></th><th>${esc(T.before)}</th><th>${esc(T.after)}</th></tr></thead>
+          <tbody>
+            <tr><td>${esc(T.rowReal)}</td><td class="n">${a.realOk}/${a.real}</td><td class="n">${b.realOk}/${b.real}</td></tr>
+            <tr><td>${esc(T.rowFake)}</td><td class="n">${a.fakeOk}/${a.fake}</td><td class="n">${b.fakeOk}/${b.fake}</td></tr>
+          </tbody>
+        </table>
+        <p class="small">${T.bdNote}</p>
+      </div>
+      <details class="panel key">
+        <summary><b>${esc(T.keyTitle)}</b> <span class="small">${esc(T.keyNote)}</span></summary>
+        <ul class="keylist">${allPosts().map(keyRow).join('')}</ul>
+      </details>
+      <section class="panel mission">
+        <h3>${esc(T.missionTitle)}</h3>
+        <p class="muted">${esc(T.mission)}</p>
+        <ol class="steps">${T.missionSteps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+      </section>
+      <div class="card3"><div class="t">${esc(T.keep)}</div><ol>${T.keepChecks.map(c => `<li>${c}</li>`).join('')}</ol></div>
+      <section class="panel">
+        <h3>${esc(T.skepticTitle)}</h3>
+        <p class="muted">${esc(T.skepticNote)}</p>
+        <div class="copybox" id="skeptic-text">${esc(L.K.skeptic)}</div>
+        <button class="copy" data-copy="skeptic-text" data-label="${esc(T.copyPrompt)}">${esc(T.copyPrompt)}</button>
+      </section>
+      <section class="panel">
+        <h3>${esc(T.boosterTitle)}</h3>
+        <p class="muted">${esc(T.booster)}</p>
+      </section>
+      <section class="panel">
+        <h3>${esc(T.testTitle)}</h3>
+        <p class="muted">${esc(T.testNote)}</p>
+        <div class="copybox" id="code-text">${esc(code)}</div>
+        <button class="copy" data-copy="code-text" data-label="${esc(T.copyCode)}">${esc(T.copyCode)}</button>
+      </section>
+      <div class="row"><button class="btn ${S.arm === 'C' ? '' : 'ghost'}" id="again">${esc(S.arm === 'C' ? T.fullGame : T.again)}</button></div>
+      <p class="small">${esc(T.credit)}</p>`;
+  };
+  R.results.after = () => {
+    const T = L.results;
+    document.querySelectorAll('.copy').forEach(btn => btn.onclick = () => {
+      const el = document.getElementById(btn.dataset.copy); const text = el.textContent;
+      const ok = () => { btn.textContent = T.copied; setTimeout(() => btn.textContent = btn.dataset.label, 1600); };
+      const fallback = () => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = T.selected; };
+      try { navigator.clipboard.writeText(text).then(ok, fallback); } catch (e) { fallback(); }
+    });
+    $('#again').onclick = () => { CONTROL = false; STUDY = false; RETEST = false; S = fresh(); render(); };
+  };
+
+  function render() { drawChrome(); screenEl.innerHTML = R[S.screen](); R[S.screen].after && R[S.screen].after(); }
+
+  function start(data) {
+    if (data && data.S && LANG[data.S.lang]) { langKey = data.S.lang; L = LANG[langKey]; S = data.S; } else S = fresh();
+    if (S.kStep === 1.5) S.kStep = 1; if (S.kStep === 3.5) S.kStep = 3;
+    applyLang(); render();
+  }
+  try { window.claude?.hot?.snapshot?.(() => ({ S })); } catch (e) {}
+  if (window.claude?.hot?.ready) window.claude.hot.ready(start); else start(window.claude?.hot?.data ?? {});
+})();
+</script>
+
+</body>
+</html>
