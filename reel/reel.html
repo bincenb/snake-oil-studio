@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Snake Oil Studio Reel</title>
+<style>
+  /* 1080x1920 Instagram Reel. Every frame is drawn by render(t), so render.js can step through time. */
+  @font-face { font-family: 'Oswald'; src: url('fonts/Oswald.ttf'); font-weight: 200 700; }
+  @font-face { font-family: 'Public Sans'; src: url('fonts/PublicSans.ttf'); font-weight: 100 900; }
+  @font-face { font-family: 'JetBrains Mono'; src: url('fonts/JetBrainsMono.ttf'); font-weight: 100 800; }
+  :root {
+    --ink: #13212E; --panel: #1C2E3E; --panel-2: #22384B; --line: #2E4457;
+    --paper: #F6F3EC; --muted: #BFC9D1; --muted-2: #8FA0AE;
+    --coral: #F07A5A; --coral-deep: #B83A20; --teal: #5CC2B0; --teal-deep: #1F7A6D;
+    --display: 'Oswald', 'Arial Narrow', sans-serif;
+    --body: 'Public Sans', Arial, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--ink); }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--ink); color: var(--paper); font-family: var(--body); }
+  #grid { position: absolute; inset: 0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 90px 90px; opacity: .25; }
+  #glow { position: absolute; width: 1400px; height: 1400px; left: -160px; top: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(240,122,90,.22), transparent 60%); }
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  /* Nudge content down so it sits in the middle of the Reels safe zone. */
+  .scene, #bar { margin-top: 70px; }
+  .center { position: absolute; left: 70px; right: 70px; }
+  h1, h2 { font-family: var(--display); font-weight: 700; text-transform: uppercase; margin: 0; line-height: 1.02; letter-spacing: 1px; }
+  .coral { color: var(--coral); }
+  .teal { color: var(--teal); }
+
+  /* Recipe bar (game's stage pills) */
+  #bar { position: absolute; top: 230px; left: 0; right: 0; display: flex; justify-content: center; gap: 18px; opacity: 0; }
+  #bar span { font-family: var(--display); font-weight: 700; font-size: 54px; width: 92px; height: 92px; display: grid; place-items: center; border: 3px solid var(--line); border-radius: 12px; color: var(--muted-2); }
+  #bar span.done { color: var(--muted); border-color: var(--muted-2); }
+  #bar span.now { background: var(--coral); border-color: var(--coral); color: var(--ink); }
+
+  /* Cards */
+  .card { position: absolute; left: 80px; right: 80px; background: var(--paper); color: var(--ink); border-radius: 28px; padding: 40px 44px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+  .card .head { display: flex; align-items: center; gap: 22px; margin-bottom: 26px; }
+  .card .av { width: 84px; height: 84px; border-radius: 50%; flex: none; overflow: hidden; }
+  .card .who { font-weight: 700; font-size: 34px; line-height: 1.15; }
+  .card .sub { font-size: 26px; color: #4A5560; }
+  .card .txt { font-size: 50px; font-weight: 700; line-height: 1.18; }
+  .card .foot { margin-top: 30px; padding-top: 24px; border-top: 2px solid #E0DACC; display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 34px; color: #4A5560; }
+  .card .foot b { color: var(--coral-deep); font-size: 52px; font-variant-numeric: tabular-nums; }
+
+  .tag { position: absolute; top: 380px; left: 0; right: 0; text-align: center; }
+  .tag .l { font-family: var(--display); font-weight: 700; font-size: 34px; letter-spacing: 6px; color: var(--coral); text-transform: uppercase; }
+  .tag h2 { font-size: 96px; margin-top: 6px; }
+  .cap { position: absolute; left: 80px; right: 80px; top: 1330px; text-align: center; font-family: var(--display); font-weight: 600; font-size: 66px; line-height: 1.32; text-transform: uppercase; }
+  .cap em { font-style: normal; background: var(--coral); color: var(--ink); padding: 2px 12px; border-radius: 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+  .stamp { position: absolute; font-family: var(--display); font-weight: 700; text-transform: uppercase; color: var(--coral); border: 8px solid var(--coral); border-radius: 14px; padding: 10px 26px; letter-spacing: 3px; background: rgba(19,33,46,.85); white-space: nowrap; }
+
+  .bubble { background: var(--panel-2); color: var(--paper); border: 2px solid var(--line); }
+  .bubble .who { color: var(--teal); font-family: var(--mono); font-size: 28px; font-weight: 600; }
+  .ref { font-family: var(--mono); font-size: 32px; line-height: 1.4; background: var(--ink); border-left: 6px solid var(--coral); padding: 22px 26px; border-radius: 8px; margin-top: 22px; }
+  .search { position: absolute; left: 80px; right: 80px; background: #fff; color: var(--ink); border-radius: 22px; padding: 30px 36px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+  .search .q { font-family: var(--mono); font-size: 30px; border: 3px solid #C9D2DA; border-radius: 12px; padding: 18px 22px; min-height: 84px; }
+  .search .r { font-family: var(--display); font-weight: 700; font-size: 84px; color: var(--coral-deep); margin-top: 18px; text-transform: uppercase; }
+  .search .lab { font-size: 26px; color: #4A5560; margin-bottom: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+
+  .comment { position: absolute; left: 110px; right: 110px; background: var(--panel-2); border: 2px solid var(--line); border-radius: 22px; padding: 22px 28px; font-size: 36px; display: flex; gap: 20px; align-items: center; }
+  .comment i { width: 56px; height: 56px; border-radius: 50%; flex: none; }
+
+  .check { display: flex; align-items: center; gap: 32px; background: var(--panel); border: 3px solid var(--teal); border-radius: 22px; padding: 30px 36px; margin-bottom: 30px; }
+  .check b { font-family: var(--display); font-size: 80px; color: var(--ink); background: var(--teal); width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+  .check span { font-family: var(--display); font-weight: 600; font-size: 64px; text-transform: uppercase; line-height: 1.05; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="grid"></div>
+  <div id="glow"></div>
+
+  <!-- 0: Hook -->
+  <div class="scene" id="hook">
+    <h1 class="center" id="hookT" style="top:300px; font-size:132px; text-align:center;">I made a<br>fake doctor<br><span class="coral">in 30 seconds.</span></h1>
+    <div class="card" id="hookCard" style="top:900px;">
+      <div class="head">
+        <div class="av" style="width:150px;height:150px;" data-glow></div>
+        <div>
+          <div class="who" style="font-size:52px;">Dr. Glow, MD <span style="color:#1F6FD0">&#10004;</span></div>
+          <div class="sub" style="font-size:32px;">@dr.glow.skin &middot; 1.2M followers</div>
+        </div>
+      </div>
+      <div class="txt" style="font-size:44px; font-weight:500;">“After 20 years in dermatology, this is the only acne product I recommend.”</div>
+    </div>
+    <div class="stamp" id="hookStamp" style="top:1290px; left:160px; font-size:84px;">Not a real person</div>
+  </div>
+
+  <!-- 1: Recipe -->
+  <div class="scene" id="recipe">
+    <h1 class="center" style="top:470px; font-size:104px; text-align:center;">Every health scam<br>uses the same<br><span class="coral">5-step recipe</span></h1>
+    <div id="bigLetters" style="position:absolute; top:1050px; left:0; right:0; display:flex; justify-content:center; gap:4px; font-family:var(--display); font-weight:700; font-size:200px; line-height:1;">
+      <span>F</span><span class="dot">.</span><span>A</span><span class="dot">.</span><span>K</span><span class="dot">.</span><span>E</span><span class="dot">.</span><span>S</span>
+    </div>
+  </div>
+
+  <!-- 2: F -->
+  <div class="scene" id="F">
+    <div class="tag"><div class="l">Step F</div><h2>Fear hook</h2></div>
+    <div class="card" id="fCard" style="top:640px;">
+      <div class="head"><div class="av" data-brand></div><div><div class="who">ThermoRoot Wellness</div><div class="sub">Sponsored</div></div></div>
+      <div class="txt">STOP using acne cream NOW. What dermatologists won’t tell you will <span style="color:var(--coral-deep)">shock you.</span></div>
+      <div class="foot"><span>shares</span><b id="fCount">0</b></div>
+    </div>
+    <div class="cap" id="fCap" style="top:1400px;">Fear makes you <em>share before you think</em></div>
+  </div>
+
+  <!-- 3: A -->
+  <div class="scene" id="A">
+    <div class="tag"><div class="l">Step A</div><h2>AI “expert”</h2></div>
+    <div class="card" id="aCard" style="top:640px; padding:0; overflow:hidden;">
+      <div style="position:relative; height:500px; background:linear-gradient(160deg,#DCEFEA,#9FD3C8); display:grid; place-items:center;">
+        <div class="av" style="width:380px;height:380px;" data-glow></div>
+        <div style="position:absolute; top:24px; right:24px; font-family:var(--mono); font-size:28px; background:rgba(19,33,46,.8); color:var(--paper); padding:8px 16px; border-radius:10px;">&#9654; 0:15</div>
+        <div id="aScan" style="position:absolute; left:0; right:0; height:10px; background:var(--coral); box-shadow:0 0 40px var(--coral); top:0; opacity:0;"></div>
+      </div>
+      <div style="padding:30px 40px; font-size:38px; font-weight:600;">Dr. Glow, MD &middot; <span style="color:#4A5560; font-weight:400">“20 years in dermatology”</span></div>
+    </div>
+    <div class="stamp" id="aStamp" style="top:900px; left:190px; font-size:80px;">AI-generated</div>
+    <div class="cap" id="aCap">No real doctor would vouch for it. <em>So they made one.</em></div>
+  </div>
+
+  <!-- 4: K -->
+  <div class="scene" id="K">
+    <div class="tag"><div class="l">Step K</div><h2>Knockoff studies</h2></div>
+    <div class="card bubble" id="kBot" style="top:620px;">
+      <div class="who">StudioBot &middot; AI assistant</div>
+      <div style="font-size:36px; margin-top:14px;">Absolutely! Here’s a clinical study proving it works:</div>
+      <div class="ref">Okafor L, et al. Turmeric drops cut acne lesions by 83% in 7 days. <i>Clin Skin Nutr Rep.</i> 2024;9:201-9.</div>
+    </div>
+    <div class="search" id="kSearch" style="top:1050px;">
+      <div class="lab">PubMed search</div>
+      <div class="q" id="kQ"></div>
+      <div class="r" id="kR">0 results</div>
+    </div>
+    <div class="cap" id="kCap" style="top:1500px;">AI can invent studies <em>that look perfect</em></div>
+  </div>
+
+  <!-- 5: E -->
+  <div class="scene" id="E">
+    <div class="tag"><div class="l">Step E</div><h2>An enemy</h2></div>
+    <div class="card" id="eCard" style="top:620px;">
+      <div class="txt" style="font-size:52px;">Big Pharma makes billions off your acne. <span style="color:var(--coral-deep)">They don’t want you to find this.</span></div>
+    </div>
+    <div class="comment" data-c style="top:1000px;"><i style="background:#E8B04B"></i>I KNEW it. They always lie to us.</div>
+    <div class="comment" data-c style="top:1130px;"><i style="background:#8E7CC3"></i>Sharing before it gets deleted</div>
+    <div class="comment" data-c style="top:1260px;"><i style="background:#5CC2B0"></i>Finally someone says it!!</div>
+    <div class="cap" id="eCap" style="top:1420px;">Anger at a group <em>isn’t evidence</em></div>
+  </div>
+
+  <!-- 6: S -->
+  <div class="scene" id="S">
+    <div class="tag"><div class="l">Step S</div><h2>The sale</h2></div>
+    <div class="card" id="sCard" style="top:620px;">
+      <div class="head"><div class="av" data-brand></div><div><div class="who">ThermoRoot Drops</div><div class="sub">Flavored water + a pinch of turmeric</div></div></div>
+      <div class="txt" style="font-size:64px;">Clear skin in 7 days. <span style="color:var(--coral-deep)">$39.</span> Link in bio.</div>
+      <div class="foot"><span>shares</span><b id="sCount">0</b></div>
+    </div>
+    <div class="cap" id="sCap" style="top:1240px;">The real cost: people <em>quit treatments that work</em></div>
+  </div>
+
+  <!-- 7: Flip -->
+  <div class="scene" id="flip">
+    <h1 class="center" id="flipT" style="top:300px; font-size:110px; text-align:center;">Now you know<br>the recipe.</h1>
+    <div class="center" id="flipSub" style="top:600px; text-align:center; font-family:var(--display); font-size:62px; font-weight:600; text-transform:uppercase; color:var(--teal);">Before you share, ask:</div>
+    <div class="center" style="top:740px;">
+      <div class="check" data-k><b>1</b><span>Who made it?</span></div>
+      <div class="check" data-k><b>2</b><span>Does the study exist?</span></div>
+      <div class="check" data-k><b>3</b><span>What do others say?</span></div>
+    </div>
+  </div>
+
+  <!-- 8: End card -->
+  <div class="scene" id="end">
+    <div class="center" style="top:360px; text-align:center; font-family:var(--display); font-weight:700; font-size:40px; letter-spacing:8px; color:var(--coral); text-transform:uppercase;">Free 10-minute game</div>
+    <h1 class="center" id="endT" style="top:440px; font-size:150px; text-align:center;">Snake Oil<br><span class="coral">Studio</span></h1>
+    <div class="center" id="endSub" style="top:820px; text-align:center; font-size:56px; font-weight:700; line-height:1.25;">Build a scam yourself.<br>Spot the next one for real.</div>
+    <div class="center" id="endCta" style="top:1110px; display:flex; justify-content:center;">
+      <div style="font-family:var(--display); font-weight:700; font-size:72px; text-transform:uppercase; background:var(--coral); color:var(--ink); padding:20px 56px; border-radius:16px;">Play &middot; link in bio</div>
+    </div>
+    <div class="center" id="endSend" style="top:1320px; text-align:center; font-size:44px; color:var(--muted); line-height:1.3;">Send this to the person who<br>forwards every health tip.</div>
+  </div>
+
+  <div id="bar"><span>F</span><span>A</span><span>K</span><span>E</span><span>S</span></div>
+  <div id="flash" style="position:absolute; inset:0; background:var(--paper); opacity:0; pointer-events:none;"></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- Stylized avatar for the invented "Dr. Glow". Deliberately cartoonish: no real face. -->
+    <symbol id="glowFace" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#5CC2B0"/>
+      <path d="M14 100c2-20 16-28 36-28s34 8 36 28z" fill="#F6F3EC"/>
+      <path d="M40 72l10 16 10-16" fill="#1F6FD0"/>
+      <path d="M30 78c0 12 6 16 12 16" stroke="#13212E" stroke-width="2.5" fill="none"/>
+      <rect x="42" y="56" width="16" height="18" rx="6" fill="#E6B391"/>
+      <ellipse cx="50" cy="42" rx="19" ry="22" fill="#F0C4A2"/>
+      <path d="M30 40c-2-18 10-26 22-25 13 1 21 10 18 25-4-9-12-13-22-13-8 0-14 5-18 13z" fill="#3B2A22"/>
+      <circle cx="43" cy="44" r="2.3" fill="#13212E"/><circle cx="57" cy="44" r="2.3" fill="#13212E"/>
+      <path d="M43 53c4 4 10 4 14 0" stroke="#B83A20" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="brandMark" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#E8B04B"/>
+      <path d="M40 22h20v14c10 4 16 12 16 24v18a8 8 0 0 1-8 8H32a8 8 0 0 1-8-8V60c0-12 6-20 16-24z" fill="#B83A20"/>
+      <rect x="40" y="14" width="20" height="10" rx="3" fill="#13212E"/>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+  document.querySelectorAll('[data-glow]').forEach(el => el.innerHTML = '<svg width="100%" height="100%"><use href="#glowFace"/></svg>');
+  document.querySelectorAll('[data-brand]').forEach(el => el.innerHTML = '<svg width="100%" height="100%"><use href="#brandMark"/></svg>');
+
+  const DURATION = 24;
+  // Scene windows in seconds. Every cut lands on a beat of the 120 BPM soundtrack.
+  const SCENES = { hook: [0, 2.5], recipe: [2.5, 4], F: [4, 6.5], A: [6.5, 9], K: [9, 11.5], E: [11.5, 14], S: [14, 16.5], flip: [16.5, 20], end: [20, 24] };
+  const BAR_ORDER = ['F', 'A', 'K', 'E', 'S'];
+
+  const $ = id => document.getElementById(id);
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const prog = (t, a, b) => clamp((t - a) / (b - a));
+  const outCubic = x => 1 - Math.pow(1 - x, 3);
+  const outBack = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+
+  // Slide/pop an element in: p = 0..1.
+  function rise(el, p, dist = 80) { const e = outCubic(p); el.style.opacity = e; el.style.transform = `translateY(${(1 - e) * dist}px)`; }
+  function pop(el, p, rot = 0, extra = '') { const e = outBack(p); el.style.opacity = clamp(p * 3); el.style.transform = `${extra} scale(${p <= 0 ? 0.6 : 0.6 + 0.4 * e}) rotate(${rot}deg)`; }
+  function slam(el, p, rot) { const e = outCubic(p); el.style.opacity = clamp(p * 4); el.style.transform = `scale(${2.2 - 1.2 * e}) rotate(${rot}deg)`; }
+  function fmt(n) { return n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : Math.round(n).toLocaleString('en-US'); }
+
+  function render(t) {
+    for (const [id, [a, b]] of Object.entries(SCENES)) {
+      const on = t >= a && t < b;
+      const el = $(id);
+      el.style.opacity = on ? 1 : 0;
+      el.style.visibility = on ? 'visible' : 'hidden';
+    }
+
+    // Hook: headline is on screen from frame 0 so the first frame works as a thumbnail.
+    const hp = prog(t, 0, 0.35);
+    $('hookT').style.transform = `scale(${1.08 - 0.08 * outCubic(hp)})`;
+    rise($('hookCard'), prog(t, 0.3, 0.8), 160);
+    slam($('hookStamp'), prog(t, 1.4, 1.65), -8);
+
+    // Recipe: letters pop in one per half beat.
+    const r0 = SCENES.recipe[0];
+    document.querySelectorAll('#bigLetters span').forEach((s, i) => {
+      const j = Math.floor(i / 2); pop(s, prog(t, r0 + 0.25 + j * 0.22, r0 + 0.5 + j * 0.22));
+      s.style.color = s.classList.contains('dot') ? 'var(--paper)' : 'var(--coral)';
+    });
+
+    // Recipe bar follows the tactic scenes.
+    const bar = $('bar');
+    bar.style.opacity = t >= SCENES.F[0] && t < SCENES.flip[0] ? 1 : 0;
+    const cur = BAR_ORDER.findIndex(k => t >= SCENES[k][0] && t < SCENES[k][1]);
+    bar.querySelectorAll('span').forEach((s, i) => { s.className = i === cur ? 'now' : i < cur ? 'done' : ''; });
+
+    // Shared entrance for each tactic: tag drops, card rises, caption pops.
+    for (const k of BAR_ORDER) {
+      const a = SCENES[k][0];
+      const tag = document.querySelector(`#${k} .tag`);
+      rise(tag, prog(t, a, a + 0.25), -40);
+    }
+
+    // F
+    let a = SCENES.F[0];
+    rise($('fCard'), prog(t, a + 0.1, a + 0.45), 200);
+    $('fCount').textContent = fmt(18400 * outCubic(prog(t, a + 0.5, a + 1.7)));
+    pop($('fCap'), prog(t, a + 1.0, a + 1.3));
+
+    // A
+    a = SCENES.A[0];
+    rise($('aCard'), prog(t, a + 0.1, a + 0.45), 200);
+    const scan = prog(t, a + 0.5, a + 1.2);
+    $('aScan').style.opacity = scan > 0 && scan < 1 ? 1 : 0;
+    $('aScan').style.top = `${scan * 490}px`;
+    slam($('aStamp'), prog(t, a + 1.2, a + 1.45), -7);
+    pop($('aCap'), prog(t, a + 1.5, a + 1.8));
+
+    // K
+    a = SCENES.K[0];
+    rise($('kBot'), prog(t, a + 0.1, a + 0.45), 200);
+    rise($('kSearch'), prog(t, a + 0.6, a + 0.85), 120);
+    const q = 'Turmeric drops cut acne lesions by 83% in 7 days';
+    const typed = Math.floor(q.length * prog(t, a + 0.85, a + 1.45));
+    $('kQ').textContent = q.slice(0, typed) + (t > a + 0.8 && t < a + 1.55 && Math.floor(t * 6) % 2 ? '|' : '');
+    slam($('kR'), prog(t, a + 1.55, a + 1.75), 0);
+    pop($('kCap'), prog(t, a + 1.8, a + 2.05));
+
+    // E
+    a = SCENES.E[0];
+    rise($('eCard'), prog(t, a + 0.1, a + 0.45), 200);
+    document.querySelectorAll('[data-c]').forEach((c, i) => {
+      const p = outBack(prog(t, a + 0.6 + i * 0.3, a + 0.85 + i * 0.3));
+      c.style.opacity = clamp(prog(t, a + 0.6 + i * 0.3, a + 0.7 + i * 0.3));
+      c.style.transform = `translateX(${(1 - p) * (i % 2 ? 300 : -300)}px)`;
+    });
+    pop($('eCap'), prog(t, a + 1.6, a + 1.9));
+
+    // S
+    a = SCENES.S[0];
+    rise($('sCard'), prog(t, a + 0.1, a + 0.45), 200);
+    $('sCount').textContent = fmt(1.2e6 * Math.pow(prog(t, a + 0.5, a + 1.5), 2));
+    pop($('sCap'), prog(t, a + 1.5, a + 1.8));
+
+    // Flip: palette swaps to teal, the game's "Flip Level" colour.
+    a = SCENES.flip[0];
+    const inFlip = t >= a && t < SCENES.end[0];
+    $('glow').style.background = inFlip ? 'radial-gradient(circle, rgba(92,194,176,.25), transparent 60%)' : 'radial-gradient(circle, rgba(240,122,90,.22), transparent 60%)';
+    pop($('flipT'), prog(t, a, a + 0.3));
+    rise($('flipSub'), prog(t, a + 0.5, a + 0.8), 40);
+    document.querySelectorAll('[data-k]').forEach((c, i) => rise(c, prog(t, a + 1.0 + i * 0.5, a + 1.3 + i * 0.5), 120));
+
+    // End card
+    a = SCENES.end[0];
+    pop($('endT'), prog(t, a, a + 0.35));
+    rise($('endSub'), prog(t, a + 0.5, a + 0.8), 50);
+    pop($('endCta'), prog(t, a + 1.0, a + 1.3));
+    rise($('endSend'), prog(t, a + 1.6, a + 1.9), 40);
+
+    // White flash on the hardest cuts, and a fade at the very end so the loop back to frame 0 feels intentional.
+    const flashAt = [SCENES.recipe[0], SCENES.flip[0], SCENES.end[0]];
+    let f = 0;
+    for (const c of flashAt) f = Math.max(f, 1 - clamp((t - c) / 0.15) - (t < c ? 1 : 0));
+    $('flash').style.opacity = clamp(f) * 0.7;
+    $('stage').style.filter = `brightness(${1 - 0.85 * prog(t, DURATION - 0.35, DURATION)})`;
+  }
+
+  window.render = render;
+  window.DURATION = DURATION;
+  render(Number(new URLSearchParams(location.search).get('t') || 0));
+</script>
+</body>
+</html>
