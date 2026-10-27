@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vincent Yuan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Vincent Yuan is a student researcher at Brooklyn Technical High School working on systematic reviews, meta-analyses and reanalysis of public biomedical data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap">
+<style>
+  /* Layout: one plain reading column, like a hand-kept academic homepage. Type does the work; no cards, chips or labels. */
+  :root {
+    --bg: #FFFFFF;
+    --ink: #1B1B1A;
+    --soft: #5E5D59;
+    --rule: #E3E1DC;
+    --link: #1F4E9C;
+    --bar: #2B2B29;
+    --serif: 'Literata', Georgia, 'Times New Roman', serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #171716; --ink: #E8E6E1; --soft: #A3A19B; --rule: #34332F; --link: #8FB4F0; --bar: #D9D6CF;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171716; --ink: #E8E6E1; --soft: #A3A19B; --rule: #34332F; --link: #8FB4F0; --bar: #D9D6CF;
+    color-scheme: dark;
+  }
+
+  :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.6;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  [hidden] { display: none !important; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 2px; }
+  :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  p { margin: 0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+
+  main { max-width: 680px; margin: 0 auto; padding-block: 64px 80px; display: flex; flex-direction: column; gap: 52px; }
+  section { display: flex; flex-direction: column; gap: 16px; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-size: 40px; line-height: 1.1; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .role { font-size: 18px; color: var(--soft); }
+  .links { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 16px; }
+  .bio { display: flex; flex-direction: column; gap: 14px; padding-top: 6px; }
+
+  h2 { font-size: 22px; font-weight: 600; margin: 0; padding-bottom: 6px; border-bottom: 1px solid var(--rule); text-wrap: balance; }
+  h3 { font-size: 18px; font-weight: 600; margin: 0; line-height: 1.35; text-wrap: balance; }
+  .note { font-size: 15px; color: var(--soft); }
+
+  /* News */
+  .news li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; padding-block: 5px; }
+  .news time { color: var(--soft); font-size: 15px; padding-top: 1px; font-variant-numeric: tabular-nums; }
+
+  /* Selected work */
+  .work { display: flex; flex-direction: column; gap: 30px; }
+  .work article { display: flex; flex-direction: column; gap: 6px; }
+  .work .where { font-size: 15px; color: var(--soft); font-style: italic; }
+
+  /* Timeline */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .scroll { overflow-x: auto; position: relative; }
+  .tl { min-width: 600px; display: grid; grid-template-columns: 200px minmax(0, 1fr); row-gap: 4px; font-size: 13.5px; }
+  .tl .lab { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 12px; line-height: 16px; color: var(--ink); }
+  .tl .trk { position: relative; height: 16px; }
+  .tl .bar { position: absolute; top: 4px; height: 8px; background: var(--bar); border-radius: 4px; }
+  .tl .bar.on { border-radius: 4px 0 0 4px; }
+  .tl .bar:hover, .tl .bar:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  .tl .grid { grid-column: 2; position: relative; pointer-events: none; }
+  .tl .grid i { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--rule); }
+  .tl .grid .now { width: 0; background: none; border-left: 1px dashed var(--soft); }
+  .tl .axis { grid-column: 2; position: relative; height: 26px; }
+  .tl .tick { position: absolute; top: 4px; transform: translateX(-50%); font-size: 12px; color: var(--soft); white-space: nowrap; }
+  .tip { position: absolute; z-index: 2; pointer-events: none; max-width: 260px; background: var(--ink); color: var(--bg); font-size: 13.5px; line-height: 1.4; padding: 6px 9px; border-radius: 3px; }
+  figcaption { font-size: 15px; color: var(--soft); }
+
+  /* Plain lists */
+  .list li { padding-block: 7px; border-top: 1px solid var(--rule); }
+  .list li:first-child { border-top: 0; padding-top: 0; }
+  .list .meta { color: var(--soft); font-size: 15px; }
+  .list .row { display: flex; justify-content: space-between; gap: 4px 16px; flex-wrap: wrap; }
+  .list .row > span:first-child { min-width: 0; }
+  .list .when { color: var(--soft); font-size: 15px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  /* Publications */
+  .pubs li { padding-left: 1.6em; text-indent: -1.6em; padding-block: 6px; font-size: 16px; overflow-wrap: anywhere; }
+  .pubs .me { font-weight: 700; }
+  .pubs .st { color: var(--soft); font-style: italic; }
+
+  .year { font-size: 15px; color: var(--soft); font-weight: 600; padding-top: 6px; }
+  .talks li { padding-block: 5px; font-size: 16px; }
+  .talks .soon { color: var(--soft); font-style: italic; }
+
+  footer { font-size: 14px; color: var(--soft); border-top: 1px solid var(--rule); padding-top: 14px; }
+
+  @media (max-width: 520px) {
+    main { padding-block: 36px 56px; gap: 44px; }
+    h1 { font-size: 34px; }
+    body { font-size: 16.5px; }
+    .news li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <header>
+    <h1>Vincent Yuan</h1>
+    <p class="role">Student researcher, Brooklyn Technical High School (Class of 2028)</p>
+    <div class="links">
+      <a href="mailto:Vincenty72000@gmail.com">Vincenty72000@gmail.com</a>
+      <a href="https://www.linkedin.com/in/vincentyuan1/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#publications">Publications</a>
+    </div>
+    <div class="bio">
+      <p>I study biology at Brooklyn Tech and take college courses at Arizona State University's College of Health Solutions, where I have a 4.0 over 26 credits. I've also been admitted to North Dakota State University's Early Entry Program for spring 2027.</p>
+      <p>Most of my research is evidence synthesis. I screen studies, extract data and run meta-analyses on clinical questions. I'm leading a review of CAR T-cell therapy in glioblastoma that I'll present at SITC in November, and I co-authored a meta-analysis of empagliflozin in fatty liver disease that <i>BMC Gastroenterology</i> published in August.</p>
+      <p>On my own, I reanalyze public datasets to check whether published results hold up. One of these projects, on lineage confounding in DepMap cancer biomarkers, was accepted as a poster at the IEEE MIT Undergraduate Research Technology Conference.</p>
+      <p>I'm looking for a research assistant position or a lab to collaborate with.</p>
+    </div>
+  </header>
+
+  <section aria-labelledby="news-h">
+    <h2 id="news-h">News</h2>
+    <ul class="news">
+      <li><time>Feb 2027</time><span>Two abstracts accepted at the Yale Undergraduate Research Conference.</span></li>
+      <li><time>Nov 2026</time><span>Presenting a poster on serum adenosine deaminase and insulin resistance at The Lancet Summit in Sitges, Spain.</span></li>
+      <li><time>Nov 2026</time><span>Presenting my CAR T-cell glioblastoma meta-analysis at SITC 2026 in Phoenix, funded by a $4,000 travel grant from Brooklyn College STEP.</span></li>
+      <li><time>Oct 2026</time><span>Started working with Dr. Wenge Ni-Meister at Hunter College on estimating carbon sequestration from tree mapping data.</span></li>
+      <li><time>Oct 2026</time><span>DepMap confounding poster accepted at the IEEE MIT Undergraduate Research Technology Conference.</span></li>
+      <li><time>Aug 2026</time><span>Empagliflozin meta-analysis published in <a href="https://doi.org/10.1186/s12876-026-05200-x" target="_blank" rel="noopener"><i>BMC Gastroenterology</i></a>.</span></li>
+      <li><time>Jun 2026</time><span>Selected as one of 12 youth co-investigators on PROJECT E3, a $1.2 million PCORI-funded study at CU Anschutz.</span></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="work-h">
+    <h2 id="work-h">Selected work</h2>
+    <div class="work">
+      <article>
+        <h3>CAR T-cell therapy in glioblastoma</h3>
+        <p class="where">Lead author · independent · Sep 2025 to present</p>
+        <p>I'm leading a systematic review and meta-analysis of early-phase CAR T-cell trials in glioblastoma, with GRADE assessment. The protocol is registered on PROSPERO (CRD420251237673). My first-author abstract was accepted at the SITC 41st Annual Meeting and at YURC 2027, and the manuscript is being prepared for resubmission.</p>
+      </article>
+      <article>
+        <h3>Is lineage confounding inflating cancer dependency biomarkers?</h3>
+        <p class="where">Independent · computational biology · 2026</p>
+        <p>I reanalyzed public DepMap data to work out how much of the apparent robustness of cancer dependency biomarkers comes from lineage confounding and how much from statistical power. The work was accepted as a poster at the 2026 IEEE MIT URTC, and a follow-up on benchmarking robustness metrics was accepted at YURC 2027. I've also measured reproducibility ceilings in ChEMBL binding-affinity data, tested for Purkinje cell loss in essential tremor with GEO cerebellum data, and compared adverse-event reporting by sex across 52 drugs in FAERS.</p>
+      </article>
+      <article>
+        <h3>Prediabetes lesson for 500 high school students</h3>
+        <p class="where">Columbia University ACComPLISHED Program · Summer 2025</p>
+        <p>I designed a prediabetes lesson, delivered it to more than 500 students, and tested them before and after. Average scores rose from 5.88 to 8.92 (p &lt; 0.001, r = 0.84). I presented the results at Columbia University Irving Medical Center.</p>
+      </article>
+      <article>
+        <h3>Meta-analysis for patients with limited English</h3>
+        <p class="where">ThinkNeuro SML Project · Nov 2025 to present</p>
+        <p>I screened over 1,600 articles, ran the meta-analysis in R, sorted 80+ studies for the meta-ethnography, and drafted the manuscript, which is now a <a href="https://doi.org/10.21203/rs.3.rs-9204170/v1" target="_blank" rel="noopener">preprint on Research Square</a>. I was ranked first of the program's 172 interns.</p>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="res-h">
+    <h2 id="res-h">Research experience</h2>
+    <figure>
+      <div class="scroll" id="scroll">
+        <div class="tl" id="timeline" role="img" aria-label="Timeline of 17 research roles from February 2025 to October 2026. The same roles are listed below."></div>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <figcaption>Every research role since 2025. Bars that reach the dashed line (October 2026) are still going.</figcaption>
+    </figure>
+    <ul class="list">
+      <li><div class="row"><span>Co-investigator, PROJECT E3 · University of Colorado Anschutz</span><span class="when">Jun 2026 to present</span></div><div class="meta">One of 12 youth on a $1.2M PCORI-funded study designing a randomized trial to define youth engagement. Co-writing an advisory book for youth advisory boards.</div></li>
+      <li><div class="row"><span>Research mentee · Hunter College, CUNY</span><span class="when">Oct 2026 to present</span></div><div class="meta">Estimating carbon sequestration from tree mapping data with Dr. Wenge Ni-Meister.</div></li>
+      <li><div class="row"><span>Contributor, PRIMED-AI · MIT Critical Data</span><span class="when">Sep 2026 to present</span></div><div class="meta">Review pull requests on the project's GitHub repository.</div></li>
+      <li><div class="row"><span>Research co-lead, oncology · Medicine4Youth</span><span class="when">May 2026 to present</span></div><div class="meta">Co-lead 5 undergraduates through literature review and question development. First author on a scoping review abstract on AI in pediatric oncology decisions.</div></li>
+      <li><div class="row"><span>Co-investigator, nalmefene vs. naloxone review</span><span class="when">Apr 2026 to present</span></div><div class="meta">Co-authored the systematic review, mentored reviewers and revised the manuscript.</div></li>
+      <li><div class="row"><span>Political science research intern · Stevens Institute of Technology</span><span class="when">Jun to Aug 2026</span></div><div class="meta">Historical research on government for Dr. Lindsey Cormack.</div></li>
+      <li><div class="row"><span>Co-investigator, tutoring costs for Egyptian medical students</span><span class="when">Dec 2025 to present</span></div><div class="meta">Wrote the survey, ran the first literature review and obtained IRB approval.</div></li>
+      <li><div class="row"><span>Co-author, cyanobacteria CO<sub>2</sub> biofixation review</span><span class="when">Dec 2025 to present</span></div><div class="meta">Screened in Rayyan and extracted data for a narrative review on <i>Synechococcus elongatus</i> photobioreactors.</div></li>
+      <li><div class="row"><span>Co-investigator, empagliflozin meta-analysis</span><span class="when">Nov 2025 to Aug 2026</span></div><div class="meta">Screened 600+ papers and extracted data. Published in <i>BMC Gastroenterology</i>.</div></li>
+      <li><div class="row"><span>Team lead · New York Academy of Sciences Junior Academy</span><span class="when">Feb 2025 to present</span></div><div class="meta">Led teams across several innovation challenges. GreenCrete, a structure that guides fish away from electromagnetic fields near NYC offshore wind farms, placed 2nd. StomaSense raised plant water retention by 40% and placed 2nd of 168 teams.</div></li>
+      <li><div class="row"><span>Co-lead · International Youth Neuroscience Association Ideathon</span><span class="when">Feb to Mar 2026</span></div><div class="meta">Designed a 4-group mouse study on blood-brain barrier breakdown and stem cell reprogramming in Alzheimer's. 4th of 204 teams.</div></li>
+      <li><div class="row"><span>Research assistant, psychology · Medicine4Youth</span><span class="when">Jun to Sep 2025</span></div><div class="meta">Thematic analysis, data extraction and writing for a review now under revision at <i>Trauma, Violence, &amp; Abuse</i>.</div></li>
+      <li><div class="row"><span>Research intern · ThinkNeuro</span><span class="when">Mar to Nov 2025</span></div><div class="meta">Bibliometric analyses in R on Alzheimer's pathways and estrogen in antidepressant pharmacokinetics.</div></li>
+      <li><div class="row"><span>Independent study, student mental health</span><span class="when">Apr to Jun 2025</span></div><div class="meta">Surveyed 200+ NYC students with the PHQ-9 and GAD-7 to compare specialized and non-specialized high schools.</div></li>
+    </ul>
+  </section>
+
+  <section id="publications" aria-labelledby="pub-h">
+    <h2 id="pub-h">Publications</h2>
+    <ul class="pubs">
+      <li>Al Ghnaimat, A., Al-Azzawi, O. M., Hasan, Z., Mohamed, A. A., <span class="me">Yuan, V.</span>, Ahmed, Y. O., et al. (2026). Efficacy of empagliflozin for hepatic and metabolic outcomes in adults with type 2 diabetes and MASLD/MASH (NAFLD/NASH): A systematic review, meta-analysis, and trial sequential analysis. <i>BMC Gastroenterology</i>. <a href="https://doi.org/10.1186/s12876-026-05200-x" target="_blank" rel="noopener">doi:10.1186/s12876-026-05200-x</a></li>
+      <li>Amin, F., Bilal, M. S., Khan, T., Riaz, M., Ahmad, J., <span class="me">Yuan, V.</span>, et al. (in press). Bag extraction versus direct extraction for retrieval of the gallbladder after laparoscopic cholecystectomy: A GRADE-assessed systematic review and updated meta-analysis of randomized controlled trials with trial sequential analysis. <i>Indian Journal of Surgery</i>.</li>
+      <li><span class="me">Yuan, V.</span> (2026). When AI becomes the therapist: A scoping review protocol of safety mechanisms, harms, and governance in generative AI tools used by adolescents for mental health support. OSF. <a href="https://doi.org/10.17605/OSF.IO/2C6YB" target="_blank" rel="noopener">doi:10.17605/OSF.IO/2C6YB</a> <span class="st">Submitted to PLOS ONE.</span></li>
+      <li>The mental health impact of online gender-based sexual violence on adolescent girls: A systematic review. <span class="st">Under revision at Trauma, Violence, &amp; Abuse.</span></li>
+      <li>Xiang, A. Q., Yoo, J., <span class="me">Yuan, V.</span>, Kola, S. L., Kaur, A., et al. (2026). The impact of systems engineering and process optimization strategies on patient experience and outcome disparities for limited English proficiency populations: An ethnographic systematic review and meta-analysis. Research Square. <a href="https://doi.org/10.21203/rs.3.rs-9204170/v1" target="_blank" rel="noopener">doi:10.21203/rs.3.rs-9204170/v1</a> <span class="st">Preprint.</span></li>
+      <li>Kosior, A., <span class="me">Yuan, V.</span>, et al. (2026). Effect of amyloid-β driven blood brain barrier breakdown on hematopoietic stem cell epigenetic programming in Alzheimer's. Zenodo. <a href="https://doi.org/10.5281/zenodo.19175839" target="_blank" rel="noopener">doi:10.5281/zenodo.19175839</a> <span class="st">Preprint.</span></li>
+      <li>Warwatkar, A., Maloo, S., <span class="me">Yuan, V.</span>, et al. Early- and late-appearing features across training checkpoints: What birth-to-endpoint tracking can and cannot show. <span class="st">In preparation.</span></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="talks-h">
+    <h2 id="talks-h">Talks and posters</h2>
+    <div class="year">2027</div>
+    <ul class="talks">
+      <li>Benchmarking robustness metrics for cancer dependency biomarkers. Yale Undergraduate Research Conference, New Haven. <span class="soon">Accepted.</span></li>
+      <li>CAR T-cell therapy in glioblastoma: a systematic review and meta-analysis. Yale Undergraduate Research Conference, New Haven. <span class="soon">Accepted.</span></li>
+    </ul>
+    <div class="year">2026</div>
+    <ul class="talks">
+      <li>CAR T-cell therapy in glioblastoma: a systematic review and meta-analysis of early phase trials with GRADE assessment. Society for Immunotherapy of Cancer (SITC) 41st Annual Meeting, Phoenix. <span class="soon">Poster, Nov 4–8.</span></li>
+      <li>Serum adenosine deaminase activity and insulin resistance in type 2 diabetes (Mallagundla et al.; I'm presenting). The Lancet Summit on Diabetes Prevention, Sitges, Spain. <span class="soon">Poster, Nov 30 to Dec 2.</span></li>
+      <li>Valve-in-valve TAVR versus redo surgical aortic valve replacement: an updated meta-analysis (Bin Abdul Malik et al.). TCT 2026, San Diego. Abstract.</li>
+      <li>Confounding or power? Decomposing the apparent robustness of cancer dependency biomarkers. IEEE MIT Undergraduate Research Technology Conference, Cambridge. Poster.</li>
+      <li>Knowing what it doesn't know: metacognitive safeguards for AI-assisted clinical decision support. BICA 2026. Paper.</li>
+      <li>Too human, not human enough: bridging the theory-of-mind gap in conversational AI. BICA 2026. Paper.</li>
+      <li>The mental health impact of online gender-based sexual violence on adolescent girls. APA Convention, Washington, DC; WPA World Congress of Psychiatry, Stockholm (e-poster); Columbia NPURC; Cornell Undergraduate Psychology Conference; NYC Epidemiology Forum at Mount Sinai.</li>
+      <li>Amyloid-β, blood-brain barrier breakdown and stem cell programming in Alzheimer's (Kosior et al.). International Young Researchers' Conference (oral); Allen Institute Early Career Symposium, Seattle; Columbia NPURC.</li>
+      <li>GreenCrete: a navigational hula hoop for fish. World One Health Congress, Lisbon; Bronx River Science Consortium (2nd place); BQS STEP Conference.</li>
+      <li>AI in pediatric oncology treatment decisions: scoping review abstract. M4Y x CJUR Abstract Booklet.</li>
+    </ul>
+    <div class="year">2025</div>
+    <ul class="talks">
+      <li>Prediabetes education intervention. Columbia University Irving Medical Center.</li>
+      <li>Challenges of mental health among NYC specialized high school students (with Uddin and Alvarez). CREST Research Symposium, NYC College of Technology.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="aw-h">
+    <h2 id="aw-h">Awards</h2>
+    <ul class="list">
+      <li><div class="row"><span>1st place, Youth Policy Challenge, for a classroom heat accountability policy brief</span><span class="when">2026</span></div></li>
+      <li><div class="row"><span>Travel grants: $4,000 (Brooklyn College STEP), $672 (Brooklyn Tech), $500 (Allen Institute)</span><span class="when">2026</span></div></li>
+      <li><div class="row"><span>4th of 204 teams, International Youth Neuroscience Association Ideathon</span><span class="when">2026</span></div></li>
+      <li><div class="row"><span>#1 of 172 interns, ThinkNeuro SML Program</span><span class="when"></span></div></li>
+      <li><div class="row"><span>2nd of 168 teams, NYAS Living in the Extremes Challenge</span><span class="when">2025</span></div></li>
+      <li><div class="row"><span>2nd place, NYAS Marine Biodiversity Challenge</span><span class="when">2025</span></div></li>
+      <li><div class="row"><span>College Board scholarship, one of 90 winners from 500,000 students</span><span class="when"></span></div></li>
+      <li><div class="row"><span>NYC Mayoral Service Recognition for Helping Hands Volunteer Club (as president)</span><span class="when"></span></div></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="svc-h">
+    <h2 id="svc-h">Service and clinical work</h2>
+    <ul class="list">
+      <li><div class="row"><span>Suicide prevention advocate, NYC Youth Committee on Mental Health</span><span class="when">Sep 2025 to present</span></div><div class="meta">Joined at 15 as the youngest member. Building a youth-made crisis resource toolkit for NYC's roughly 1.8 million young people.</div></li>
+      <li><div class="row"><span>Ambulance dispatcher intern, BRAVO Volunteer Ambulance</span><span class="when">Nov 2025 to present</span></div><div class="meta">Dispatch ambulances, notify hospitals and keep patient and radio records.</div></li>
+      <li><div class="row"><span>Founder, research mentorship program</span><span class="when">Summer 2026 to present</span></div><div class="meta">Mentor 11 high school students through their own research questions and protocols.</div></li>
+      <li><div class="row"><span>Founder, St. Jude Fundraising Club; president, Helping Hands Volunteer Club</span><span class="when">Brooklyn Tech</span></div><div class="meta">350+ members combined and 40+ volunteer events.</div></li>
+      <li><div class="row"><span>Co-lead, Pre-Health Shadowing Live Sessions</span><span class="when">Dec 2024 to present</span></div><div class="meta">Hosted 30+ two-hour sessions with medical professionals, about 30 students each.</div></li>
+      <li><div class="row"><span>Policy advocate, NYC Youth Agenda</span><span class="when">Feb 2025 to present</span></div><div class="meta">Advocating for $654M more in NYC parks funding and analyzing survey data for the recommendations.</div></li>
+      <li><div class="row"><span>Youth advisory boards</span><span class="when">2025 to present</span></div><div class="meta">Teen Health Lab at Northwestern (LGBTQ+ youth health), AdolescentFaces at the University of Pittsburgh, and Love Is Respect.</div></li>
+      <li><div class="row"><span>Conservation intern, NYC Parks Urban Park Rangers</span><span class="when">Mar to Nov 2025</span></div><div class="meta">Cut 80+ invasive trees and helped build an accessible ramp in Bowling Green Park.</div></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="edu-h">
+    <h2 id="edu-h">Education and training</h2>
+    <ul class="list">
+      <li><div class="row"><span>Brooklyn Technical High School, biological sciences major</span><span class="when">Class of 2028</span></div></li>
+      <li><div class="row"><span>Arizona State University, College of Health Solutions (dual enrollment), 4.0 GPA</span><span class="when">26 credits</span></div></li>
+      <li><div class="row"><span>North Dakota State University, Early Entry Program</span><span class="when">Spring 2027</span></div></li>
+      <li><div class="row"><span>Touro College of Osteopathic Medicine, MedAchieve and MedExcel</span><span class="when">2025 to 2027</span></div></li>
+      <li><div class="row"><span>Mount Sinai Hospital, CEYE Medical &amp; Scientific Explorations</span><span class="when">Summer 2025</span></div></li>
+      <li><div class="row"><span>Columbia University, ACComPLISHED Program</span><span class="when">Summer 2025</span></div></li>
+      <li><div class="row"><span>Brooklyn College, STEP Laboratory Techniques (PCR, gel electrophoresis, DNA extraction)</span><span class="when">Summer 2026</span></div></li>
+    </ul>
+    <p class="note">I also speak Chinese (Integrated Chinese Level 2) and am a member of the American Psychological Association, Divisions 7, 15 and 20.</p>
+  </section>
+
+  <footer>Vincent Yuan · Brooklyn, New York · Vincenty72000@gmail.com · Updated October 2026</footer>
+</main>
+
+<script>
+(function () {
+  // Month index 0 = Jan 2025. End is exclusive; null = still going.
+  var roles = [
+    ['NYAS challenge teams', 'Team lead', 1, null, 'Feb 2025 to present'],
+    ['ThinkNeuro research intern', 'Neurology and psychology', 2, 11, 'Mar to Nov 2025'],
+    ['Mental health survey', 'Independent', 3, 6, 'Apr to Jun 2025'],
+    ['M4Y psychology review', 'Research assistant', 5, 9, 'Jun to Sep 2025'],
+    ['CAR T glioblastoma review', 'Lead author', 8, null, 'Sep 2025 to present'],
+    ['Empagliflozin meta-analysis', 'Co-investigator', 10, 20, 'Nov 2025 to Aug 2026'],
+    ['ThinkNeuro SML project', 'Research intern', 10, null, 'Nov 2025 to present'],
+    ['Egyptian tutoring study', 'Co-investigator', 11, null, 'Dec 2025 to present'],
+    ['Cyanobacteria review', 'Co-author', 11, null, 'Dec 2025 to present'],
+    ['DepMap reanalyses', 'Independent', 12, null, '2026 to present'],
+    ['IYNA Ideathon', 'Co-lead', 13, 15, 'Feb to Mar 2026'],
+    ['Nalmefene review', 'Co-investigator', 15, null, 'Apr 2026 to present'],
+    ['M4Y oncology team', 'Research co-lead', 16, null, 'May 2026 to present'],
+    ['PROJECT E3', 'Youth co-investigator', 17, null, 'Jun 2026 to present'],
+    ['Stevens political science', 'Research intern', 17, 20, 'Jun to Aug 2026'],
+    ['PRIMED-AI', 'Contributor', 20, null, 'Sep 2026 to present'],
+    ['Hunter College', 'Research mentee', 21, null, 'Oct 2026 to present']
+  ];
+  var SPAN = 24, NOW = 21 + 26 / 31;
+  var pct = function (m) { return (m / SPAN * 100) + '%'; };
+  var tl = document.getElementById('timeline');
+
+  var grid = document.createElement('div');
+  grid.className = 'grid';
+  grid.style.gridRow = '1 / span ' + roles.length;
+  [0, 12, 24].forEach(function (g) { var i = document.createElement('i'); i.style.left = pct(g); grid.appendChild(i); });
+  var now = document.createElement('i'); now.className = 'now'; now.style.left = pct(NOW); grid.appendChild(now);
+  tl.appendChild(grid);
+
+  roles.forEach(function (r, i) {
+    var lab = document.createElement('div');
+    lab.className = 'lab'; lab.textContent = r[0];
+    lab.style.gridRow = i + 1; lab.style.gridColumn = 1;
+    var trk = document.createElement('div');
+    trk.className = 'trk'; trk.style.gridRow = i + 1; trk.style.gridColumn = 2;
+    var bar = document.createElement('span');
+    var end = r[3] === null ? NOW : r[3];
+    bar.className = 'bar' + (r[3] === null ? ' on' : '');
+    bar.style.left = pct(r[2]); bar.style.width = pct(end - r[2]);
+    bar.tabIndex = 0; bar.dataset.i = i;
+    bar.setAttribute('aria-label', r[0] + ', ' + r[1] + ', ' + r[4]);
+    trk.appendChild(bar);
+    tl.appendChild(lab); tl.appendChild(trk);
+  });
+
+  var axis = document.createElement('div');
+  axis.className = 'axis'; axis.style.gridRow = roles.length + 1;
+  [[0, '2025'], [6, 'Jul'], [12, '2026'], [18, 'Jul'], [24, '2027']].forEach(function (t) {
+    var s = document.createElement('span'); s.className = 'tick'; s.style.left = pct(t[0]); s.textContent = t[1];
+    if (t[0] === 0) s.style.transform = 'none';
+    if (t[0] === SPAN) s.style.transform = 'translateX(-100%)';
+    axis.appendChild(s);
+  });
+  tl.appendChild(axis);
+
+  var tip = document.getElementById('tip'), box = document.getElementById('scroll');
+  function show(bar) {
+    var r = roles[+bar.dataset.i];
+    tip.textContent = r[0] + ' · ' + r[1] + ' · ' + r[4];
+    tip.hidden = false;
+    var b = bar.getBoundingClientRect(), c = box.getBoundingClientRect();
+    var x = b.left - c.left + box.scrollLeft + b.width / 2 - tip.offsetWidth / 2;
+    x = Math.max(box.scrollLeft, Math.min(x, box.scrollLeft + box.clientWidth - tip.offsetWidth));
+    var y = b.top - c.top - tip.offsetHeight - 6;
+    if (y < 0) y = b.bottom - c.top + 6;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  function hide() { tip.hidden = true; }
+  tl.addEventListener('mouseover', function (e) { if (e.target.classList.contains('bar')) show(e.target); });
+  tl.addEventListener('mouseout', function (e) { if (e.target.classList.contains('bar')) hide(); });
+  tl.addEventListener('focusin', function (e) { if (e.target.classList.contains('bar')) show(e.target); });
+  tl.addEventListener('focusout', hide);
+})();
+</script>
+</body>
+</html>
