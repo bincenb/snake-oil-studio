@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BIO 163 Study Deck">
+  <rect width="64" height="64" rx="14" fill="#17203A"/>
+  <g transform="rotate(-7 32 33)">
+    <rect x="9" y="15" width="46" height="35" rx="2.5" fill="#FBFCFD"/>
+    <path d="M9 23.5h46" stroke="#C7372C" stroke-width="2"/>
+    <path d="M9 31.5h46M9 39.5h46" stroke="#C9D8EC" stroke-width="1.2"/>
+    <rect x="15" y="32.5" width="35" height="9" rx="1.5" fill="#F4E36A"/>
+    <path d="M21.5 46 31 27" stroke="#17203A" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="40.5" cy="38" r="6" fill="none" stroke="#17203A" stroke-width="4"/>
+  </g>
+</svg>

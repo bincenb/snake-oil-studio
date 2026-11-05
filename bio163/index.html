@@ -1,0 +1,1668 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Anki-style flashcards, weekly study guides and timed practice quizzes for BIO 163 Medical Terminology.">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="logo.svg">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>BIO 163 Study Deck</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@500;700&display=swap">
+<style>
+  /* Layout: a clipboard on scrub-blue. Masthead left, plain text nav; the deck tree reads like Anki's
+     deck browser with a handwritten margin note beside it. Cards are ruled index cards.
+     Materials: ceil-blue scrubs, navy chart ink, index-card rules, highlighter, red pen.
+     Anki's own colors mark New (blue), Learn (red) and Due (green). */
+  :root {
+    --bg: #DCE5EF;
+    --sheet: #FBFCFD;
+    --sheet-2: #F1F5F9;
+    --ink: #17203A;
+    --ink-2: #4E5A74;
+    --ink-3: #8592A8;
+    --rule: #C7D2DF;
+    --scrub: #3E64A0;
+    --pen: #C7372C;
+    --hl: #F4E36A;
+    --lines: #DCE7F4;
+    --new: #2B68D0;
+    --learn: #C7372C;
+    --due: #23824A;
+    --hard: #5D6880;
+    --serif: 'Young Serif', Georgia, 'Times New Roman', serif;
+    --sans: 'Figtree', 'Segoe UI', Helvetica, Arial, sans-serif;
+    --hand: 'Caveat', 'Bradley Hand', 'Comic Sans MS', cursive;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10172A; --sheet: #182136; --sheet-2: #1E2840; --ink: #E5EAF4; --ink-2: #A3AEC4; --ink-3: #6E7A93;
+      --rule: #2B3753; --scrub: #8DAEE6; --pen: #FF7468; --hl: rgba(240, 220, 90, .3); --lines: #1F2A44;
+      --new: #7EA8FF; --learn: #FF7468; --due: #5FCB86; --hard: #A3AEC4;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10172A; --sheet: #182136; --sheet-2: #1E2840; --ink: #E5EAF4; --ink-2: #A3AEC4; --ink-3: #6E7A93;
+    --rule: #2B3753; --scrub: #8DAEE6; --pen: #FF7468; --hl: rgba(240, 220, 90, .3); --lines: #1F2A44;
+    --new: #7EA8FF; --learn: #FF7468; --due: #5FCB86; --hard: #A3AEC4;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.55;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--scrub); outline-offset: 3px; }
+  .app { max-width: 1000px; margin: 0 auto; padding-block: 28px 80px; }
+
+  /* Masthead */
+  .mast { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px 32px; padding-bottom: 18px; border-bottom: 2px solid var(--ink); }
+  .brand { display: flex; align-items: flex-end; gap: 14px; }
+  .logo { width: 58px; height: 58px; flex: 0 0 auto; align-self: center; }
+  .code { font-family: var(--serif); font-size: clamp(40px, 8vw, 58px); line-height: .9; letter-spacing: -.01em; }
+  .code em { font-style: normal; background: linear-gradient(176deg, transparent 52%, var(--hl) 52%, var(--hl) 88%, transparent 88%); padding: 0 .06em; }
+  .course { font-size: 14px; line-height: 1.3; color: var(--ink-2); padding-bottom: 4px; }
+  .nav { display: flex; gap: 22px; }
+  .nav button { background: none; border: 0; padding: 4px 0; font-weight: 700; font-size: 16px; color: var(--ink-2); border-bottom: 3px solid transparent; }
+  .nav button[aria-current="page"] { color: var(--ink); border-bottom-color: var(--pen); }
+  main { padding-top: 26px; }
+
+  /* Shared bits */
+  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 5vw, 40px); line-height: 1.1; margin: 0; text-wrap: balance; }
+  h3 { font-family: var(--serif); font-weight: 400; font-size: 24px; line-height: 1.2; margin: 0; }
+  .lede { margin: 0; max-width: 64ch; color: var(--ink-2); font-size: 17px; }
+  .hand { font-family: var(--hand); }
+  .btn { border: 1px solid var(--rule); background: var(--sheet); border-radius: 6px; padding: 9px 15px; font-weight: 700; font-size: 15px; }
+  .btn:hover { border-color: var(--ink-3); }
+  .btn.solid { background: var(--ink); border-color: var(--ink); color: var(--sheet); }
+  .link { background: none; border: 0; padding: 2px 0; color: var(--scrub); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .n-new { color: var(--new); } .n-learn { color: var(--learn); } .n-due { color: var(--due); }
+  .zero { color: var(--ink-3) !important; }
+
+  /* Word-part coloring */
+  .bd { font-size: 15px; display: inline-flex; flex-wrap: wrap; gap: 0 3px; align-items: baseline; letter-spacing: .01em; }
+  .p { color: var(--new); font-weight: 700; }
+  .r { color: var(--ink); font-weight: 700; }
+  .v { color: var(--ink-3); }
+  .s { color: var(--pen); font-weight: 700; }
+  .wp { font-weight: 700; white-space: nowrap; }
+  .wp.k-p { color: var(--new); } .wp.k-s { color: var(--pen); }
+
+  /* Decks view */
+  .decks { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 36px; align-items: start; }
+  .tree { background: var(--sheet); border-radius: 4px; box-shadow: 0 1px 0 var(--rule), 0 14px 30px -22px rgba(10, 20, 50, .45); }
+  .thead, .drow { display: grid; grid-template-columns: minmax(0, 1fr) 3.4em 3.4em 3.4em; align-items: center; column-gap: 4px; }
+  .thead { padding: 14px 18px 10px; font-size: 13px; font-weight: 700; border-bottom: 2px solid var(--ink); }
+  .thead span:not(:first-child), .drow .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .wk { border-bottom: 1px solid var(--rule); }
+  .wk:last-child { border-bottom: 0; }
+  .drow { width: 100%; text-align: left; background: none; border: 0; padding: 11px 18px; }
+  .drow:hover { background: var(--sheet-2); }
+  .drow .name { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+  .drow .name b { font-weight: 700; }
+  .drow .name small { color: var(--ink-2); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .drow .num { font-weight: 700; font-size: 15px; }
+  .drow.root { padding-block: 16px; }
+  .drow.root .name b { font-family: var(--serif); font-weight: 400; font-size: 20px; }
+  .drow.sub { padding-left: 50px; }
+  .drow.sub .name span { font-size: 15px; }
+  .wkhead { display: flex; align-items: stretch; }
+  .wkhead .drow { flex: 1; padding-left: 4px; }
+  .chev { flex: 0 0 auto; width: 44px; background: none; border: 0; color: var(--ink-3); font-size: 13px; display: grid; place-items: center; }
+  .chev span { display: inline-block; transition: transform .15s; }
+  .chev[aria-expanded="true"] span { transform: rotate(90deg); }
+  .tsec { padding: 18px 18px 8px; font-family: var(--hand); font-size: 22px; color: var(--ink-2); border-bottom: 1px solid var(--rule); }
+  .cipx { display: grid; gap: 8px; max-width: 46ch; margin-top: 4px; }
+  .cipx div { display: grid; }
+  .cipx b { font-size: 17px; }
+  .cipx span { color: var(--ink-2); font-size: 15px; }
+  .cipx .rel { margin: 0; font-size: 14px; color: var(--ink-3); }
+  .cipx .cnote { margin: 0; font-family: var(--hand); font-size: 20px; line-height: 1.2; color: var(--ink-2); }
+  .ciptable td small { color: var(--ink-3); font-size: 13px; }
+  .ciptable td:first-child { white-space: nowrap; }
+  .weeks button.wide { width: auto; padding: 0 12px; font-family: var(--sans); font-weight: 700; font-size: 15px; }
+  .meter { height: 3px; background: var(--sheet-2); margin: 0 18px 0 50px; border-radius: 2px; overflow: hidden; }
+  .meter i { display: block; height: 100%; background: var(--due); }
+  .aside { position: sticky; top: 20px; display: grid; gap: 18px; }
+  .margin-note { font-family: var(--hand); font-size: 22px; line-height: 1.2; color: var(--ink-2); transform: rotate(-1.2deg); }
+  .margin-note b { font-weight: 700; }
+  .margin-note .a { color: var(--learn); } .margin-note .g { color: var(--due); } .margin-note .e { color: var(--new); }
+  .stats { display: grid; gap: 2px; font-size: 14px; color: var(--ink-2); }
+  .stats b { font-family: var(--serif); font-weight: 400; font-size: 30px; color: var(--ink); line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+  /* Study screen */
+  .study { max-width: 680px; margin: 0 auto; display: grid; gap: 16px; }
+  .crumbs { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .crumbs .path { font-weight: 700; }
+  .crumbs .path span { color: var(--ink-2); font-weight: 500; }
+  .counts { font-weight: 700; font-size: 18px; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+  .counts .cur { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .counts .plus { color: var(--ink-3); font-weight: 400; margin: 0 2px; }
+  .card {
+    position: relative; min-height: 340px; border-radius: 3px; background-color: var(--sheet);
+    background-image: repeating-linear-gradient(to bottom, transparent 0 33px, var(--lines) 33px 34px);
+    background-position: 0 12px;
+    box-shadow: 0 1px 0 var(--rule), 0 18px 34px -24px rgba(10, 20, 50, .5);
+    padding: 22px 26px 30px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
+  }
+  .card .kind { align-self: flex-start; font-size: 13px; color: var(--ink-2); text-align: left; }
+  .card .kind b { color: var(--ink); }
+  .q { font-family: var(--serif); font-size: clamp(32px, 7vw, 52px); line-height: 1.12; overflow-wrap: anywhere; margin-top: 26px; }
+  .q.long { font-family: var(--sans); font-weight: 700; font-size: clamp(19px, 3.6vw, 24px); line-height: 1.4; max-width: 32ch; }
+  .q-pre { font-family: var(--hand); font-size: 22px; color: var(--ink-2); margin-bottom: -12px; margin-top: 18px; }
+  .redline { align-self: stretch; height: 0; border: 0; border-top: 2px solid var(--pen); opacity: .7; margin: 10px -26px 4px; }
+  .a { font-size: clamp(19px, 3.6vw, 23px); font-weight: 700; max-width: 40ch; line-height: 1.4; }
+  .a.big { font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 6vw, 44px); }
+  .a-sub { color: var(--ink-2); max-width: 46ch; }
+  .reveal { width: 100%; padding: 15px; border-radius: 6px; border: 0; background: var(--ink); color: var(--sheet); font-weight: 700; font-size: 17px; }
+  .rate { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .rate button { display: grid; gap: 0; justify-items: center; padding: 6px 4px 11px; border: 1px solid var(--rule); background: var(--sheet); border-radius: 6px; font-weight: 700; font-size: 16px; }
+  .rate button:hover { border-color: currentColor; }
+  .rate .ivl { font-family: var(--hand); font-size: 19px; font-weight: 500; color: var(--ink-2); line-height: 1.2; }
+  .r1 { color: var(--learn); } .r2 { color: var(--hard); } .r3 { color: var(--due); } .r4 { color: var(--new); }
+  .foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 14px; color: var(--ink-2); }
+  .foot label { display: inline-flex; gap: 8px; align-items: center; }
+  .foot select { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 8px; }
+  .keys { font-size: 13px; color: var(--ink-3); text-align: center; margin: 0; }
+  kbd { font-family: var(--sans); font-size: 12px; font-weight: 700; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--sheet); color: var(--ink-2); }
+  .congrats { background: var(--sheet); border-radius: 4px; padding: 34px 26px; text-align: center; display: grid; gap: 14px; justify-items: center; box-shadow: 0 1px 0 var(--rule); }
+  .congrats p { margin: 0; color: var(--ink-2); max-width: 46ch; }
+  .reset { background: none; border: 0; color: var(--ink-3); font-size: 13px; text-decoration: underline; padding: 2px; }
+  .reset.armed { color: var(--pen); font-weight: 700; }
+
+  /* Week picker (guide + quiz) */
+  .weeks { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 26px; }
+  .weeks .lbl { font-size: 14px; color: var(--ink-2); margin-right: 6px; }
+  .weeks button { width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--rule); background: var(--sheet); font-family: var(--serif); font-size: 18px; }
+  .weeks button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--sheet); }
+
+  /* Guide */
+  .guide { display: grid; gap: 34px; }
+  .ghead { display: grid; gap: 12px; }
+  .ghead .src { font-size: 14px; color: var(--ink-2); }
+  .due { display: grid; gap: 6px; padding-left: 16px; border-left: 3px solid var(--pen); }
+  .due b { font-size: 15px; }
+  .due ul { margin: 0; padding-left: 18px; }
+  .gtools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+  .search { flex: 1 1 260px; max-width: 420px; display: flex; align-items: center; gap: 8px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 0 12px; }
+  .search input { border: 0; background: transparent; padding: 10px 0; width: 100%; outline: none; }
+  .search:focus-within { border-color: var(--scrub); }
+  .jump { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 15px; }
+  .jump a { color: var(--scrub); font-weight: 700; text-underline-offset: 3px; }
+  .sec { display: grid; gap: 14px; scroll-margin-top: 16px; }
+  .sec > h3 { padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+  .sec h4 { font-size: 15px; font-weight: 700; margin: 8px 0 0; color: var(--ink-2); }
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 22px 34px; }
+  .note { min-width: 0; }
+  .note h5 { margin: 0 0 6px; font-size: 17px; font-weight: 700; display: inline; background: linear-gradient(176deg, transparent 55%, var(--hl) 55%, var(--hl) 90%, transparent 90%); }
+  .note ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 5px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; color: var(--ink-2); }
+  .tablewrap { overflow-x: auto; background: var(--sheet); border-radius: 4px; box-shadow: 0 1px 0 var(--rule); }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+  td.ex { color: var(--ink-2); }
+  .terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px 34px; }
+  .term { min-width: 0; display: grid; gap: 1px; align-content: start; }
+  .term b { font-size: 17px; }
+  .term p { margin: 0; color: var(--ink-2); }
+  .watch { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px 34px; }
+  .watch div { min-width: 0; }
+  .watch b { display: block; color: var(--pen); }
+  .watch span { color: var(--ink-2); }
+
+  /* Quiz */
+  .quiz { max-width: 720px; display: grid; gap: 18px; }
+  .panel { background: var(--sheet); border-radius: 4px; padding: 24px; display: grid; gap: 18px; box-shadow: 0 1px 0 var(--rule), 0 14px 30px -24px rgba(10, 20, 50, .45); }
+  .panel p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+  .field { display: grid; gap: 6px; }
+  .field > span { font-size: 14px; font-weight: 700; }
+  .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; width: fit-content; max-width: 100%; }
+  .seg button { border: 0; background: var(--sheet); padding: 7px 14px; font-weight: 700; font-size: 15px; color: var(--ink-2); }
+  .seg button + button { border-left: 1px solid var(--rule); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); }
+  .panel select { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; max-width: 100%; }
+  .check { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; }
+  .check input { accent-color: var(--ink); width: 17px; height: 17px; }
+  .qhead { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .timer { height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+  .timer i { display: block; height: 100%; background: var(--scrub); transition: width .25s linear; }
+  .timer.low i { background: var(--pen); }
+  .qlabel { font-size: 15px; color: var(--ink-2); margin: 0 0 4px; }
+  .qprompt { font-family: var(--serif); font-size: clamp(28px, 6vw, 42px); line-height: 1.15; overflow-wrap: anywhere; }
+  .qprompt.long { font-family: var(--sans); font-weight: 700; font-size: clamp(18px, 3.4vw, 22px); line-height: 1.4; }
+  .options { display: grid; gap: 8px; }
+  .opt { text-align: left; border: 1px solid var(--rule); background: var(--sheet); border-radius: 6px; padding: 12px 14px; display: flex; gap: 12px; align-items: baseline; font-size: 16px; }
+  .opt:hover:not(:disabled) { border-color: var(--ink-2); }
+  .opt:disabled { cursor: default; }
+  .opt.right { border-color: var(--due); box-shadow: inset 4px 0 0 var(--due); }
+  .opt.wrong { border-color: var(--pen); box-shadow: inset 4px 0 0 var(--pen); }
+  .feedback { display: grid; gap: 4px; }
+  .feedback .ok { color: var(--due); font-family: var(--hand); font-size: 26px; line-height: 1; }
+  .feedback .no { color: var(--pen); font-family: var(--hand); font-size: 26px; line-height: 1; }
+  .score { display: flex; gap: 22px; flex-wrap: wrap; align-items: baseline; }
+  .score .num { font-family: var(--serif); font-size: 68px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .score .grade { font-family: var(--hand); font-size: 60px; line-height: 1; color: var(--pen); transform: rotate(-6deg); display: inline-block; }
+  .missed { display: grid; gap: 8px; }
+  .missed div { padding-left: 12px; border-left: 3px solid var(--pen); }
+  .scale { font-size: 13px; color: var(--ink-3); }
+
+  @media (max-width: 860px) {
+    .decks { grid-template-columns: 1fr; gap: 24px; }
+    .aside { position: static; grid-template-columns: 1fr 1fr; align-items: start; }
+  }
+  @media (max-width: 560px) {
+    .app { padding-block: 18px 64px; }
+    .nav { width: 100%; justify-content: space-between; }
+    .logo { width: 46px; height: 46px; } .brand { gap: 10px; }
+    .thead, .drow { grid-template-columns: minmax(0, 1fr) 2.6em 2.6em 2.6em; }
+    .thead { padding-inline: 12px; } .drow { padding-inline: 12px; } .drow.sub { padding-left: 40px; }
+    .drow .name small { display: none; }
+    .meter { margin: 0 12px 0 40px; }
+    .chev { width: 36px; }
+    .aside { grid-template-columns: 1fr; }
+    .card { padding: 18px 18px 26px; min-height: 300px; }
+    .redline { margin-inline: -18px; }
+    .rate { gap: 6px; } .rate button { font-size: 15px; }
+    .panel { padding: 18px; }
+    .weeks { gap: 5px; } .weeks .lbl { display: none; } .weeks button { width: 34px; height: 36px; } .weeks button.wide { padding: 0 9px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .chev span { transition: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="mast">
+    <div class="brand">
+      <svg class="logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"> <rect width="64" height="64" rx="14" fill="#17203A"/> <g transform="rotate(-7 32 33)"> <rect x="9" y="15" width="46" height="35" rx="2.5" fill="#FBFCFD"/> <path d="M9 23.5h46" stroke="#C7372C" stroke-width="2"/> <path d="M9 31.5h46M9 39.5h46" stroke="#C9D8EC" stroke-width="1.2"/> <rect x="15" y="32.5" width="35" height="9" rx="1.5" fill="#F4E36A"/> <path d="M21.5 46 31 27" stroke="#17203A" stroke-width="4" stroke-linecap="round"/> <circle cx="40.5" cy="38" r="6" fill="none" stroke="#17203A" stroke-width="4"/> </g> </svg>
+      <span class="code">BIO <em>163</em></span>
+      <span class="course">Medical Terminology<br>Fall 2026, online</span>
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <button data-view="decks">Decks</button>
+      <button data-view="guide">Study guide</button>
+      <button data-view="quiz">Quiz</button>
+    </nav>
+  </header>
+  <main id="view"></main>
+</div>
+
+<script>
+const UNITS = [
+{
+  id: "w1", wk: 1, name: "Basics", title: "Basics of Medical Terminology",
+  cip: "CIP Lectures 1–7, 9–20",
+  due: ["Introduction discussion (post + reply to 2 classmates)", "8. Timed: Basics of Medical Terminology", "15. Timed: Diagnostic Equipment & Instruments", "19. Timed: Integrated Medicine"],
+  overview: "How medical words are built. Learn the prefixes, suffixes and combining forms that repeat in every body system, the plural rules, body directions, the tools used to examine patients, and the vocabulary of integrated medicine. Everything later in the course builds on this week.",
+  notes: [
+    { h: "Reading a term", items: ["Read the suffix first, then the prefix, then the root(s). Gastroenteritis = inflammation (-itis) of the stomach (gastr/o) and small intestine (enter/o).", "Word root = core meaning. Combining vowel (usually o) links parts. Combining form = root + vowel, written gastr/o.", "Keep the combining vowel between two roots, even if the next root starts with a vowel: gastr/o + enter/o.", "Drop it before a suffix that starts with a vowel: gastritis, not gastroitis.", "Keep it before a suffix that starts with a consonant: arthroscopy."] },
+    { h: "Pronunciation clues", items: ["ch often sounds like k: chronic, cholecystitis.", "ps at the start sounds like s: psychology.", "pn at the start sounds like n: pneumonia. pt sounds like t: ptosis.", "x at the start sounds like z: xeroderma.", "ph sounds like f (phalanges); rh sounds like r (rhinitis).", "Plural -i sounds like “eye” (bronchi); -ae sounds like “ee” (vertebrae)."] },
+    { h: "Diagnostic suffix families", items: ["-scope = the instrument; -scopy = the exam done with it.", "-graph = the recording instrument; -graphy = the process; -gram = the record produced.", "-meter = instrument that measures; -metry = the measurement.", "Exam skills: inspection (look), palpation (feel), percussion (tap), auscultation (listen)."] },
+    { h: "Integrated medicine", items: ["Complementary therapy is used along with conventional care.", "Alternative therapy is used instead of conventional care.", "Integrative medicine combines conventional care with evidence-based complementary therapies.", "Learn each therapy by its core idea: needles (acupuncture), spine (chiropractic), dilution (homeopathy), self-healing (naturopathy)."] }
+  ],
+  parts: {
+    "Prefixes": [
+      ["a-, an-", "no, not, without", "apnea"], ["anti-", "against", "antibiotic"], ["auto-", "self", "autoimmune"], ["bi-", "two", "bilateral"],
+      ["brady-", "slow", "bradycardia"], ["dys-", "bad, painful, difficult", "dyspnea"], ["endo-", "within, inside", "endoscope"], ["epi-", "upon, above", "epidermis"],
+      ["eu-", "good, normal", "eupnea"], ["ex-, exo-", "out, outside", "exocrine"], ["hemi-", "half", "hemiplegia"], ["hyper-", "above, excessive", "hypertension"],
+      ["hypo-", "below, deficient", "hypoglycemia"], ["inter-", "between", "intercostal"], ["intra-", "within", "intravenous"], ["macro-", "large", "macrocyte"],
+      ["micro-", "small", "microscope"], ["neo-", "new", "neonate"], ["pan-", "all", "pancytopenia"], ["para-", "beside, near, abnormal", "parathyroid"],
+      ["peri-", "around", "pericardium"], ["poly-", "many, much", "polyuria"], ["post-", "after", "postoperative"], ["pre-", "before", "prenatal"],
+      ["quadri-", "four", "quadriplegia"], ["sub-", "under, below", "subcutaneous"], ["supra-", "above", "suprapubic"], ["tachy-", "fast", "tachycardia"],
+      ["tri-", "three", "tricuspid"], ["uni-, mono-", "one", "unilateral"]
+    ],
+    "Color combining forms": [
+      ["erythr/o", "red", "erythrocyte"], ["leuk/o", "white", "leukocyte"], ["cyan/o", "blue", "cyanosis"], ["melan/o", "black", "melanoma"], ["xanth/o", "yellow", "xanthoma"], ["chlor/o", "green", "chlorophyll"]
+    ],
+    "Suffixes: conditions": [
+      ["-algia, -dynia", "pain", "neuralgia"], ["-emia", "blood condition", "anemia"], ["-itis", "inflammation", "tonsillitis"], ["-megaly", "enlargement", "cardiomegaly"],
+      ["-oma", "tumor, mass", "lipoma"], ["-osis", "abnormal condition", "cyanosis"], ["-pathy", "disease", "neuropathy"], ["-penia", "deficiency, decrease", "leukopenia"],
+      ["-plasia", "formation, development", "hyperplasia"], ["-rrhagia, -rrhage", "bursting forth (of blood)", "hemorrhage"], ["-rrhea", "flow, discharge", "rhinorrhea"], ["-rrhexis", "rupture", "hysterorrhexis"],
+      ["-sclerosis", "hardening", "arteriosclerosis"], ["-stenosis", "narrowing", "aortic stenosis"], ["-cele", "hernia, protrusion", "cystocele"], ["-ptosis", "drooping, falling", "blepharoptosis"],
+      ["-lysis", "breakdown, destruction", "hemolysis"], ["-genic", "producing", "carcinogenic"], ["-logy", "study of", "cardiology"], ["-logist", "specialist", "dermatologist"]
+    ],
+    "Suffixes: procedures": [
+      ["-ectomy", "excision, removal", "appendectomy"], ["-tomy", "incision, cutting into", "craniotomy"], ["-stomy", "new surgical opening", "colostomy"], ["-plasty", "surgical repair", "rhinoplasty"],
+      ["-scopy", "visual examination", "endoscopy"], ["-scope", "instrument to view", "otoscope"], ["-graphy", "process of recording", "mammography"], ["-gram", "record", "electrocardiogram"],
+      ["-graph", "instrument for recording", "electrocardiograph"], ["-meter", "instrument to measure", "thermometer"], ["-centesis", "surgical puncture to remove fluid", "amniocentesis"], ["-rrhaphy", "suture", "herniorrhaphy"],
+      ["-pexy", "surgical fixation", "nephropexy"], ["-tripsy", "crushing", "lithotripsy"]
+    ],
+    "Common combining forms": [
+      ["cardi/o", "heart", "cardiology"], ["gastr/o", "stomach", "gastritis"], ["hepat/o", "liver", "hepatitis"], ["nephr/o", "kidney", "nephritis"],
+      ["neur/o", "nerve", "neuralgia"], ["oste/o", "bone", "osteoma"], ["dermat/o", "skin", "dermatitis"], ["hem/o, hemat/o", "blood", "hematology"],
+      ["cyt/o", "cell", "cytology"], ["hist/o", "tissue", "histology"], ["path/o", "disease", "pathology"], ["cephal/o", "head", "cephalalgia"],
+      ["thorac/o", "chest", "thoracotomy"], ["abdomin/o", "abdomen", "abdominal"], ["ot/o", "ear", "otitis"], ["ophthalm/o", "eye", "ophthalmoscope"],
+      ["rhin/o", "nose", "rhinitis"], ["carcin/o", "cancer", "carcinoma"]
+    ]
+  },
+  terms: {
+    "Word building": [
+      ["word root", "The core of a term that carries its basic meaning (cardi in cardiology)."],
+      ["combining vowel", "A vowel, usually o, that links a root to a suffix or to another root."],
+      ["combining form", "A word root plus its combining vowel, written with a slash: cardi/o."],
+      ["prefix", "Word part at the beginning of a term that modifies its meaning (brady- in bradycardia)."],
+      ["suffix", "Word part at the end of a term that tells the condition, procedure or part of speech (-itis)."],
+      ["eponym", "A term named after a person, such as Alzheimer disease or Parkinson disease."],
+      ["acronym", "A word formed from the first letters of a phrase and spoken as a word, such as laser or AIDS."]
+    ],
+    "Directions & planes": [
+      ["anterior (ventral)", "Toward the front of the body."], ["posterior (dorsal)", "Toward the back of the body."],
+      ["superior (cephalic)", "Above; toward the head."], ["inferior (caudal)", "Below; toward the feet or tail."],
+      ["medial", "Toward the midline of the body."], ["lateral", "Away from the midline; toward the side."],
+      ["proximal", "Nearer to the point of attachment or origin (the elbow is proximal to the wrist)."], ["distal", "Farther from the point of attachment or origin."],
+      ["superficial", "Toward the body surface."], ["deep", "Away from the body surface."],
+      ["supine", "Lying on the back, face up."], ["prone", "Lying on the abdomen, face down."],
+      ["sagittal plane", "Divides the body into right and left parts (midsagittal = equal halves)."],
+      ["frontal (coronal) plane", "Divides the body into front (anterior) and back (posterior) parts."],
+      ["transverse (horizontal) plane", "Divides the body into upper and lower parts."]
+    ],
+    "Diagnostic equipment & instruments": [
+      ["stethoscope", "Instrument for listening to internal body sounds such as heart and lungs.", "steth /o -scope"],
+      ["sphygmomanometer", "Instrument that measures blood pressure (blood pressure cuff).", "sphygm /o man /o -meter"],
+      ["otoscope", "Lighted instrument for examining the ear canal and eardrum.", "ot /o -scope"],
+      ["ophthalmoscope", "Instrument for examining the interior of the eye.", "ophthalm /o -scope"],
+      ["endoscope", "Lighted tube for viewing inside a body cavity or organ.", "endo- -scope"],
+      ["speculum", "Instrument that opens and holds a body cavity for viewing (vaginal, nasal)."],
+      ["reflex hammer", "Rubber hammer used to test deep tendon reflexes (percussion hammer)."],
+      ["scalpel", "Small, straight surgical knife."],
+      ["forceps", "Tweezer-like instrument for grasping or holding tissue."],
+      ["hemostat", "Clamp used to stop blood flow from a vessel.", "hem /o -stat"],
+      ["catheter", "Flexible tube inserted into the body to drain or deliver fluids."],
+      ["electrocardiograph", "Machine that records the electrical activity of the heart; the record is an electrocardiogram (ECG).", "electr /o cardi /o -graph"],
+      ["pulse oximeter", "Clip-on sensor that measures oxygen saturation of the blood (SpO2).", "ox -i -meter"],
+      ["radiography (x-ray)", "Imaging that uses x-rays to show dense structures such as bone.", "radi /o -graphy"],
+      ["computed tomography (CT)", "Series of x-rays processed by computer into cross-sectional slices.", "tom /o -graphy"],
+      ["magnetic resonance imaging (MRI)", "Imaging with a strong magnetic field and radio waves; no ionizing radiation; excellent for soft tissue."],
+      ["ultrasonography (sonography)", "Imaging with high-frequency sound waves (used in pregnancy, heart, abdomen).", "ultra- son /o -graphy"],
+      ["positron emission tomography (PET)", "Imaging with a radioactive tracer that shows metabolic activity of tissue."],
+      ["auscultation", "Listening to sounds within the body, usually with a stethoscope."],
+      ["palpation", "Examining by feeling with the hands."],
+      ["percussion", "Tapping the body surface to judge the size, density or fluid in underlying parts."]
+    ],
+    "Integrated medicine": [
+      ["integrative medicine", "Care that combines conventional medicine with evidence-based complementary therapies."],
+      ["complementary medicine", "Non-mainstream therapy used together with conventional medicine."],
+      ["alternative medicine", "Non-mainstream therapy used in place of conventional medicine."],
+      ["acupuncture", "Traditional Chinese medicine practice of inserting thin needles at specific points on the body."],
+      ["chiropractic", "Treatment by manual adjustment of the spine and joints to relieve pain and improve function."],
+      ["osteopathic medicine", "Practice of DOs, fully licensed physicians who add hands-on manipulation (OMT) to conventional care."],
+      ["naturopathy", "System that uses natural remedies (diet, herbs, lifestyle) to support the body's ability to heal itself."],
+      ["homeopathy", "System based on “like cures like,” using extremely diluted substances."],
+      ["Ayurveda", "Traditional medicine of India that seeks balance among three body energies (doshas)."],
+      ["massage therapy", "Manipulation of soft tissues to relieve tension, pain and stress."],
+      ["reflexology", "Pressure applied to points on the feet, hands or ears believed to correspond to body organs."],
+      ["biofeedback", "Using electronic monitoring of body functions (heart rate, muscle tension) to learn to control them."],
+      ["aromatherapy", "Use of essential oils from plants to promote well-being."],
+      ["herbal medicine", "Use of plants or plant extracts for therapeutic purposes."],
+      ["Reiki", "Japanese energy-based practice in which the practitioner's hands rest on or near the body."],
+      ["meditation", "Mind-body practice of focused attention used to reduce stress."]
+    ]
+  },
+  plurals: [
+    ["vertebra", "vertebrae", "-a → -ae"], ["bursa", "bursae", "-a → -ae"], ["diagnosis", "diagnoses", "-is → -es"], ["prognosis", "prognoses", "-is → -es"],
+    ["appendix", "appendices", "-ix → -ices"], ["cortex", "cortices", "-ex → -ices"], ["bacterium", "bacteria", "-um → -a"], ["ovum", "ova", "-um → -a"],
+    ["bronchus", "bronchi", "-us → -i"], ["thrombus", "thrombi", "-us → -i"], ["ganglion", "ganglia", "-on → -a"], ["criterion", "criteria", "-on → -a"],
+    ["carcinoma", "carcinomata", "-ma → -mata"], ["stoma", "stomata", "-ma → -mata"], ["phalanx", "phalanges", "-nx → -nges"], ["larynx", "larynges", "-nx → -nges"],
+    ["foramen", "foramina", "-en → -ina"], ["ovary", "ovaries", "-y → -ies"]
+  ],
+  abbr: [["CT", "computed tomography"], ["MRI", "magnetic resonance imaging"], ["PET", "positron emission tomography"], ["US", "ultrasound"], ["ECG, EKG", "electrocardiogram"], ["CAM", "complementary and alternative medicine"], ["DO", "doctor of osteopathic medicine"], ["TCM", "traditional Chinese medicine"]],
+  watch: [
+    ["-ectomy vs -tomy vs -stomy", "Removal vs cutting into vs creating a new opening. Gastrectomy removes the stomach; gastrotomy cuts into it; gastrostomy makes an opening into it."],
+    ["-scope vs -scopy", "The instrument vs the procedure. An endoscope is used to perform an endoscopy."],
+    ["-graph vs -graphy vs -gram", "Machine vs process vs the record. The electrocardiograph performs electrocardiography and prints an electrocardiogram."],
+    ["hyper- vs hypo-", "Above or excessive vs below or deficient. Easy to swap when spelling under time pressure."],
+    ["inter- vs intra-", "Between vs within. Intercostal = between ribs; intravenous = within a vein."],
+    ["The four rrh suffixes", "-rrhea flow, -rrhagia bursting forth of blood, -rrhaphy suture, -rrhexis rupture."],
+    ["Plural exceptions", "Virus → viruses and sinus → sinuses, not viri or sini."]
+  ]
+},
+{
+  id: "w2", wk: 2, name: "Abbreviations", title: "Abbreviations & Self-Testing",
+  cip: "CIP 21–22 Flashcards: Abbreviations",
+  due: ["Discussion: Significance of medical terminology outside the health care setting", "CIP 21–22 abbreviation flashcards (time-intensive week)"],
+  overview: "The syllabus calls this a very time-intensive week of flashcards. Abbreviations show up on prescriptions, charts and orders, and many of them come from Latin. Learn them in groups: when and how a drug is given, how a chart is written, where care happens, and common labs.",
+  notes: [
+    { h: "Latin behind dosing abbreviations", items: ["a.c. = ante cibum (before meals); p.c. = post cibum (after meals).", "b.i.d. = bis in die (twice a day); t.i.d. = ter in die (3 times); q.i.d. = quater in die (4 times).", "h.s. = hora somni (at bedtime); p.r.n. = pro re nata (as needed).", "NPO = nil per os (nothing by mouth); PO = per os (by mouth).", "stat = statim (immediately); q = quaque (every)."] },
+    { h: "SOAP note order", items: ["S: Subjective (what the patient reports).", "O: Objective (what is measured or observed).", "A: Assessment (diagnosis or impression).", "P: Plan (treatment and follow-up)."] },
+    { h: "Joint Commission “Do Not Use” list", items: ["U or IU → write “unit” or “international unit.”", "Q.D. and Q.O.D. → write “daily” and “every other day.”", "Trailing zero (1.0 mg) → write 1 mg. Missing leading zero (.5 mg) → write 0.5 mg.", "MS, MSO4, MgSO4 → write morphine sulfate or magnesium sulfate."] },
+    { h: "How to study this week", items: ["Set “Ask with” to Meaning so you practice producing the abbreviation, not just recognizing it.", "Be honest with Again. A missed card comes back in 3 cards; a card you know drifts further away each time.", "Abbreviations with x usually mean a noun: Dx, Tx, Hx, Sx, Fx, Bx, Rx."] }
+  ],
+  parts: {},
+  terms: {},
+  abbrGroups: {
+    "Timing & dosing": [["a.c.", "before meals"], ["p.c.", "after meals"], ["b.i.d.", "twice a day"], ["t.i.d.", "three times a day"], ["q.i.d.", "four times a day"], ["q", "every"], ["q.h.", "every hour"], ["q4h", "every 4 hours"], ["h.s.", "at bedtime (hour of sleep)"], ["p.r.n.", "as needed"], ["stat", "immediately"], ["ad lib", "as desired"], ["NPO", "nothing by mouth"], ["c̄", "with"], ["s̄", "without"], ["gtt", "drop(s)"], ["Rx", "prescription; take"], ["Sig", "directions for the label"]],
+    "Routes": [["PO", "by mouth"], ["IV", "intravenous"], ["IM", "intramuscular"], ["SubQ, SC", "subcutaneous"], ["ID", "intradermal"], ["SL", "sublingual (under the tongue)"], ["PR", "per rectum"], ["IVP", "intravenous push"], ["NG", "nasogastric"], ["top", "topical"]],
+    "Charting": [["Dx", "diagnosis"], ["Tx", "treatment"], ["Hx", "history"], ["Sx", "symptoms"], ["Fx", "fracture"], ["Bx", "biopsy"], ["CC", "chief complaint"], ["HPI", "history of present illness"], ["PMH", "past medical history"], ["ROS", "review of systems"], ["PE", "physical examination"], ["H&P", "history and physical"], ["SOAP", "subjective, objective, assessment, plan"], ["VS", "vital signs"], ["TPR", "temperature, pulse, respirations"], ["BP", "blood pressure"], ["I&O", "intake and output"], ["WNL", "within normal limits"], ["NKDA", "no known drug allergies"], ["DNR", "do not resuscitate"], ["ADL", "activities of daily living"], ["ROM", "range of motion"], ["SOB", "shortness of breath"], ["N/V", "nausea and vomiting"], ["R/O", "rule out"], ["F/U", "follow-up"], ["c/o", "complains of"], ["y/o", "years old"], ["Wt / Ht", "weight / height"]],
+    "Settings & specialties": [["ED, ER", "emergency department / emergency room"], ["ICU", "intensive care unit"], ["OR", "operating room"], ["PACU", "post-anesthesia care unit"], ["OB/GYN", "obstetrics and gynecology"], ["ENT", "ear, nose and throat"], ["PT", "physical therapy"], ["OT", "occupational therapy"], ["EMS", "emergency medical services"], ["RN", "registered nurse"], ["LPN", "licensed practical nurse"], ["NP", "nurse practitioner"], ["PA", "physician assistant"]],
+    "Labs & tests": [["CBC", "complete blood count"], ["BMP", "basic metabolic panel"], ["CMP", "comprehensive metabolic panel"], ["UA", "urinalysis"], ["ABG", "arterial blood gas"], ["CXR", "chest x-ray"], ["WBC", "white blood cell (count)"], ["RBC", "red blood cell (count)"], ["Hgb", "hemoglobin"], ["Hct", "hematocrit"], ["ESR", "erythrocyte sedimentation rate"]],
+    "Measurements": [["mg", "milligram"], ["mcg", "microgram"], ["g", "gram"], ["kg", "kilogram"], ["mL", "milliliter"], ["L", "liter"], ["cm", "centimeter"], ["mmHg", "millimeters of mercury"]]
+  },
+  watch: [
+    ["PT", "Physical therapy, but also prothrombin time (a clotting test). Read the context."],
+    ["PE", "Physical examination or pulmonary embolism. A big difference."],
+    ["cc", "Cubic centimeter (use mL instead) vs CC, chief complaint."],
+    ["q.d. / Q.O.D.", "On the Do Not Use list because they get misread as q.i.d. or each other. Write “daily” or “every other day.”"],
+    ["a.c. vs p.c.", "Ante = before, post = after. Same pattern as antepartum and postpartum."]
+  ]
+},
+{
+  id: "w3", wk: 3, name: "Musculoskeletal", title: "Musculoskeletal System",
+  cip: "CIP 23–28, 30–35, 37–42",
+  due: ["Discussion #3: Musculoskeletal system", "3-D Model Matching: Musculoskeletal System", "29. Timed: Musculoskeletal System"],
+  overview: "Bones, joints, muscles, tendons and ligaments. Know the roots for each structure, the spine curvatures, fracture types, the major disorders, and the procedures named with arthr/o.",
+  notes: [
+    { h: "Structure facts", items: ["The adult skeleton has 206 bones: axial (skull, spine, ribs, sternum) and appendicular (limbs, shoulder and pelvic girdles).", "Vertebrae: 7 cervical, 12 thoracic, 5 lumbar, then the sacrum and coccyx. Memory hook: breakfast at 7, lunch at 12, dinner at 5.", "Tendons connect muscle to bone. Ligaments connect bone to bone.", "Muscle types: skeletal (voluntary, striated), cardiac (involuntary, striated), smooth (involuntary, in organ walls)."] },
+    { h: "Bone cells", items: ["Osteoblasts build bone (-blast = immature, forming cell).", "Osteoclasts break bone down (-clast = to break).", "Osteocytes are mature bone cells (-cyte = cell).", "Myel/o here means bone marrow, where blood cells are made."] },
+    { h: "Discussion #3 roots", items: ["The prompt asks about oste/o, myel/o or arthr/o, plus a condition and two suffixes such as -itis, -algia, -porosis.", "Use the word-part tables below to check spelling and meaning as you study."] }
+  ],
+  parts: {
+    "Bones & joints": [
+      ["oste/o", "bone", "osteoporosis"], ["arthr/o", "joint", "arthritis"], ["chondr/o", "cartilage", "chondromalacia"], ["myel/o", "bone marrow (also spinal cord)", "osteomyelitis"],
+      ["cost/o", "rib", "intercostal"], ["crani/o", "skull", "craniotomy"], ["vertebr/o", "vertebra", "intervertebral"], ["spondyl/o", "vertebra, spine", "spondylitis"],
+      ["kyph/o", "hump", "kyphosis"], ["lord/o", "curve, swayback", "lordosis"], ["scoli/o", "crooked, bent", "scoliosis"], ["carp/o", "wrist bones", "carpal tunnel"],
+      ["tars/o", "ankle bones", "tarsal"], ["phalang/o", "finger or toe bones", "phalangeal"], ["femor/o", "femur (thigh bone)", "femoral"], ["patell/o", "kneecap", "patellar"],
+      ["stern/o", "sternum (breastbone)", "sternal"], ["clavicul/o", "clavicle (collarbone)", "clavicular"], ["scapul/o", "scapula (shoulder blade)", "scapular"], ["humer/o", "humerus (upper arm)", "humeral"],
+      ["ili/o", "ilium (hip bone)", "iliac"], ["lumb/o", "lower back", "lumbar"], ["burs/o", "bursa", "bursitis"], ["synov/o", "synovial membrane", "synovitis"], ["ankyl/o", "stiff, fused", "ankylosis"]
+    ],
+    "Muscles & connective tissue": [
+      ["my/o, muscul/o", "muscle", "myalgia"], ["ten/o, tend/o, tendin/o", "tendon", "tendinitis"], ["ligament/o", "ligament", "ligamentous"], ["fasci/o", "fascia", "fasciitis"],
+      ["fibr/o", "fiber", "fibromyalgia"], ["kinesi/o", "movement", "kinesiology"], ["sarc/o", "flesh (connective tissue)", "osteosarcoma"], ["rhabd/o", "striated (skeletal) muscle", "rhabdomyolysis"], ["lei/o", "smooth (muscle)", "leiomyoma"]
+    ],
+    "Suffixes": [
+      ["-malacia", "softening", "osteomalacia"], ["-porosis", "porous condition", "osteoporosis"], ["-desis", "surgical fusion, binding", "arthrodesis"], ["-clast", "to break", "osteoclast"],
+      ["-blast", "immature, forming cell", "osteoblast"], ["-physis", "growth", "epiphysis"], ["-asthenia", "weakness", "myasthenia"], ["-trophy", "development, nourishment", "atrophy"]
+    ]
+  },
+  terms: {
+    "Disorders": [
+      ["osteoporosis", "Loss of bone density that leaves bones porous and fragile.", "oste /o -porosis"],
+      ["osteoarthritis", "Degenerative joint disease; wearing away of joint cartilage.", "oste /o arthr -itis"],
+      ["rheumatoid arthritis", "Autoimmune disease causing chronic inflammation of synovial joints, often hands and wrists on both sides.", "arthr -itis"],
+      ["osteomyelitis", "Infection and inflammation of bone and bone marrow.", "oste /o myel -itis"],
+      ["osteomalacia", "Softening of bone, usually from vitamin D deficiency (called rickets in children).", "oste /o -malacia"],
+      ["gout", "Arthritis caused by uric acid crystals in a joint, often the big toe."],
+      ["kyphosis", "Exaggerated outward curve of the thoracic spine (humpback).", "kyph -osis"],
+      ["lordosis", "Exaggerated inward curve of the lumbar spine (swayback).", "lord -osis"],
+      ["scoliosis", "Sideways (lateral) curvature of the spine.", "scoli -osis"],
+      ["herniated disk", "Intervertebral disk bulges or ruptures and can press on spinal nerves."],
+      ["carpal tunnel syndrome", "Compression of the median nerve in the wrist, causing numbness and tingling in the hand."],
+      ["ankylosing spondylitis", "Chronic inflammation of the spine that can lead to fusion of vertebrae.", "spondyl -itis"],
+      ["muscular dystrophy", "Group of inherited diseases with progressive muscle weakness and degeneration.", "dys- -trophy"],
+      ["myasthenia gravis", "Autoimmune disorder causing muscle weakness that worsens with use.", "my -asthenia"],
+      ["tendinitis", "Inflammation of a tendon.", "tendin -itis"],
+      ["bursitis", "Inflammation of a bursa, the fluid sac that cushions a joint.", "burs -itis"],
+      ["fibromyalgia", "Chronic widespread muscle pain with tender points and fatigue.", "fibr /o my -algia"],
+      ["arthralgia", "Joint pain.", "arthr -algia"],
+      ["myalgia", "Muscle pain.", "my -algia"],
+      ["atrophy", "Wasting away or decrease in size of a tissue, such as muscle.", "a- -trophy"],
+      ["osteosarcoma", "Malignant tumor of bone.", "oste /o sarc -oma"],
+      ["chondromalacia", "Softening of cartilage, often under the kneecap.", "chondr /o -malacia"],
+      ["sprain", "Injury to a ligament."],
+      ["strain", "Injury to a muscle or tendon."]
+    ],
+    "Fracture types": [
+      ["closed (simple) fracture", "Bone is broken but the skin is intact."],
+      ["open (compound) fracture", "Broken bone breaks through the skin."],
+      ["comminuted fracture", "Bone is shattered into several pieces."],
+      ["greenstick fracture", "Incomplete break; bone bends and cracks on one side. Common in children."],
+      ["compression fracture", "Bone collapses on itself, often a vertebra weakened by osteoporosis."],
+      ["Colles fracture", "Break of the distal radius at the wrist, often from a fall on an outstretched hand."],
+      ["spiral fracture", "Break that twists around the bone, caused by a twisting force."]
+    ],
+    "Procedures & tests": [
+      ["arthroscopy", "Visual examination of the inside of a joint with a scope.", "arthr /o -scopy"],
+      ["arthroplasty", "Surgical repair or replacement of a joint.", "arthr /o -plasty"],
+      ["arthrocentesis", "Puncture of a joint to remove fluid.", "arthr /o -centesis"],
+      ["arthrodesis", "Surgical fusion of a joint.", "arthr /o -desis"],
+      ["laminectomy", "Removal of the lamina (back part) of a vertebra to relieve pressure on nerves.", "lamin -ectomy"],
+      ["osteotomy", "Surgical cutting of a bone.", "oste /o -tomy"],
+      ["reduction", "Putting a fractured or dislocated bone back in place (closed or open)."],
+      ["ORIF", "Open reduction, internal fixation: surgery to realign a fracture and hold it with plates, screws or rods."],
+      ["DEXA scan", "Bone density test using low-dose x-ray; diagnoses osteoporosis."],
+      ["electromyography", "Recording of the electrical activity of muscle.", "electr /o my /o -graphy"]
+    ],
+    "Movement": [
+      ["flexion", "Bending a joint; decreases the angle between bones."], ["extension", "Straightening a joint; increases the angle."],
+      ["abduction", "Moving a limb away from the midline (ab- = away)."], ["adduction", "Moving a limb toward the midline (ad- = toward)."],
+      ["rotation", "Turning a bone around its own axis."], ["pronation", "Turning the palm down."], ["supination", "Turning the palm up."],
+      ["dorsiflexion", "Pointing the toes up toward the shin."], ["plantar flexion", "Pointing the toes down."]
+    ]
+  },
+  abbr: [["Fx", "fracture"], ["OA", "osteoarthritis"], ["RA", "rheumatoid arthritis"], ["DJD", "degenerative joint disease"], ["ROM", "range of motion"], ["ORIF", "open reduction, internal fixation"], ["CTS", "carpal tunnel syndrome"], ["DEXA", "dual-energy x-ray absorptiometry"], ["EMG", "electromyography"], ["NSAID", "nonsteroidal anti-inflammatory drug"], ["TKA", "total knee arthroplasty"], ["THA", "total hip arthroplasty"], ["C1–C7", "cervical vertebrae"], ["T1–T12", "thoracic vertebrae"], ["L1–L5", "lumbar vertebrae"], ["ACL", "anterior cruciate ligament"]],
+  watch: [
+    ["myel/o", "Bone marrow in this unit, spinal cord in the nervous system. Osteomyelitis vs poliomyelitis."],
+    ["ilium vs ileum", "Ilium is the hip bone (think i for hIp). Ileum is part of the small intestine."],
+    ["tendon vs ligament", "Tendon: muscle to bone. Ligament: bone to bone."],
+    ["sprain vs strain", "Sprain hurts a ligament; strain hurts a muscle or tendon (strain has a t, like tendon)."],
+    ["abduction vs adduction", "Abduction takes the limb away; adduction adds it back toward the body."],
+    ["osteoporosis vs osteomalacia", "Porosis = less bone mass. Malacia = bone that is soft because it is poorly mineralized."]
+  ]
+},
+{
+  id: "w4", wk: 4, name: "Nervous & Cardio", title: "Nervous & Cardiovascular Systems",
+  cip: "CIP 30–35, 37–42",
+  due: ["Discussion #4: Nervous system", "3-D Model Matching: The Heart", "3-D Model Matching: Nervous System", "36. Timed: Nervous System", "43. Timed: Circulatory System"],
+  overview: "The two busiest systems on the final. For the nervous system, know brain anatomy, the paralysis and sensation suffixes, and major neurological diseases. For the heart, know the chambers, valves and blood flow path, plus the vessel disorders and procedures.",
+  notes: [
+    { h: "Nervous system map", items: ["CNS = brain + spinal cord. PNS = 12 pairs of cranial nerves + 31 pairs of spinal nerves.", "Autonomic nervous system: sympathetic (fight or flight) vs parasympathetic (rest and digest).", "Cerebrum: thought, memory, voluntary movement. Cerebellum: balance and coordination. Brainstem (midbrain, pons, medulla): breathing and heart rate.", "Meninges from outside in: dura mater, arachnoid, pia mater."] },
+    { h: "Blood flow through the heart", items: ["Body → superior and inferior venae cavae → right atrium → tricuspid valve → right ventricle.", "→ pulmonary valve → pulmonary arteries → lungs (pick up oxygen).", "→ pulmonary veins → left atrium → mitral (bicuspid) valve → left ventricle.", "→ aortic valve → aorta → body."] },
+    { h: "Numbers to know", items: ["Normal resting heart rate: 60–100 beats per minute.", "Bradycardia: under 60 bpm. Tachycardia: over 100 bpm.", "Normal blood pressure: under 120/80 mmHg (systolic/diastolic).", "Electrical path: SA node (pacemaker) → AV node → bundle of His → Purkinje fibers."] },
+    { h: "Paralysis vocabulary", items: ["-plegia = paralysis; -paresis = partial paralysis or weakness.", "Hemiplegia = one side. Paraplegia = lower body. Quadriplegia (tetraplegia) = all four limbs.", "Discussion #4 suggests -algia, -pathy and -plegia as suffix examples."] }
+  ],
+  parts: {
+    "Nervous system": [
+      ["neur/o", "nerve", "neuralgia"], ["encephal/o", "brain", "encephalitis"], ["cerebr/o", "cerebrum, brain", "cerebrovascular"], ["cerebell/o", "cerebellum", "cerebellar"],
+      ["mening/o", "meninges", "meningitis"], ["myel/o", "spinal cord (also bone marrow)", "myelogram"], ["gli/o", "glue; neuroglia", "glioma"], ["radicul/o", "nerve root", "radiculopathy"],
+      ["psych/o", "mind", "psychology"], ["thalam/o", "thalamus", "hypothalamus"], ["esthesi/o", "sensation, feeling", "anesthesia"], ["-plegia", "paralysis", "hemiplegia"],
+      ["-paresis", "partial paralysis, weakness", "hemiparesis"], ["-phasia", "speech", "aphasia"], ["-lepsy", "seizure", "epilepsy"], ["-taxia", "muscle coordination", "ataxia"], ["-kinesia", "movement", "bradykinesia"]
+    ],
+    "Cardiovascular system": [
+      ["cardi/o", "heart", "cardiology"], ["angi/o", "vessel", "angioplasty"], ["vas/o", "vessel, duct", "vasoconstriction"], ["arteri/o", "artery", "arteriosclerosis"],
+      ["ather/o", "fatty plaque", "atherosclerosis"], ["phleb/o", "vein", "phlebitis"], ["ven/o", "vein", "venous"], ["aort/o", "aorta", "aortic"],
+      ["atri/o", "atrium", "atrial"], ["ventricul/o", "ventricle", "ventricular"], ["valv/o, valvul/o", "valve", "valvuloplasty"], ["coron/o", "crown; heart", "coronary"],
+      ["thromb/o", "clot", "thrombosis"], ["embol/o", "plug, embolus", "embolism"], ["sphygm/o", "pulse", "sphygmomanometer"], ["-cardia", "heart condition", "tachycardia"]
+    ]
+  },
+  terms: {
+    "Nervous system": [
+      ["central nervous system", "The brain and spinal cord."],
+      ["peripheral nervous system", "Cranial and spinal nerves that connect the CNS to the rest of the body."],
+      ["neuron", "Nerve cell that transmits impulses."],
+      ["cerebrospinal fluid", "Clear fluid that cushions the brain and spinal cord."],
+      ["cerebrovascular accident (stroke)", "Loss of blood flow to part of the brain from a clot (ischemic) or bleeding (hemorrhagic).", "cerebr /o vascul -ar"],
+      ["transient ischemic attack", "Brief stroke-like episode that resolves within 24 hours; a warning sign of stroke."],
+      ["epilepsy", "Disorder of recurrent seizures.", "epi- -lepsy"],
+      ["multiple sclerosis", "Autoimmune destruction of the myelin sheath in the CNS, leaving scarred (sclerotic) patches.", "-sclerosis"],
+      ["Parkinson disease", "Loss of dopamine-producing neurons causing tremor, rigidity and slow movement (bradykinesia)."],
+      ["Alzheimer disease", "Progressive dementia with memory loss and confusion."],
+      ["amyotrophic lateral sclerosis", "Degeneration of motor neurons causing progressive muscle weakness (Lou Gehrig disease).", "a- my /o -trophic"],
+      ["meningitis", "Inflammation of the meninges.", "mening -itis"],
+      ["encephalitis", "Inflammation of the brain.", "encephal -itis"],
+      ["hydrocephalus", "Excess cerebrospinal fluid in the ventricles of the brain.", "hydr /o cephal -us"],
+      ["concussion", "Temporary brain dysfunction caused by a blow to the head."],
+      ["hemiplegia", "Paralysis of one side of the body.", "hemi- -plegia"],
+      ["paraplegia", "Paralysis of the lower half of the body.", "para- -plegia"],
+      ["quadriplegia", "Paralysis of all four limbs.", "quadri- -plegia"],
+      ["hemiparesis", "Weakness of one side of the body.", "hemi- -paresis"],
+      ["neuralgia", "Nerve pain.", "neur -algia"],
+      ["sciatica", "Pain along the sciatic nerve, down the back of the leg."],
+      ["Bell palsy", "Sudden weakness or paralysis of one side of the face (facial nerve)."],
+      ["glioma", "Tumor of glial cells.", "gli -oma"],
+      ["aphasia", "Loss of the ability to speak or understand language.", "a- -phasia"],
+      ["ataxia", "Lack of muscle coordination.", "a- -taxia"],
+      ["syncope", "Fainting; brief loss of consciousness."],
+      ["neuropathy", "Disease of the nerves, often peripheral nerves.", "neur /o -pathy"],
+      ["anesthesia", "Loss of sensation.", "an- -esthesia"],
+      ["paresthesia", "Abnormal sensation such as tingling or pins and needles.", "par- -esthesia"],
+      ["electroencephalography", "Recording of the brain's electrical activity (EEG).", "electr /o encephal /o -graphy"],
+      ["lumbar puncture", "Needle inserted into the lower spine to withdraw cerebrospinal fluid (spinal tap)."],
+      ["craniotomy", "Surgical incision into the skull.", "crani /o -tomy"]
+    ],
+    "Heart anatomy": [
+      ["atria", "The two upper, receiving chambers of the heart (singular: atrium)."],
+      ["ventricles", "The two lower, pumping chambers of the heart."],
+      ["septum", "Wall dividing the right and left sides of the heart."],
+      ["tricuspid valve", "Valve between the right atrium and right ventricle.", "tri- cusp -id"],
+      ["pulmonary valve", "Semilunar valve between the right ventricle and pulmonary artery."],
+      ["mitral (bicuspid) valve", "Valve between the left atrium and left ventricle.", "bi- cusp -id"],
+      ["aortic valve", "Semilunar valve between the left ventricle and aorta."],
+      ["myocardium", "Heart muscle; the middle layer of the heart wall.", "my /o cardi -um"],
+      ["endocardium", "Inner lining of the heart.", "endo- cardi -um"],
+      ["pericardium", "Sac surrounding the heart.", "peri- cardi -um"],
+      ["sinoatrial (SA) node", "The heart's natural pacemaker in the right atrium."],
+      ["atrioventricular (AV) node", "Relays the electrical impulse from the atria to the ventricles."],
+      ["systole", "Contraction phase of the heartbeat (top BP number)."],
+      ["diastole", "Relaxation phase of the heartbeat (bottom BP number)."],
+      ["artery", "Vessel that carries blood away from the heart."],
+      ["vein", "Vessel that carries blood toward the heart."],
+      ["capillary", "Tiny vessel where oxygen and nutrients are exchanged with tissues."]
+    ],
+    "Cardiovascular disorders": [
+      ["myocardial infarction", "Heart attack; death of heart muscle from a blocked coronary artery.", "my /o cardi -al"],
+      ["angina pectoris", "Chest pain from reduced blood flow to the heart muscle."],
+      ["coronary artery disease", "Narrowing of the coronary arteries, usually from atherosclerosis."],
+      ["atherosclerosis", "Buildup of fatty plaque inside artery walls.", "ather /o -sclerosis"],
+      ["arteriosclerosis", "Hardening and thickening of the arteries.", "arteri /o -sclerosis"],
+      ["hypertension", "Persistently high blood pressure.", "hyper- tens -ion"],
+      ["hypotension", "Low blood pressure.", "hypo- tens -ion"],
+      ["congestive heart failure", "Heart cannot pump effectively, so fluid backs up into lungs and tissues."],
+      ["arrhythmia", "Abnormal heart rhythm (also dysrhythmia).", "a- rrhythm -ia"],
+      ["bradycardia", "Slow heart rate, under 60 beats per minute.", "brady- -cardia"],
+      ["tachycardia", "Fast heart rate, over 100 beats per minute.", "tachy- -cardia"],
+      ["atrial fibrillation", "Rapid, irregular quivering of the atria.", "atri -al"],
+      ["aneurysm", "Ballooning of a weakened artery wall."],
+      ["deep vein thrombosis", "Blood clot in a deep vein, usually in the leg.", "thromb -osis"],
+      ["embolism", "Blockage of a vessel by a clot or other material that traveled through the blood.", "embol -ism"],
+      ["varicose veins", "Swollen, twisted veins, usually in the legs, from weak valves."],
+      ["murmur", "Abnormal heart sound, often from a faulty valve."],
+      ["endocarditis", "Inflammation of the inner lining of the heart, often its valves.", "endo- card -itis"],
+      ["pericarditis", "Inflammation of the sac around the heart.", "peri- card -itis"],
+      ["cardiomegaly", "Enlargement of the heart.", "cardi /o -megaly"],
+      ["phlebitis", "Inflammation of a vein.", "phleb -itis"]
+    ],
+    "Cardiovascular procedures": [
+      ["electrocardiogram", "Record of the heart's electrical activity (ECG/EKG).", "electr /o cardi /o -gram"],
+      ["echocardiogram", "Ultrasound image of the heart.", "ech /o cardi /o -gram"],
+      ["cardiac catheterization", "Thin tube threaded through a vessel into the heart to measure pressures or inject dye."],
+      ["angioplasty", "Balloon used to open a narrowed vessel.", "angi /o -plasty"],
+      ["stent", "Small mesh tube placed to keep an artery open."],
+      ["coronary artery bypass graft", "Surgery using a vessel from elsewhere to route blood around a blocked coronary artery (CABG)."],
+      ["pacemaker", "Device implanted to regulate heart rhythm."],
+      ["defibrillation", "Electric shock to restore a normal heart rhythm."]
+    ]
+  },
+  abbr: [["CNS", "central nervous system"], ["PNS", "peripheral nervous system"], ["ANS", "autonomic nervous system"], ["CSF", "cerebrospinal fluid"], ["EEG", "electroencephalogram"], ["LP", "lumbar puncture"], ["CVA", "cerebrovascular accident (stroke)"], ["TIA", "transient ischemic attack"], ["MS", "multiple sclerosis"], ["ALS", "amyotrophic lateral sclerosis"], ["MI", "myocardial infarction"], ["CAD", "coronary artery disease"], ["CHF", "congestive heart failure"], ["HTN", "hypertension"], ["AFib", "atrial fibrillation"], ["DVT", "deep vein thrombosis"], ["PE", "pulmonary embolism"], ["CABG", "coronary artery bypass graft"], ["ECG, EKG", "electrocardiogram"], ["bpm", "beats per minute"], ["CPR", "cardiopulmonary resuscitation"], ["AED", "automated external defibrillator"], ["LDL", "low-density lipoprotein (“bad” cholesterol)"], ["HDL", "high-density lipoprotein (“good” cholesterol)"]],
+  watch: [
+    ["-plegia vs -paresis", "Full paralysis vs weakness. Hemiplegia cannot move one side; hemiparesis has a weak side."],
+    ["cerebrum vs cerebellum", "Cerebrum thinks. Cerebellum (the “little brain” at the back) balances."],
+    ["atherosclerosis vs arteriosclerosis", "Ather/o = fatty plaque buildup (a type of arteriosclerosis). Arteri/o = hardening of arteries in general."],
+    ["thrombus vs embolus", "A thrombus is a clot that stays put. An embolus travels and lodges somewhere else."],
+    ["Pulmonary vessels", "Pulmonary arteries carry oxygen-poor blood; pulmonary veins carry oxygen-rich blood. Arteries are defined by direction (away from heart), not oxygen."],
+    ["Mitral = bicuspid", "Same valve, two names. Tricuspid is on the right; “mitral” sounds like it could be middle but it is on the left."]
+  ]
+},
+{
+  id: "w5", wk: 5, name: "Resp & Skin", title: "Respiratory & Integumentary Systems",
+  cip: "CIP 44–47, 49–54",
+  due: ["Discussion #5: Respiratory and integumentary systems", "3-D Model Matching: Respiratory System", "3-D Model Matching: Epidermis Layers", "48. Timed: Respiratory System", "55. Timed: Integumentary System"],
+  overview: "Air passages from nose to alveoli, breathing patterns, and lung disease; then the skin, its layers, lesions, burns and skin cancers. There is a 3-D model on epidermis layers this week, so learn those five strata in order.",
+  notes: [
+    { h: "Airway path", items: ["Nose → pharynx (throat) → larynx (voice box) → trachea (windpipe) → bronchi → bronchioles → alveoli (air sacs).", "The right lung has 3 lobes; the left has 2 (room for the heart).", "Pleura: double membrane around the lungs; the pleural space is between its layers.", "The diaphragm (phren/o) is the main breathing muscle."] },
+    { h: "Epidermis layers (deep → surface)", items: ["Stratum basale: new cells and melanocytes.", "Stratum spinosum.", "Stratum granulosum.", "Stratum lucidum: only in thick skin (palms, soles).", "Stratum corneum: dead, keratinized surface cells.", "Surface → deep memory hook: “Come Let's Get Sun Burned.”"] },
+    { h: "Skin layers & burns", items: ["Epidermis (outer) → dermis (blood vessels, nerves, glands, hair follicles) → hypodermis/subcutaneous layer (fat).", "First-degree (superficial): epidermis only, red and painful.", "Second-degree (partial-thickness): into the dermis, blisters.", "Third-degree (full-thickness): all skin layers; may be painless because nerves are destroyed.", "Rule of nines: head 9%, each arm 9%, front trunk 18%, back trunk 18%, each leg 18%, perineum 1%."] },
+    { h: "Melanoma ABCDEs", items: ["Asymmetry.", "Border irregular.", "Color varies.", "Diameter larger than 6 mm (pencil eraser).", "Evolving (changing size, shape or color)."] }
+  ],
+  parts: {
+    "Respiratory system": [
+      ["pneum/o, pneumon/o", "lung, air", "pneumonia"], ["pulmon/o", "lung", "pulmonary"], ["bronch/o, bronchi/o", "bronchus", "bronchitis"], ["bronchiol/o", "bronchiole", "bronchiolitis"],
+      ["trache/o", "trachea (windpipe)", "tracheostomy"], ["laryng/o", "larynx (voice box)", "laryngitis"], ["pharyng/o", "pharynx (throat)", "pharyngitis"], ["rhin/o, nas/o", "nose", "rhinorrhea"],
+      ["sinus/o", "sinus", "sinusitis"], ["pleur/o", "pleura", "pleurisy"], ["alveol/o", "alveolus (air sac)", "alveolar"], ["thorac/o", "chest", "thoracentesis"],
+      ["pector/o, steth/o", "chest", "angina pectoris"], ["phren/o", "diaphragm (also mind)", "phrenic nerve"], ["spir/o", "breathing", "spirometry"], ["ox/o", "oxygen", "hypoxia"],
+      ["capn/o", "carbon dioxide", "hypercapnia"], ["lob/o", "lobe", "lobectomy"], ["tonsill/o", "tonsils", "tonsillectomy"], ["-pnea", "breathing", "dyspnea"],
+      ["-thorax", "chest, pleural cavity", "pneumothorax"], ["-ptysis", "spitting", "hemoptysis"], ["-phonia", "voice", "dysphonia"], ["-ectasis", "dilation, expansion", "atelectasis"]
+    ],
+    "Integumentary system": [
+      ["derm/o, dermat/o", "skin", "dermatitis"], ["cutane/o", "skin", "subcutaneous"], ["kerat/o", "hard, horny tissue", "keratosis"], ["melan/o", "black", "melanoma"],
+      ["onych/o, ungu/o", "nail", "onychomycosis"], ["trich/o, pil/o", "hair", "trichology"], ["hidr/o", "sweat", "hyperhidrosis"], ["seb/o", "sebum (oil)", "seborrhea"],
+      ["xer/o", "dry", "xeroderma"], ["ichthy/o", "dry, scaly (fish-like)", "ichthyosis"], ["lip/o, adip/o", "fat", "lipoma"], ["myc/o", "fungus", "onychomycosis"],
+      ["necr/o", "death", "necrosis"], ["rhytid/o", "wrinkle", "rhytidectomy"], ["-derma", "skin", "scleroderma"]
+    ]
+  },
+  terms: {
+    "Respiratory disorders": [
+      ["asthma", "Chronic airway inflammation with bronchospasm, wheezing and shortness of breath."],
+      ["chronic obstructive pulmonary disease", "Long-term airflow blockage; includes emphysema and chronic bronchitis."],
+      ["emphysema", "Alveoli are damaged and overinflated, trapping air."],
+      ["chronic bronchitis", "Inflamed bronchi with a productive cough for at least 3 months in 2 consecutive years.", "bronch -itis"],
+      ["pneumonia", "Lung infection in which alveoli fill with fluid or pus.", "pneumon -ia"],
+      ["tuberculosis", "Bacterial infection by Mycobacterium tuberculosis, usually of the lungs."],
+      ["pneumothorax", "Air in the pleural space causing the lung to collapse.", "pneum /o -thorax"],
+      ["hemothorax", "Blood in the pleural space.", "hem /o -thorax"],
+      ["pleural effusion", "Excess fluid in the pleural space."],
+      ["pleurisy (pleuritis)", "Inflammation of the pleura; sharp pain on breathing.", "pleur -itis"],
+      ["pulmonary embolism", "Clot that travels to and blocks a lung artery.", "pulmon -ary"],
+      ["cystic fibrosis", "Inherited disorder producing thick mucus that clogs lungs and pancreas."],
+      ["atelectasis", "Collapsed or incompletely expanded lung.", "atel -ectasis"],
+      ["croup", "Childhood viral infection with a barking cough and stridor."],
+      ["pertussis", "Whooping cough; bacterial infection with violent coughing fits."],
+      ["laryngitis", "Inflammation of the larynx; hoarse voice.", "laryng -itis"],
+      ["pharyngitis", "Inflammation of the throat.", "pharyng -itis"],
+      ["sinusitis", "Inflammation of the sinuses.", "sinus -itis"]
+    ],
+    "Breathing signs & symptoms": [
+      ["apnea", "Temporary absence of breathing.", "a- -pnea"],
+      ["dyspnea", "Difficult or labored breathing.", "dys- -pnea"],
+      ["eupnea", "Normal breathing.", "eu- -pnea"],
+      ["orthopnea", "Difficulty breathing except when sitting or standing upright.", "orth /o -pnea"],
+      ["tachypnea", "Rapid breathing.", "tachy- -pnea"],
+      ["bradypnea", "Slow breathing.", "brady- -pnea"],
+      ["hemoptysis", "Coughing up blood.", "hem /o -ptysis"],
+      ["epistaxis", "Nosebleed."],
+      ["rhinorrhea", "Runny nose; discharge from the nose.", "rhin /o -rrhea"],
+      ["hypoxia", "Too little oxygen reaching the tissues.", "hyp- ox -ia"],
+      ["hypercapnia", "Too much carbon dioxide in the blood.", "hyper- capn -ia"],
+      ["cyanosis", "Bluish skin from lack of oxygen.", "cyan -osis"],
+      ["crackles (rales)", "Crackling sounds from fluid in small airways."],
+      ["wheeze", "High-pitched whistling sound from narrowed airways."],
+      ["rhonchi", "Low-pitched rattling sounds from mucus in larger airways."],
+      ["stridor", "Harsh, high-pitched sound from an upper airway obstruction."]
+    ],
+    "Respiratory procedures": [
+      ["bronchoscopy", "Visual examination of the bronchi with a scope.", "bronch /o -scopy"],
+      ["spirometry", "Measurement of the volume and speed of air breathed in and out.", "spir /o -metry"],
+      ["thoracentesis", "Needle puncture of the chest to remove pleural fluid.", "thorac -centesis"],
+      ["tracheostomy", "Surgical opening into the trachea, usually with a tube placed.", "trache /o -stomy"],
+      ["tracheotomy", "Incision into the trachea.", "trache /o -tomy"],
+      ["endotracheal intubation", "Tube passed through the mouth or nose into the trachea to keep the airway open.", "endo- trache -al"],
+      ["pulse oximetry", "Measurement of blood oxygen saturation with a clip-on sensor.", "ox -i -metry"],
+      ["lobectomy", "Removal of a lobe of the lung.", "lob -ectomy"]
+    ],
+    "Skin structure": [
+      ["epidermis", "Outer layer of skin, without blood vessels.", "epi- derm -is"],
+      ["dermis", "Layer under the epidermis with blood vessels, nerves, glands and hair follicles."],
+      ["hypodermis (subcutaneous layer)", "Fatty layer beneath the dermis.", "hypo- derm -is"],
+      ["stratum corneum", "Outermost epidermal layer of dead, keratin-filled cells."],
+      ["stratum lucidum", "Clear layer found only in thick skin of palms and soles."],
+      ["stratum granulosum", "Granular layer where cells begin to die and fill with keratin."],
+      ["stratum spinosum", "Spiny layer above the basale; gives the skin strength."],
+      ["stratum basale", "Deepest epidermal layer, where new cells form; contains melanocytes."],
+      ["melanocyte", "Cell that produces melanin pigment.", "melan /o -cyte"],
+      ["keratin", "Tough protein in skin, hair and nails.", "kerat -in"],
+      ["sebaceous gland", "Oil gland that secretes sebum into hair follicles."],
+      ["sudoriferous gland", "Sweat gland."]
+    ],
+    "Skin conditions": [
+      ["dermatitis", "Inflammation of the skin.", "dermat -itis"],
+      ["eczema (atopic dermatitis)", "Chronic itchy, red, dry skin inflammation."],
+      ["psoriasis", "Autoimmune condition with thick, red plaques covered in silvery scales."],
+      ["acne vulgaris", "Inflammation of sebaceous glands and hair follicles; pimples and blackheads."],
+      ["impetigo", "Contagious bacterial skin infection with honey-colored crusts."],
+      ["cellulitis", "Bacterial infection of the dermis and subcutaneous tissue."],
+      ["urticaria", "Hives; itchy raised welts from an allergic reaction."],
+      ["alopecia", "Hair loss."],
+      ["onychomycosis", "Fungal infection of a nail.", "onych /o myc -osis"],
+      ["melanoma", "Malignant tumor of melanocytes; the most dangerous skin cancer.", "melan -oma"],
+      ["basal cell carcinoma", "Most common skin cancer; grows slowly and rarely spreads."],
+      ["squamous cell carcinoma", "Skin cancer of the flat surface cells; can spread."],
+      ["nevus", "Mole; a pigmented spot (plural: nevi)."],
+      ["pressure ulcer (decubitus ulcer)", "Skin breakdown from prolonged pressure, often over bony areas."],
+      ["jaundice", "Yellowing of skin and eyes from excess bilirubin."],
+      ["pruritus", "Itching."],
+      ["diaphoresis", "Profuse sweating."],
+      ["hyperhidrosis", "Excessive sweating.", "hyper- hidr -osis"],
+      ["anhidrosis", "Absence of sweating.", "an- hidr -osis"],
+      ["ecchymosis", "Bruise; bleeding under the skin."],
+      ["petechiae", "Tiny pinpoint red or purple spots from bleeding under the skin."],
+      ["keloid", "Raised overgrowth of scar tissue."],
+      ["laceration", "Torn or jagged wound."],
+      ["abrasion", "Scraping away of the skin surface."],
+      ["xeroderma", "Very dry skin.", "xer /o -derma"],
+      ["lipoma", "Benign fatty tumor.", "lip -oma"]
+    ],
+    "Skin lesions": [
+      ["macule", "Flat, discolored spot (a freckle)."],
+      ["papule", "Small, solid, raised bump."],
+      ["nodule", "Larger, solid, raised lesion that extends deeper."],
+      ["vesicle", "Small fluid-filled blister."],
+      ["bulla", "Large fluid-filled blister."],
+      ["pustule", "Raised lesion filled with pus."],
+      ["wheal", "Smooth, raised, itchy swelling (as in hives or a mosquito bite)."],
+      ["cyst", "Closed sac containing fluid or semisolid material."]
+    ],
+    "Skin procedures": [
+      ["debridement", "Removal of dead or damaged tissue from a wound or burn."],
+      ["biopsy", "Removal of a tissue sample for examination.", "bi /o -opsy"],
+      ["cryosurgery", "Destruction of tissue by freezing.", "cry /o -surgery"],
+      ["skin graft", "Transplant of healthy skin to cover a damaged area."],
+      ["Mohs surgery", "Removing skin cancer layer by layer, checking each under a microscope."],
+      ["incision and drainage", "Cutting open an abscess to drain pus (I&D)."],
+      ["rhytidectomy", "Face-lift; surgical removal of wrinkles.", "rhytid -ectomy"]
+    ]
+  },
+  abbr: [["COPD", "chronic obstructive pulmonary disease"], ["URI", "upper respiratory infection"], ["SOB", "shortness of breath"], ["DOE", "dyspnea on exertion"], ["TB", "tuberculosis"], ["ABG", "arterial blood gas"], ["PFT", "pulmonary function test"], ["O2", "oxygen"], ["CO2", "carbon dioxide"], ["CPAP", "continuous positive airway pressure"], ["CXR", "chest x-ray"], ["RR", "respiratory rate"], ["SpO2", "oxygen saturation by pulse oximetry"], ["ARDS", "acute respiratory distress syndrome"], ["RUL / LLL", "right upper lobe / left lower lobe"], ["Bx", "biopsy"], ["I&D", "incision and drainage"], ["UV", "ultraviolet"], ["SPF", "sun protection factor"], ["BCC", "basal cell carcinoma"], ["SCC", "squamous cell carcinoma"], ["TBSA", "total body surface area"]],
+  watch: [
+    ["-stomy vs -tomy (trachea)", "Tracheostomy creates a lasting opening; tracheotomy is the incision itself."],
+    ["pneum/o vs pulmon/o", "Both mean lung; pneum/o can also mean air (pneumothorax = air in the chest)."],
+    ["vesicle vs bulla vs pustule", "Small fluid blister vs large fluid blister vs pus-filled."],
+    ["papule vs nodule", "Both solid and raised; a nodule is larger and deeper."],
+    ["hidr/o vs hydr/o", "Hidr/o = sweat (hyperhidrosis). Hydr/o = water (hydrocephalus)."],
+    ["Lucidum location", "Stratum lucidum is only in thick skin (palms and soles). Easy test question."]
+  ]
+},
+{
+  id: "w6", wk: 6, name: "Digestive & Urogenital", title: "Digestive & Urogenital Systems",
+  cip: "CIP 56–60, 62–65",
+  due: ["Discussion #6: Digestive and urogenital systems", "3-D Model Matching: Digestive System", "3-D Model Matching: Urogenital System", "61. Timed: Digestive System", "66. Timed: Urogenital System"],
+  overview: "The longest list of roots in the course. Follow the GI tract in order from mouth to anus, then the urinary tract from kidney to urethra, then the male and female reproductive roots. Many terms are just a root plus -itis, -ectomy, -stomy or -scopy.",
+  notes: [
+    { h: "GI tract in order", items: ["Mouth → pharynx → esophagus → stomach.", "Small intestine: duodenum → jejunum → ileum (memory hook: Dow Jones Industrial).", "Large intestine: cecum (appendix attached) → ascending → transverse → descending → sigmoid colon → rectum → anus.", "Accessory organs: liver (makes bile), gallbladder (stores bile), pancreas (enzymes and insulin)."] },
+    { h: "Urinary tract", items: ["Kidneys filter blood through about a million nephrons each and make urine.", "Kidney → ureters (2) → urinary bladder → urethra (1) → outside.", "Ureter has two e's and there are two ureters. Urethra is the single exit tube.", "-uria terms describe urine: hematuria (blood), pyuria (pus), polyuria (a lot), oliguria (scanty), anuria (none), nocturia (at night)."] },
+    { h: "Ostomy pattern", items: ["Colostomy: opening from the colon to the abdominal wall.", "Ileostomy: opening from the ileum to the abdominal wall.", "Gastrostomy: opening into the stomach (feeding tube).", "Anastomosis: surgical connection between two tubular structures."] },
+    { h: "Reproductive roots at a glance", items: ["Uterus: hyster/o, uter/o, metr/o. Ovary: oophor/o, ovari/o. Fallopian tube: salping/o.", "Vagina: colp/o, vagin/o. Breast: mamm/o, mast/o. Menstruation: men/o.", "Testis: orchi/o, orchid/o, test/o. Prostate: prostat/o (not prostrate)."] }
+  ],
+  parts: {
+    "Digestive system": [
+      ["or/o, stomat/o", "mouth", "stomatitis"], ["gloss/o, lingu/o", "tongue", "sublingual"], ["dent/i, odont/o", "tooth", "orthodontist"], ["gingiv/o", "gums", "gingivitis"],
+      ["cheil/o", "lip", "cheilitis"], ["sial/o", "saliva", "sialolith"], ["esophag/o", "esophagus", "esophagitis"], ["gastr/o", "stomach", "gastritis"],
+      ["enter/o", "small intestine", "gastroenteritis"], ["duoden/o", "duodenum", "duodenal ulcer"], ["jejun/o", "jejunum", "jejunostomy"], ["ile/o", "ileum", "ileostomy"],
+      ["col/o, colon/o", "colon", "colonoscopy"], ["sigmoid/o", "sigmoid colon", "sigmoidoscopy"], ["rect/o", "rectum", "rectal"], ["proct/o", "anus and rectum", "proctology"],
+      ["an/o", "anus", "anal"], ["append/o, appendic/o", "appendix", "appendicitis"], ["hepat/o", "liver", "hepatitis"], ["cholecyst/o", "gallbladder", "cholecystectomy"],
+      ["chol/e", "bile, gall", "cholelithiasis"], ["choledoch/o", "common bile duct", "choledocholithiasis"], ["pancreat/o", "pancreas", "pancreatitis"], ["lapar/o", "abdomen, abdominal wall", "laparoscopy"],
+      ["peritone/o", "peritoneum", "peritonitis"], ["herni/o", "hernia", "herniorrhaphy"], ["-emesis", "vomiting", "hematemesis"], ["-pepsia", "digestion", "dyspepsia"],
+      ["-phagia", "eating, swallowing", "dysphagia"], ["-lith", "stone", "cholelith"], ["-iasis", "abnormal condition", "cholelithiasis"], ["-orexia", "appetite", "anorexia"]
+    ],
+    "Urinary system": [
+      ["nephr/o, ren/o", "kidney", "nephritis"], ["pyel/o", "renal pelvis", "pyelonephritis"], ["glomerul/o", "glomerulus", "glomerulonephritis"], ["ureter/o", "ureter", "ureteral"],
+      ["cyst/o, vesic/o", "urinary bladder", "cystitis"], ["urethr/o", "urethra", "urethritis"], ["ur/o, urin/o", "urine, urinary tract", "urology"], ["-uria", "urine condition", "hematuria"],
+      ["olig/o", "scanty, few", "oliguria"], ["noct/i", "night", "nocturia"], ["lith/o", "stone", "lithotripsy"], ["azot/o", "nitrogen, urea", "azotemia"], ["py/o", "pus", "pyuria"]
+    ],
+    "Reproductive system": [
+      ["orchi/o, orchid/o, test/o", "testis", "orchitis"], ["prostat/o", "prostate gland", "prostatitis"], ["vas/o", "vas deferens (also vessel)", "vasectomy"], ["epididym/o", "epididymis", "epididymitis"],
+      ["andr/o", "male", "androgen"], ["spermat/o", "sperm", "spermatogenesis"], ["hyster/o, uter/o, metr/o", "uterus", "hysterectomy"], ["oophor/o, ovari/o", "ovary", "oophorectomy"],
+      ["salping/o", "fallopian tube", "salpingectomy"], ["colp/o, vagin/o", "vagina", "colposcopy"], ["cervic/o", "cervix (also neck)", "cervicitis"], ["mamm/o, mast/o", "breast", "mammogram"],
+      ["men/o", "menstruation", "amenorrhea"], ["gynec/o", "woman, female", "gynecology"], ["-arche", "beginning", "menarche"], ["-cyesis", "pregnancy", "pseudocyesis"]
+    ]
+  },
+  terms: {
+    "Digestive disorders": [
+      ["gastroesophageal reflux disease", "Stomach acid flows back into the esophagus, causing heartburn (GERD).", "gastr /o esophag -eal"],
+      ["peptic ulcer", "Sore in the lining of the stomach or duodenum."],
+      ["gastritis", "Inflammation of the stomach.", "gastr -itis"],
+      ["gastroenteritis", "Inflammation of the stomach and small intestine.", "gastr /o enter -itis"],
+      ["Crohn disease", "Inflammatory bowel disease that can affect any part of the GI tract, through the full wall, in patches."],
+      ["ulcerative colitis", "Inflammatory bowel disease of the colon and rectum lining, continuous from the rectum.", "col -itis"],
+      ["irritable bowel syndrome", "Functional disorder with cramping, gas, diarrhea and/or constipation, without visible damage."],
+      ["diverticulosis", "Small pouches (diverticula) in the colon wall.", "diverticul -osis"],
+      ["diverticulitis", "Inflammation or infection of those pouches.", "diverticul -itis"],
+      ["appendicitis", "Inflammation of the appendix.", "appendic -itis"],
+      ["cholelithiasis", "Gallstones.", "chol /e lith -iasis"],
+      ["cholecystitis", "Inflammation of the gallbladder.", "cholecyst -itis"],
+      ["hepatitis", "Inflammation of the liver, often viral (A, B, C).", "hepat -itis"],
+      ["cirrhosis", "Chronic liver disease with scarring that replaces healthy tissue."],
+      ["pancreatitis", "Inflammation of the pancreas.", "pancreat -itis"],
+      ["hiatal hernia", "Part of the stomach pushes up through the diaphragm."],
+      ["inguinal hernia", "Part of the intestine pushes through the abdominal wall in the groin."],
+      ["hemorrhoids", "Swollen veins in the rectum or anus."],
+      ["polyp", "Growth projecting from a mucous membrane, such as in the colon."],
+      ["celiac disease", "Autoimmune damage to the small intestine triggered by gluten."],
+      ["gingivitis", "Inflammation of the gums.", "gingiv -itis"],
+      ["stomatitis", "Inflammation of the mouth.", "stomat -itis"],
+      ["peritonitis", "Inflammation of the peritoneum (abdominal lining).", "peritone -itis"]
+    ],
+    "Digestive signs & symptoms": [
+      ["dysphagia", "Difficulty swallowing.", "dys- -phagia"],
+      ["dyspepsia", "Indigestion.", "dys- -pepsia"],
+      ["hematemesis", "Vomiting blood.", "hemat -emesis"],
+      ["emesis", "Vomiting."],
+      ["melena", "Black, tarry stool from digested blood."],
+      ["hematochezia", "Bright red blood in the stool."],
+      ["ascites", "Fluid buildup in the peritoneal cavity."],
+      ["anorexia", "Loss of appetite.", "an- -orexia"],
+      ["diarrhea", "Frequent, loose, watery stools.", "dia- -rrhea"],
+      ["constipation", "Infrequent or difficult bowel movements."],
+      ["flatus", "Gas expelled through the anus."]
+    ],
+    "Digestive procedures": [
+      ["colonoscopy", "Visual examination of the colon with a scope.", "colon /o -scopy"],
+      ["esophagogastroduodenoscopy", "Scope exam of the esophagus, stomach and duodenum (EGD).", "esophag /o gastr /o duoden /o -scopy"],
+      ["colostomy", "Opening from the colon through the abdominal wall.", "col /o -stomy"],
+      ["ileostomy", "Opening from the ileum through the abdominal wall.", "ile /o -stomy"],
+      ["gastrectomy", "Removal of all or part of the stomach.", "gastr -ectomy"],
+      ["cholecystectomy", "Removal of the gallbladder.", "cholecyst -ectomy"],
+      ["appendectomy", "Removal of the appendix.", "append -ectomy"],
+      ["laparoscopy", "Visual exam of the abdomen with a scope through small incisions.", "lapar /o -scopy"],
+      ["herniorrhaphy", "Surgical repair of a hernia by suturing.", "herni /o -rrhaphy"],
+      ["anastomosis", "Surgical connection between two tubular structures."]
+    ],
+    "Urinary terms": [
+      ["urinary tract infection", "Infection anywhere in the urinary tract, most often the bladder (UTI)."],
+      ["cystitis", "Inflammation of the urinary bladder.", "cyst -itis"],
+      ["pyelonephritis", "Infection of the kidney and renal pelvis.", "pyel /o nephr -itis"],
+      ["nephrolithiasis", "Kidney stones.", "nephr /o lith -iasis"],
+      ["glomerulonephritis", "Inflammation of the glomeruli, the kidney's filters.", "glomerul /o nephr -itis"],
+      ["chronic kidney disease", "Gradual loss of kidney function; end stage is ESRD."],
+      ["hematuria", "Blood in the urine.", "hemat -uria"],
+      ["dysuria", "Painful urination.", "dys- -uria"],
+      ["polyuria", "Excessive urination.", "poly- -uria"],
+      ["oliguria", "Scanty urine output.", "olig- -uria"],
+      ["anuria", "Absence of urine output.", "an- -uria"],
+      ["nocturia", "Urinating at night.", "noct -uria"],
+      ["pyuria", "Pus in the urine.", "py -uria"],
+      ["proteinuria", "Protein in the urine (also albuminuria).", "protein -uria"],
+      ["enuresis", "Involuntary urination, especially bed-wetting."],
+      ["incontinence", "Inability to control urination."],
+      ["urinary retention", "Inability to empty the bladder."],
+      ["urinalysis", "Physical, chemical and microscopic exam of urine (UA)."],
+      ["dialysis", "Filtering wastes from the blood artificially when the kidneys fail."],
+      ["lithotripsy", "Crushing stones with shock waves.", "lith /o -tripsy"],
+      ["cystoscopy", "Visual exam of the bladder with a scope.", "cyst /o -scopy"],
+      ["urinary catheterization", "Inserting a tube through the urethra into the bladder to drain urine."],
+      ["nephrectomy", "Removal of a kidney.", "nephr -ectomy"]
+    ],
+    "Male reproductive terms": [
+      ["benign prostatic hyperplasia", "Noncancerous enlargement of the prostate that can block urine flow (BPH).", "hyper- -plasia"],
+      ["prostatitis", "Inflammation of the prostate.", "prostat -itis"],
+      ["cryptorchidism", "Undescended testis.", "crypt orchid -ism"],
+      ["orchitis", "Inflammation of a testis.", "orch -itis"],
+      ["vasectomy", "Cutting and tying the vas deferens for sterilization.", "vas -ectomy"],
+      ["erectile dysfunction", "Inability to achieve or maintain an erection."],
+      ["prostate-specific antigen test", "Blood test used to screen for prostate cancer (PSA)."],
+      ["transurethral resection of the prostate", "Removing prostate tissue through the urethra (TURP)."]
+    ],
+    "Female reproductive terms": [
+      ["endometriosis", "Endometrial tissue growing outside the uterus.", "endo- metr -iosis"],
+      ["hysterectomy", "Removal of the uterus.", "hyster -ectomy"],
+      ["oophorectomy", "Removal of an ovary.", "oophor -ectomy"],
+      ["salpingectomy", "Removal of a fallopian tube.", "salping -ectomy"],
+      ["amenorrhea", "Absence of menstruation.", "a- men /o -rrhea"],
+      ["dysmenorrhea", "Painful menstruation.", "dys- men /o -rrhea"],
+      ["menorrhagia", "Excessive menstrual bleeding.", "men /o -rrhagia"],
+      ["menarche", "First menstrual period.", "men -arche"],
+      ["menopause", "Permanent end of menstruation.", "men /o -pause"],
+      ["mammography", "X-ray imaging of the breast.", "mamm /o -graphy"],
+      ["mastectomy", "Removal of a breast.", "mast -ectomy"],
+      ["Pap test", "Cells scraped from the cervix to screen for cervical cancer (Papanicolaou)."],
+      ["colposcopy", "Magnified visual exam of the vagina and cervix.", "colp /o -scopy"],
+      ["uterine fibroids", "Benign tumors of uterine smooth muscle (leiomyomas)."],
+      ["ectopic pregnancy", "Fertilized egg implants outside the uterus, usually in a fallopian tube."],
+      ["dilation and curettage", "Widening the cervix and scraping the uterine lining (D&C)."]
+    ]
+  },
+  abbr: [["GI", "gastrointestinal"], ["GERD", "gastroesophageal reflux disease"], ["IBS", "irritable bowel syndrome"], ["IBD", "inflammatory bowel disease"], ["N/V", "nausea and vomiting"], ["NG", "nasogastric"], ["EGD", "esophagogastroduodenoscopy"], ["LFT", "liver function test"], ["BM", "bowel movement"], ["UTI", "urinary tract infection"], ["BUN", "blood urea nitrogen"], ["UA", "urinalysis"], ["CKD", "chronic kidney disease"], ["ESRD", "end-stage renal disease"], ["AKI", "acute kidney injury"], ["KUB", "kidneys, ureters, bladder (x-ray)"], ["ESWL", "extracorporeal shock wave lithotripsy"], ["BPH", "benign prostatic hyperplasia"], ["PSA", "prostate-specific antigen"], ["TURP", "transurethral resection of the prostate"], ["D&C", "dilation and curettage"], ["GYN", "gynecology"], ["OB", "obstetrics"]],
+  watch: [
+    ["ureter vs urethra", "Two ureters carry urine from kidneys to bladder. One urethra carries it out of the body."],
+    ["ileum vs ilium", "Ileum (e for entero, eating) is small intestine. Ilium is the hip bone."],
+    ["Crohn vs ulcerative colitis", "Crohn: anywhere mouth to anus, patchy, full wall thickness. UC: colon and rectum only, continuous, inner lining."],
+    ["diverticulosis vs diverticulitis", "-osis = the pouches are present. -itis = they are inflamed or infected."],
+    ["cyst/o", "Means urinary bladder (cystitis, cystoscopy) but a cyst is also any fluid-filled sac. Cholecyst/o is the gallbladder."],
+    ["melena vs hematochezia", "Black, tarry stool (upper GI bleed) vs bright red blood (lower GI bleed)."],
+    ["salping/o", "Fallopian tube here; can also mean the eustachian tube in ear terms."]
+  ]
+},
+{
+  id: "w7", wk: 7, name: "STIs & Endocrine", title: "Sexually Transmitted Infections & Endocrine System",
+  cip: "CIP 67–69, 71–73",
+  due: ["Discussion #7: STI and the endocrine system", "3-D Model Matching: Endocrine System", "70. Timed: Sexually Transmitted Infections", "74. Timed: Endocrine System"],
+  overview: "First the major STIs: the pathogen behind each one, its key signs, and where the name comes from. Then the endocrine glands, the hormones each one secretes, and what happens when there is too much (hyper-) or too little (hypo-).",
+  notes: [
+    { h: "Pathogen by STI", items: ["Bacteria: chlamydia (Chlamydia trachomatis), gonorrhea (Neisseria gonorrhoeae), syphilis (Treponema pallidum). Treated with antibiotics.", "Viruses: HIV, herpes simplex (HSV), human papillomavirus (HPV), hepatitis B. Managed with antivirals or prevented by vaccines (HPV, hepatitis B).", "Protozoan: trichomoniasis (Trichomonas vaginalis).", "Chlamydia and gonorrhea are often asymptomatic and can lead to pelvic inflammatory disease (PID)."] },
+    { h: "Where STI names come from", items: ["Chlamydia: Greek chlamys, “cloak.” The bacterium hides inside host cells, and infections are often silent.", "Gonorrhea: Greek gonos (seed) + -rrhea (flow); the discharge was once mistaken for semen.", "Herpes: Greek herpein, “to creep,” for spreading sores.", "Syphilis: from a 1530 poem about a shepherd named Syphilus.", "Papilloma(virus): papill/o (nipple-like projection) + -oma; it causes warts."] },
+    { h: "Hyper vs hypo patterns", items: ["Thyroid: hyper → Graves disease (fast metabolism, weight loss, exophthalmos). Hypo → Hashimoto, myxedema (slow, weight gain, cold).", "Growth hormone: excess in children → gigantism; in adults → acromegaly. Deficiency in children → pituitary dwarfism.", "Cortisol: excess → Cushing syndrome. Deficiency → Addison disease.", "PTH: excess → high blood calcium. Deficiency → low calcium and tetany."] },
+    { h: "Diabetes vocabulary", items: ["Diabetes mellitus: diabetes (“to pass through”) + mellitus (“honey-sweet”) for sugar in urine.", "Classic triad: polyuria, polydipsia, polyphagia.", "Type 1: autoimmune loss of insulin-making beta cells. Type 2: insulin resistance.", "Diabetes insipidus (“tasteless”): not enough ADH, so large amounts of dilute urine; blood sugar is normal.", "A1c reflects average blood glucose over about 2–3 months."] }
+  ],
+  parts: {
+    "Endocrine system": [
+      ["aden/o", "gland", "adenoma"], ["adren/o, adrenal/o", "adrenal gland", "adrenalectomy"], ["thyr/o, thyroid/o", "thyroid gland", "thyroidectomy"], ["parathyroid/o", "parathyroid gland", "hyperparathyroidism"],
+      ["pituitar/o, hypophys/o", "pituitary gland", "hypopituitarism"], ["pancreat/o", "pancreas", "pancreatitis"], ["gonad/o", "sex glands (ovaries, testes)", "gonadotropin"], ["thym/o", "thymus", "thymoma"],
+      ["crin/o, -crine", "to secrete", "endocrine"], ["gluc/o, glyc/o", "sugar, glucose", "hyperglycemia"], ["-dipsia", "thirst", "polydipsia"], ["acr/o", "extremities", "acromegaly"],
+      ["calc/o", "calcium", "hypercalcemia"], ["kal/i", "potassium", "hyperkalemia"], ["natr/o", "sodium", "hyponatremia"], ["home/o", "sameness", "homeostasis"],
+      ["-tropin", "stimulating hormone", "thyrotropin"], ["ket/o, keton/o", "ketones", "ketoacidosis"], ["toxic/o", "poison", "thyrotoxicosis"]
+    ],
+    "STI word parts": [
+      ["-rrhea", "flow, discharge", "gonorrhea"], ["gon/o", "seed", "gonorrhea"], ["papill/o", "nipple-like projection", "papilloma"], ["immun/o", "protection, immunity", "immunodeficiency"],
+      ["urethr/o", "urethra", "urethritis"], ["trich/o", "hair (hair-like flagella)", "trichomoniasis"], ["-iasis", "abnormal condition", "trichomoniasis"]
+    ]
+  },
+  terms: {
+    "Sexually transmitted infections": [
+      ["chlamydia", "Bacterial STI (Chlamydia trachomatis); most commonly reported bacterial STI and often without symptoms."],
+      ["gonorrhea", "Bacterial STI (Neisseria gonorrhoeae) causing discharge and painful urination; often silent in women.", "gon /o -rrhea"],
+      ["syphilis", "Bacterial STI (Treponema pallidum) that progresses in stages: primary, secondary, latent, tertiary."],
+      ["chancre", "Painless sore at the infection site; the sign of primary syphilis."],
+      ["chancroid", "Painful genital ulcer caused by the bacterium Haemophilus ducreyi."],
+      ["genital herpes", "Viral STI (herpes simplex virus, usually HSV-2) with recurring painful blisters; no cure, antivirals control outbreaks."],
+      ["human papillomavirus", "Viral STI that causes genital warts and can lead to cervical and other cancers; preventable by vaccine.", "papill -oma"],
+      ["condylomata acuminata", "Genital warts caused by HPV."],
+      ["HIV", "Human immunodeficiency virus; a retrovirus that destroys CD4 (helper T) cells."],
+      ["AIDS", "Acquired immunodeficiency syndrome; late-stage HIV with CD4 count under 200 cells/mm³ or an opportunistic infection."],
+      ["trichomoniasis", "STI caused by the protozoan Trichomonas vaginalis; frothy discharge and itching.", "trich /o mon -iasis"],
+      ["hepatitis B", "Viral liver infection spread by blood and sexual contact; preventable by vaccine.", "hepat -itis"],
+      ["pelvic inflammatory disease", "Infection of the uterus, fallopian tubes and ovaries, often from untreated chlamydia or gonorrhea; can cause infertility."],
+      ["urethritis", "Inflammation of the urethra.", "urethr -itis"],
+      ["asymptomatic", "Without symptoms.", "a- symptomat -ic"],
+      ["pathogen", "Organism that causes disease.", "path /o -gen"],
+      ["opportunistic infection", "Infection that takes hold because the immune system is weakened, as in AIDS."],
+      ["Kaposi sarcoma", "Cancer of blood vessel walls causing purple skin lesions; linked with AIDS.", "sarc -oma"],
+      ["antiretroviral therapy", "Combination of drugs that suppresses HIV (ART)."],
+      ["pre-exposure prophylaxis", "Medication taken before exposure to prevent HIV infection (PrEP)."]
+    ],
+    "Glands & hormones": [
+      ["endocrine gland", "Ductless gland that secretes hormones directly into the blood.", "endo- -crine"],
+      ["exocrine gland", "Gland that secretes through ducts (sweat, salivary).", "exo- -crine"],
+      ["hormone", "Chemical messenger carried in the blood to target organs."],
+      ["homeostasis", "Stable internal balance that hormones help maintain.", "home /o -stasis"],
+      ["hypothalamus", "Brain region that controls the pituitary gland.", "hypo- thalam -us"],
+      ["pituitary gland", "“Master gland” at the base of the brain that controls other glands."],
+      ["growth hormone (GH)", "Anterior pituitary hormone that stimulates growth of bone and tissue."],
+      ["thyroid-stimulating hormone (TSH)", "Anterior pituitary hormone that tells the thyroid to release T3 and T4."],
+      ["adrenocorticotropic hormone (ACTH)", "Anterior pituitary hormone that stimulates the adrenal cortex.", "adren /o cortic /o -tropic"],
+      ["FSH and LH", "Anterior pituitary hormones that control the ovaries and testes."],
+      ["prolactin", "Anterior pituitary hormone that stimulates milk production."],
+      ["antidiuretic hormone (ADH)", "Posterior pituitary hormone that makes the kidneys retain water (vasopressin).", "anti- diuret -ic"],
+      ["oxytocin", "Posterior pituitary hormone that triggers uterine contractions and milk let-down."],
+      ["thyroxine (T4) and triiodothyronine (T3)", "Thyroid hormones that regulate metabolism."],
+      ["calcitonin", "Thyroid hormone that lowers blood calcium."],
+      ["parathyroid hormone (PTH)", "Raises blood calcium by pulling it from bone."],
+      ["cortisol", "Adrenal cortex hormone for stress response and blood glucose."],
+      ["aldosterone", "Adrenal cortex hormone that makes the kidneys retain sodium and water."],
+      ["epinephrine", "Adrenal medulla hormone for fight or flight (adrenaline)."],
+      ["insulin", "Hormone from pancreatic beta cells that lowers blood glucose."],
+      ["glucagon", "Hormone from pancreatic alpha cells that raises blood glucose."],
+      ["melatonin", "Pineal gland hormone that regulates sleep cycles."],
+      ["thymosin", "Thymus hormone that helps T cells mature."],
+      ["estrogen and progesterone", "Ovarian hormones for female sex characteristics and the menstrual cycle."],
+      ["testosterone", "Testicular hormone for male sex characteristics."]
+    ],
+    "Endocrine disorders": [
+      ["hyperthyroidism", "Overactive thyroid; fast heart rate, weight loss, heat intolerance.", "hyper- thyroid -ism"],
+      ["Graves disease", "Autoimmune hyperthyroidism, often with bulging eyes (exophthalmos)."],
+      ["exophthalmos", "Bulging eyes.", "ex- ophthalm -os"],
+      ["hypothyroidism", "Underactive thyroid; fatigue, weight gain, cold intolerance.", "hypo- thyroid -ism"],
+      ["Hashimoto thyroiditis", "Autoimmune destruction of the thyroid; common cause of hypothyroidism.", "thyroid -itis"],
+      ["goiter", "Enlargement of the thyroid gland."],
+      ["myxedema", "Severe hypothyroidism in adults with puffy, thickened skin."],
+      ["congenital hypothyroidism", "Thyroid deficiency present at birth (formerly cretinism)."],
+      ["diabetes mellitus type 1", "Autoimmune destruction of beta cells; no insulin is made; requires insulin."],
+      ["diabetes mellitus type 2", "Insulin resistance with relative insulin deficiency; most common form."],
+      ["gestational diabetes", "High blood glucose that develops during pregnancy."],
+      ["diabetes insipidus", "Lack of ADH causing extreme thirst and large amounts of dilute urine."],
+      ["hyperglycemia", "High blood glucose.", "hyper- glyc -emia"],
+      ["hypoglycemia", "Low blood glucose.", "hypo- glyc -emia"],
+      ["polydipsia", "Excessive thirst.", "poly- -dipsia"],
+      ["polyphagia", "Excessive hunger or eating.", "poly- -phagia"],
+      ["diabetic ketoacidosis", "Dangerous buildup of ketones and acid in the blood from lack of insulin (DKA).", "ket /o acid -osis"],
+      ["acromegaly", "Enlarged hands, feet and face from excess growth hormone in adults.", "acr /o -megaly"],
+      ["gigantism", "Excess growth hormone before growth plates close, causing extreme height."],
+      ["pituitary dwarfism", "Short stature from growth hormone deficiency in childhood."],
+      ["Cushing syndrome", "Excess cortisol; moon face, buffalo hump, weight gain."],
+      ["Addison disease", "Adrenal insufficiency; too little cortisol and aldosterone; fatigue and darkened skin."],
+      ["pheochromocytoma", "Tumor of the adrenal medulla that releases excess epinephrine, causing high blood pressure.", "phe /o chrom /o cyt -oma"],
+      ["hyperparathyroidism", "Too much PTH; high blood calcium, weak bones, kidney stones.", "hyper- parathyroid -ism"],
+      ["hypocalcemia", "Low blood calcium; can cause tetany (muscle spasms).", "hypo- calc -emia"],
+      ["thyroidectomy", "Removal of the thyroid gland.", "thyroid -ectomy"],
+      ["hemoglobin A1c", "Blood test showing average glucose over about 2–3 months."]
+    ]
+  },
+  abbr: [["STI", "sexually transmitted infection"], ["STD", "sexually transmitted disease"], ["HIV", "human immunodeficiency virus"], ["AIDS", "acquired immunodeficiency syndrome"], ["HSV", "herpes simplex virus"], ["HPV", "human papillomavirus"], ["PID", "pelvic inflammatory disease"], ["ART", "antiretroviral therapy"], ["PrEP", "pre-exposure prophylaxis"], ["PEP", "post-exposure prophylaxis"], ["NAAT", "nucleic acid amplification test"], ["RPR, VDRL", "blood screening tests for syphilis"], ["DM", "diabetes mellitus"], ["T1DM / T2DM", "type 1 / type 2 diabetes mellitus"], ["FBS", "fasting blood sugar"], ["A1c, HbA1c", "hemoglobin A1c"], ["OGTT", "oral glucose tolerance test"], ["DKA", "diabetic ketoacidosis"], ["DI", "diabetes insipidus"], ["TSH", "thyroid-stimulating hormone"], ["T3 / T4", "triiodothyronine / thyroxine"], ["GH", "growth hormone"], ["ACTH", "adrenocorticotropic hormone"], ["ADH", "antidiuretic hormone"], ["PTH", "parathyroid hormone"], ["FSH", "follicle-stimulating hormone"], ["LH", "luteinizing hormone"]],
+  watch: [
+    ["chancre vs chancroid", "Chancre is painless (syphilis). Chancroid is painful (Haemophilus ducreyi)."],
+    ["HIV vs AIDS", "HIV is the virus. AIDS is the late stage of HIV infection."],
+    ["mellitus vs insipidus", "Mellitus: high blood sugar. Insipidus: ADH problem, blood sugar normal. Both cause polyuria."],
+    ["gigantism vs acromegaly", "Same hormone excess (GH). Before growth plates close → gigantism; after → acromegaly."],
+    ["Cushing vs Addison", "Cushing = too much cortisol. Addison = too little."],
+    ["Calcitonin vs PTH", "Calcitonin lowers calcium (tones it down). PTH pulls calcium up."],
+    ["endocrine vs exocrine", "Endocrine is ductless, into blood. Exocrine uses ducts. The pancreas is both."]
+  ]
+},
+{
+  id: "w8", wk: 8, name: "Final review", title: "Comprehensive Final Exam",
+  cip: "Review all CIP activities",
+  due: ["77. Timed: Final Exam, due Friday at 11:59 PM EST"],
+  overview: "The final is worth 50% of your course grade. It has 220 questions in a 2-hour window and submits automatically when time runs out. That works out to about 33 seconds per question, so you need fast recall, not just recognition.",
+  notes: [
+    { h: "Exam facts", items: ["220 questions, 2-hour time limit, auto-submits at the end.", "About 33 seconds per question on average.", "Worth 50% of the course grade (timed events 40%, discussions 10%).", "Plan for a reliable computer, stable internet and a quiet place before you start."] },
+    { h: "A 7-day plan", items: ["Days 1–2: Flashcards on Weeks 1 and 2 (word parts and abbreviations unlock everything else).", "Days 3–5: One or two body systems a day. Flashcards first, then a 25-question quiz.", "Day 6: Study the Everything deck until the red Learn number stays low.", "Day 7: Take the full 220-question quiz at exam pace, then review only what you missed."] },
+    { h: "Test-day tactics", items: ["Break unfamiliar terms into parts: suffix first, then prefix, then root.", "Watch for look-alikes: ileum/ilium, ureter/urethra, hyper/hypo, inter/intra, -tomy/-stomy.", "Do not sit on one question. 33 seconds goes fast; answer, then move on.", "Spelling counts. Many distractors differ by a single letter."] }
+  ],
+  parts: {}, terms: {}, abbr: [], watch: []
+}
+];
+
+const CIP_RAW = [[["AB-","away (away from)",[["ab/norm/al","away (away from)/normal or regular/refers to"],["ab/ducens","away/draw or lead"]],"",[]],["ABDOMIN/O-","belly",[["abdomin/al","belly/refers to"],["abdomen/oscopy","belly/process of viewing"]],"",[]],["ACOUST/I-","hearing",[["acoust/ic","hearing/refers to"],["acoust/ic/ophobia","sound (loud)/refers to/fear of"]],"AUDI-",[]],["ADHES/IO-","to stick together",[["adhes/ion","to stick together/process of"],["adhes/i/otomy","adhesions/cutting"]],"",[]],["ADIP/O-","fat",[["adip/oma","fat/tumor"],["adip/ocyte","fat/cell"]],"STEATO-, LIPO-",["(adip/oma is also known as lip/oma)"]],["-AGE","relates to or pertains to",[["tri/age","three/relates to or pertains to (French term which means to sort or classify into three or more divisions)"],["mass/age","kneading/procedure of or process of"]],"-ATION, -IATION, -ING, -ION, -TION, -Y",[]],["-AGON","walls",[["pent/agon","5 sided/walls"],["hex/agon","6 sided/walls"]],"",[]],["AMBUL/O-","to walk",[["ambul/atory","to walk or walking/process of"],["somn/ambul/ism","sleep/walking/process of"]],"",[]],["-AMINE","nitrogen compound",[["anti-hist/amine medic/ation","against-tissue/nitrogen compound: cure/process of"]],"",[]],["ANA-","apart or up",[["ana/tom/y","apart or up/cut/procedure of or process of"],["ana/phase","up/stage"]],"",["(mitosis stage when chromosomes move up or apart)"]],["ANOMAL/Y","abnormal",[["anomal/o/scope","abnormal or not average (not or without normal development)/viewing or examining"],["anomal/ad","abnormal or not average/toward"]],"",[]],["ANTER/O-","before or foremost",[["anter/ior","before or foremost (in front)/refers to"],["anter/opster/ior","front/to back/refers to"]],"",[]],["ANTI-","against",[["anti/sept/ic","against/infection/refers to"],["anti/bio/tic","against/life/refers to"]],"",[]],["ANTR/O-","cavity",[["antro/scop/e","cavity/view or examine (sinuses)/instrument"]],"",[]],["APO-","above or upon",[["apo/plex/y","above or upon/paralyzed/process of"]],"",[]],["AQUA-","water",[["aqua/therap/y","water/treat/process or procedure"],["aqua/phobia","water/fear of"]],"HYDRO-",[]],["-ASIS","condition of or disease",[["psori/asis","itching/condition of or disease"]],"-OSIS, -ESIS, -SIS",[]],["-ATION","process of or procedure of",[["circul/ation","circle/process of"],["cardio/graph/y","heart/instrument to record/procedure of"]],"-AGE, -IATION, -ING, -ION, -TION, -Y",["(blood moving from heart and returning)"]],["ATM/O-","vapor or steam",[["atmo/therap/y","vapor or steam/treatment/process of"],["atmo/sphere","vapor/sphere"]],"",["(aroma/therap/y: vapor/treat/process)"]],["AUDI-","hearing",[["audi/olog/y","hearing/science of or study of/procedure or process of"],["audio/meter","hear/measurement"]],"ACOUST/I-",[]],["AUSCULT/O-","to listen",[["auscult/ation","to listen (physical diagnosis)/process of"]],"",[]],["BACILL/O-","rod-like",[["bacill/us","rod-like (bacteria)/refers to"],["bacill/emia","rod-like (bacteria)/in blood"]],"",[]],["BACTERI/O-","rod",[["bacter/ia","rod/refers to"],["bacter/ial","rod/pertaining to"]],"",["(rod was the first bacteria viewed under microscope)"]],["BENE-","good or normal",[["bene/fit","good or normal/suited for"]],"",[]],["BUCCA-","cheek",[["bucc/al","cheek/pertains to"],["bucc/edema","cheek/swelling"]],"",[]],["CAC/O-","diseased or bad",[["caco/plas/tic","diseased or bad/growth/refers to"],["caco/geus/ia","bad/taste/refers to"]],"",[]],["CAL/O-","heat, heated or hot",[["cal/or","heat, heated or hot/one who is (1 of 4 characteristics of inflammation: calor-heat; rubor- red; tumor-swelling; and dolor-pain)"],["cal/orie","heat/unit"]],"",[]],["CATHETER/O-","to let down into",[["catheter/iz/ation","to let down into/act of/procedure of"],["catheter/ostat","to let down into/stand"]],"",[]],["CAUS-","burn or heat",[["caus/tic","burn or heat/refers to"],["caus/algia","burn or heat/pain"]],"CAUST/O-, CAUTER/O-",[]],["CAUST/O-","burn or heat",[["caus/tic","burn or heat/refers to"]],"CAUS-, CAUTER/O-",[]],["CAUTER/O-","to burn or to heat",[["cauter/iz/ation","to burn or to heat/act of/procedure of"]],"CAUS-, CAUST/O-",[]],["CAV-","hollow",[["cav/ity","hollow/state of or refers to"],["cav/um","hollow/state of"]],"",[]],["-CELE","swelling or tumor",[["laparo/cele","abdominal/swelling or tumor"]],"",[]],["CELLUL/O-","chambers",[["cellul/itis","chambers or body cells (tissues are cell groups)/infection"]],"",[]],["-CENTESIS","surgical puncture to drain fluid",[["thoraco/centesis","chest/surgical puncture to drain fluid (procedure)"]],"",[]],["CENTR/I-","center",[["centri/fug/al","center (middle of circle)/to flee/refers to (heavy particles move to bottom or outside from the center)"],["centri/lobul/ar","center/lobule/pertaining to"]],"",[]],["CHIRO-","hand",[["chiro/pract/or","hand/practice/one who"]],"",["(mano also means hand)"]],["-CID","to kill",[["sui/cid/al","oneself/to kill/refers to"]],"",[]],["CINE/O-","movement filming",[["cine/angio/cardio/graph/y","movement/vessel/heart/filming instrument/procedure"]],"",[]],["CIRCUM-","around",[["circum/flex","around/bend"],["circum/cis/ion","around/cut/process of"],["circum/duct/ion","around/movement/state of"]],"",[]],["-CIS","cut or to cut",[["in/cis/ion","into/cut/procedure of"]],"sect/o-",[]],["-CLYSIS","irrigation or injection",[["hydro/clysis","water/irrigation or injection"]],"",[]],["-COCCUS","berry",[["staphylo/coccus","grapelike/berry (shape of bacteria)"]],"",[]],["CON-","together",[["con/duct/ion","together/draw"]],"COM-, SYM- SYN-",[]],["CORONAL PLANE","crowning or frontal body cut",[["coron/al","crowning or frontal body cut/refers to (downward cut through coronal suture right to left of skull cuts the body into a front and back part. Also known as 'FRONTAL PLANE')"]],"",[]],["CRYO-","cold",[["cryo/therap/y","cold/treat or cure (killing cells)/procedure of"]],"",[]],["CULD/O-","blind pouch",[["culdo/scop/y","blind pouch/viewing/procedure of (an instrument examines the pelvic viscera 'organs' with an endo/scop/e after introducing it through the posterior fornix 'arch' cul-de-sac 'blind pouch' wall of the vagina)"]],"",[]],["CYT-","cell or chamber",[["cyt/olog/y","cell or chamber/study of or science of/process of"]],"CYTE-, CYTH-",[]],["CYTH-","cell or chamber",[["erythro/cyth/emia","red/cell/clod"]],"CYT-, CYTE-",[]],["DEBRIDE-","removal",[["debride/ment","removal/act of or ability to (the removal of foreign matter, dead, damaged tissue, 'wounds')"]],"",[]],["DEM/O-","people",[["dem/o/graphy","people/procedure of recording with an instrument"]],"",[]],["DEPRESS/O-","lower",[["depress/or","lower/one who"]],"",[]],["-DESIS","binding or to bind",[["ligo/desis","to bind/binding"]],"",["(surgical procedure to reattach ligaments to bone)"]],["DIFFERENT-","to separate",[["different/ial dia/gnosis","to separate or apart/refers to: total/knowledge (different/ial dia/gnosis - also known as D.D. means to identify the differences between two or more similar conditions)"]],"-DEFERENS",[]],["DIS-","away from or reverse",[["dis/ease","away from or reverse/comfort or ease"]],"",[]],["DOL/O-","pain",[["dol/or","pain/one who (causes)"]],"-AGRA, ALGESIA-, -ALGIA, -DYNIA",[]],["DOSE-","a giving or to give",[["dos/age","a giving/act of or relates to"]],"DOSE",[]],["-DOTE","what is given",[["anti/dote","against/what is given"]],"",[]],["DYNAM/O-","work or strength",[["dynam/ics","work or strength/refers to"],["dynamo/meter","strength/measurement"]],"",["(measure the strength of muscles)"]],["-E (suffix)","instrument",[["rhino/scop/e","nose/view or examine/instrument"]],"-graph",[]],["E- (prefix)","out or remove",[["e/viscer/ate","out or remove/organs/act of or state of"]],"ec-, ect-, ex-, ext-",[]],["ECHO-","sound",[["echo/gram","sound/writing or recording"]],"SONO-",[]],["-ECTOMY","excision or removal",[["tonsill/ectomy","almond or small mass/excision or removal"]],"",[]],["ELECTR/O-","electrical",[["electro/encephalo/gram","electrical/in head (brain)/recording"]],"",[]],["-ELLUM","lesser or smaller",[["cereb/ellum","brain/lesser or smaller"]],"",[]],["ENEMA","injection",[["enema","injection"]],"",["(water forced into colon for cleansing)"]],["ERGO-","work or labor",[["ergo/meter","work/to measure ergot work or labor"]],"",["(birthing drug)"]],["-ER","one who",[["pract/ition/er","performs/process of/one who"]],"-IOR, -OR",[]],["ETI/O-","cause",[["eti/olog/y","cause/study or science of diseases/process"]],"",[]],["FEBR/O-","fever",[["febr/ile","fever/state of or refers to"]],"",[]],["FENESTR/O-","window",[["fenestr/ial","window (opening in body or forceps)/refers to"]],"",[]],["FIL-","thread",[["fila/ment","thread/state of or refers to"]],"FILI-",[]],["-FLECT","bend",[["de/flect","away/bend or divert"]],"FLEX-",[]],["FLU-","flowing",[["in/fluenza","inward/condition of flowing"]],"",["(mucoid material)"]],["-FUGE","to flee",[["centri/fuge","center/to flee"]],"",["(cell separation in tube)"]],["FULGUR/O-","to lighten",[["fulgur/ation","to lighten/procedure of (process of) (the destruction of tissue with a long, high-frequency, electrical sparks)"]],"",[]],["FURC/O-","branch or fork",[["bi/furc/ation","two/branch or fork/procedure of (making)"]],"",[]],["GELATINO-","freeze or congeal",[["gelatin/ous","freeze or congeal/state of"]],"",[]],["-GEN","origin, develop, to produce, to form, to make",[["carcino/gen","crab-like/ to produce, to form, to make, origin, develop"],["carcino/gen/esis","crab-like/origin or beginning/process of"]],"-GENESIS",["(substance that causes cancer)"]],["-GNOSIS","knowledge",[["dia/gnosis","total or complete/knowledge"]],"",[]],["GONI/O-","angle",[["goni/meter","angle/measurement"]],"",["(usually be for surgery)"]],["-GRADE","a step, stage, or degree in a process",[["retro/grade","backward or behind/a step, stage, or degree in a process"]],"",[]],["-GRAFT","to probe or cut with a knife",[["dermo/graft","skin/to probe with knife (pole; probe; or steak) (the removal of skin to be placed on new body part - like a flap)"]],"",[]],["-GRAM","to record",[["myo/gram","muscle/to record (write or take down)"]],"",[]],["-GRAPHY","procedure of using an instrument to do a recording",[["myo/graphy","muscle/procedure of using an instrument to do recording"]],"",[]],["-GRAPH","recording instrument",[["myo/graph","muscle/instrument"]],"-E",["(used to do recording)"]],["HELICO-","spiral",[["helico/bacter pylori","spiral (shaped)/bacteria: gatekeeper (lower end of stomach) (digestive system bacteria that causes most digestive ulcers 'sores')"]],"",[]],["ICHOR/O-","serum or watery pus",[["ichor/ous","serum or watery pus/state of"]],"",[]],["IN SITU","in position or location",[["in situ","in: position or location (original or first)"]],"",["(a stage of cancer)"]],["INFECT/O-","to invade",[["infect/ion","to invade/process of"]],"",[]],["-ING","procedure of or process of",[["operat/ing","working/procedure of or process of"]],"-AGE, -ATION, -IATION, -ION, -TION, -Y",[]],["INTRO-","within",[["intro/spect","within/to view"]],"",[]],["INTUS-","within",[["intus/suscept/ion","within/to receive/process of (invagination or the slipping of a body part into a lower body part 'like the intestines' - often seen in children and animals)"]],"",[]],["ION/O-","going or ion movement",[["iono/therap/y","going (of ions)/treat or cure/procedure of (treatment by introducing ions into body"]],"IONT/O-",[]],["IONT/O-","going or ion movement",[["ionto/therap/y","going or ion movement/treat or cure/procedure of"]],"ION/O-",["(treatment by introducing ions into body)"]],["-ION","procedure of or process of",[["in/cis/ion","into/cut/procedure of or process of"]],"-AGE, -ATION, -IATION, -ING, -TION, -Y",[]],["IPSI-","equal",[["ipsi/later/al","equal/side or sides/process of"]],"",[]],["IR-","not or lack of",[["ir/regul/ar","not or lack of/consistent or regular/refers to"]],"",[]],["-ISH","resembling or related to",[["lap/ish","stone/resembling or related to"]],"",[]],["-ISM","state of or condition of",[["giant/ism","large/state of"],["albin/ism","white/state of or condition of"]],"",[]],["-IST","specialist",[["endo/crin/olog/ist","within/secrete/science or study of/specialist"]],"",["(glands that secrete directly into or within the blood)"]],["-ITIS","inflamed or inflammation",[["gloss/itis","tongue/inflamed or inflammation"]],"-ICY",[]],["-ITY","state of",[["steril/ity","barren (not capable of fertility)/state of"]],"-OUS",[]],["-IZE","state of or acts like",[["cauter/ize","burn/state of"],["hypnot/ize","sleep/state of or acts like"]],"",[]],["KAKO-","bad",[["kako/smia","bad/smell"]],"",[]],["LAX-","to loosen or loosening",[["re/lax/ation","again/to loosen/process of"],["lax/ative","to loosen/to cause alternate spelling: LAXAT/O-"]],"",[]],["LEPTO-","thin or slender",[["lepto/morph/ic","thin or slender/shape or form/refers to"]],"",[]],["LETH/O-","sluggish",[["leth/argic","sluggish (fall, sag, drowsy)/pertains to"],["leth/al","drowsy/refers to"]],"",["(so sluggish or drowsy it leads to death)"]],["-LITER","liter",[["milli/liter","one-thousandth/litre of fluid measurement"]],"",["(liter is an unit of liquid: 1.0567 quarts or 1000 ml or cc.)","alternate spelling: -LITRE (European)"]],["-LOG-","science or study of, process or procedure of",[["hist/o/log/y","web-like (tissue appearance)/science of or study of/process of"]],"-OLOGY",[]],["-LYSIS","destruction, breakdown, declining",[["auto/lysis","self/destruction, breakdown, declining"],["hemo/lysis","blood/breakdown"]],"",[]],["MAL-","bad, harm, injury",[["mal/ignant","bad, harm, injury/refers to"],["mal/practice","bad/action"]],"",["(growing worse or resisting treatment)"]],["-MATA","multiple",[["carcino/mata","crab-like (cancerous growths)/multiple (many)"]],"",[]],["-METRY","measurement procedure",[["opto/metr/y (O.D.)","sight or vision/measurement/procedure or process"]],"",[]],["MILLI-","one thousandth",[["milli/meter","one thousandth/of meter (39.37 inches) (A kilo/gram is one thousand grams or a recording weight of about 2.2 lb. A milli/gram is one thousandth of a gram.)"]],"",[]],["MINIMUS-","smallest",[["minim/um","smallest/refers to (smallest: gluteus minimus is the smallest of the 3 groups of buttock muscles)"]],"",[]],["MINUTE","small",[["com/minute","together/small (com/minuted fractures are caused by the bone being forced together causing small bone parts or chips)"]],"",[]],["-MITR/E","head band or mitre box",[["mitr/al","head band or mitre box/refers to alternate spelling: MITR/O- (European)"]],"",[]],["MYEL/O-","spinal cord or bone marrow",[["myelo/gram","spinal cord/recording"],["myel/itis","bone marrow/inflamed"]],"",[]],["NUCLE/O-","nut",[["nucle/us","nut (shaped)/refers to"]],"",[]],["-O/PLASTY","repair or plastic surgery",[["rhino/plast/y","nose/repair or plastic surgery/procedure of"]],"",[]],["-OID","resembling",[["lip/oid","fat/resembling"],["epi/derm/oid","upper/skin/resembling"]],"",[]],["ONC/O-","tumor",[["onco/log/y","tumor/science or study of/process of"],["onco/log/ist","tumor/science of or study of/specialist"]],"",["(Note - all tumors are not cancer. ex: 'benign growths')"]],["-OPSY","vision, sight, and eye",[["aut/opsy","self/process of viewing (after death)"]],"-OPT-, OPTO-, OPIA-",[]],["ORGAN/O-","viscera, organ or cell parts",[["organ/elle","viscera, organ, or cell parts (specialized body part)/small"]],"",["(cells: mitochondria, lysosomes, etc.)"]],["-ORRHAPHY","suturing or repair",[["neur/orrhaph/y","nerve/suturing or repair/procedure of"]],"",[]],["-OR","one who",[["doct/or","teacher/one who"],["praction/er","performs/one who"]],"-ER, -IOR",[]],["-OSTOMY","mouth-like opening produced by surgery",[["col/ostomy","colon/opening (mouth-like formation) procedure"]],"",[]],["-OTOMY","cutting, to cut, cut into",[["tracheo/tom/y","rough (windpipe)/cut into/procedure of"],["ana/tom/y","apart/cutting/procedure of or process of"]],"",[]],["-OTRIPSY","crushing or to crush",[["neur/otrips/y","nerve/crushing or to crush/procedure of (surgical)"],["litho/tripsy","stone/crushing/procedure of (kidney or gall stones 'calculi')"]],"",[]],["PALL/O-","pale or lack of color",[["pall/or","pale or lack of color/one who"]],"",["(characteristic of illness)"]],["PALPAT/O-","touching or to touch",[["palpat/ion","touching or to touch/process of"]],"",["(physical diagnosis procedure)"]],["PALPIT-","quivering or fluttering",[["palpit/ation","quivering or fluttering (heart)/process of"]],"",[]],["PEDIA-","child",[["ped/ia/tric/ian","child/treats or cures/one who"]],"PEDI-",[]],["PHARMAC/O-","drug relationship, to drug, medicine",[["pharmac/o/log/ist","drug or medicine/study of/specialist"]],"",[]],["-PHERESIS","withdrawal or to separate",[["hemato/pheresis","blood/to separate (separating different types of blood cells: leuco/cytes, erythro/cytes, and thrombo/cytes)"]],"",[]],["PHOT/O-","light",[["photo/graphy","light/process of recording with device"],["photo/phobia","light/fear of"]],"",[]],["PHYSI/O-","function or nature of",[["physi/o/log/y","function or nature of/science of/process of"]],"",[]],["PIP/O-","pipe or tube-like",[["pip/ette","pipe or tube-like/little"]],"",[]],["PLAS-","growth, development, formation",[["hyper/plas/ia","excessive/growth, development, formation/pertains to alternate spelling: PLAS/O-, PLAST"]],"-PLASM",[]],["PLIC/O-","fold, to fold, to tuck",[["plic/ation","folding or tucking/process of"]],"",["(to reduce a structure or organ size)"]],["PRO-","before",[["pro/gnosis","before/knowledge"],["pro/phylax/is","before/prevention or guard/refers to"]],"ANTE-, PRE-",[]],["PRONE-","to bend forward",[["pronat/ion","to bend forward/process of (to lay face down; to lower; to turn hand palm downward or backward)"]],"PRONAT/O-",[]],["PROXIM/O-","close or closest",[["proxim/al","close or closest/refer to"]],"",[]],["PYO-","pus",[["pyo/gen/ic","pus/produce/refers to"]],"PY-",[]],["PYRET/O-","fever",[["pyret/ic","fever 'febrile', heat, fire/refers to"],["pyreto/gen","fever/producing"]],"PYREX-",[]],["PYREX-","fever",[["pyrex/ia","feverish/refers to"]],"PYRET/O-",[]],["RADI/O-","ray, spoke, X-ray, radioactivity",[["radia/tion","ray, spoke, X-ray, radioactivity/process of or state of"],["rad/ius","spoke/refer to"]],"",["(lateral bone of forearm - to side with palm up)"]],["RAY-","spoke or wave length",[["ray","spoke or wave length (This is one or more lines from a common center: energy, X-ray, spectrum, radiant, fluorescence, and heat. Types vary: X-ray, alpha, beta, gamma, delta, actinic, cathode, hard, heat, infrared, luminous, medullary, positive, primary, secondary, roentgen, ultraviolet, etc.)"]],"",[]],["RHABD/O-","rod or rod-shaped",[["rhabdo/virus","rod-shaped (RNA viruses)/poison"],["rhabdo/phob/ia","rod or rod-shaped/fear (fear of being hit by rod or fear of nematode 'rods' worm infection)"]],"",["(one pathogen in this group is the rabies virus)"]],["ROENT/O-","X-ray",[["roent/gen/ic","X-ray/beginning or caused by/refer to"]],"",[]],["SAGITT/O-","arrow or arrow-like",[["mid/sagitt/al","middle/like and arrow or arrow-like (cut)/refers to (visual or surgical cut separating body or parts into right and left segments)"]],"",[]],["SCINTILL/O-","spark",[["scintillo/scop/e","spark/to examine/instrument (viewing effects of ionizing radiation on fluorescent screen)"]],"",[]],["-SCOP/E","an instrument that examines or views",[["micro/scop/e","small/to view or examine/instrument (process of)"]],"",[]],["-SCOPY","to examine or view",[["lapro/scop/y","abdomen wall or abdominal/to examine or view/procedure of (process of)"]],"",[]],["SECT/O-","to cut",[["sect/ion","to cut (several times) or to cut apart/procedure of"]],"-CIS, -TOM",["(to section an organ)"]],["SINISTR/O-","to the left or left",[["sinistro/card/ia","to the left or left/heart/refers to"]],"",[]],["SOM/O-","body",[["psycho/somat/ic","mind/body/refer to"]],"SOMAT/O-",["(the term SOM/O is a prefix, the term -SOME is a suffix)"]],["SON/O-","sound",[["sono/gram","sound/recording or writing (diagnosis)"]],"ECHO-",[]],["SPHYGM/O-","pulse",[["sphygmo/mano/meter","pulse/by hand/measurement (this records the pressure of blood above atmospheric pressure 760 mm/hg as it passes through arteries)"]],"",[]],["STAPHYL/O-","grape or grape-like clusters",[["staphylo/coccus","grape or grape-like clusters/berry"]],"UV-, UVE/A-, UVE/O-, UVUL/O-",["(bacteria appearance)"]],["STEREO-","three-dimensional or solid",[["stereo/cine/fluoro/graphy","three-dimensional (viewing)/motion picture/fluorescence/recording procedure"]],"",[]],["STETH/O-","chest",[["stetho/scope","chest/to examine"]],"PECT/O-, PECTER/O-, THORAC/O-",[]],["STREPT/O-","twisted or twisted chain",[["strepto/coccus","twisted or twisted chain/spheres"]],"",["(bacteria appearance)"]],["STRICT/O-","drawing or binding",[["strict/ure","drawing or binding/state of"]],"",[]],["SURG/I-","working by hand",[["surg/ical","working by hand/refers to surgeon one who works by hand"]],"",[]],["SUTURE","sewing together",[["sutur/ing","sewing together/procedure of"]],"",[]],["SYN-","together",[["syn/drome","together/running (signs and symptoms)"],["syn/apse","together/point of contact"],["syn/ovi/al","together/like egg/refer to"]],"COM-, CON-, SYM-",[]],["SYNCOPE","to faint or fainting",[["syncope","to faint or fainting"]],"",[]],["SYSTEM/O-","to classify or arrange",[["system/ic","to classify or arrange/refers to"]],"",[]],["TAX/O-","arrange, to order, to organize, locate",[["tax/o/nom/y","arrange, to order, to organize, locate/law/process of (to classify plants or animals, to organize or put a order to items in biology)"]],"",[]],["TERMIN/O-","end, place at the end, boundary",[["termin/al","place at the end or boundary/refers to"]],"TERM",[]],["THERAP/O-","treating or curing",[["therap/y","treating or curing/procedure of"],["chemo/therap/y","chemical (with)/treatment or cure/procedure of"]],"",[]],["THERM/O-","heat, hot or warm",[["therm/ometer","heat, hot, or warm)/measurement"],["therm/al","temperature/pertain to"],["thermo/gram","heat/recording (diagnostic graphic record of heat variations: blood flow or tissue changes)"]],"",[]],["-TION","process of or procedure of",[["nutri/tion","nourishment/process of or procedure of"]],"-AGE, -ATION, -IATION, -ING, -ION, -Y",[]],["-TOM/E","cutting instrument",[["derma/tom/e","skin/cut/instrument"]],"",["(an instrument used to cut into the skin)"]],["TON/O-","tension, tone, pressure",[["tono/meter","tension, tone, pressure/to measure (instrument used to measure pressure or tension within the eye 'intra/ocul/ar')"]],"",[]],["TOX/O-","poison",[["tox/ic","poison/refers to"],["toxic/olog/y","poison/science of/procedure of (science that studies how poisons are chemical composed, action tests, and antidotes)"]],"SEPS/O-, SEPT/O-, VIR/O-",[]],["TRAUMA","wound",[["trauma","wound"]],"",[]],["TREPAN/O-","borer or to bore",[["trepan/ation","a borer (to perforate)/procedure of"]],"TRYPAN/O-",["(usually drilling a bone to take biopsy tissue samples)"]],["-TRESIA","perforation or opening",[["a/tresia","without/perforation or opening"]],"",[]],["TRIAGE","to sort or classify",[["triage","to sort or classify (screening: in hospitals, at accidents, in war to prioritize treatment)"]],"",[]],["-TRIPSY","to crush",[["litho/tripsy","stone/crushing (gall stones)"]],"",[]],["TRYPAN/O-","borer, to bore, drill",[["trypano/som/iasis","borer/body/disease or condition"]],"TREPAN/O-",[]],["VECT/O-","carries or a carrier",[["vect/or","carries or a carrier/one who (insect, arthropod, animal that transmits organism that causes the disease)"]],"",[]],["VENTR/O-","belly",[["ventr/al","belly/refer to"],["ventr/icle","belly/small"]],"",[]],["VIR/O-","poison",[["vir/al","poison/refers to (smallest of etiologic infectious agents - thought to cause severe poisoning)"]],"SEPS/O-, SEPT/O-, TOX/O-",[]],["VIT/O-","alive, life, living",[["vit/al","alive, life, living/pertains to"]],"VIV/I-",["(your resume is your personal vitae)"]],["-Y","procedure of or process of",[["therap/y","treating or curing/procedure of or process of"]],"-AGE, -ATION, -IATION, -ING, -ION, -TION",[]]],[["-ABLE","capable of or ability to",[["erg/able","work/capable of"]],"-IBLE",[]],["-AC","refers to, pertains to, or state of",[["cardi/ac","heart/refers to, pertains to, or state of"]],"-AL, -AR, -ARY, -ATE, -EUM, -IAC, -IC, -ICAL, -ILE, -IS, -IUM, -ORY, -OUS, -UM, -US",[]],["AER/O-","air or gas",[["aero/cele","air or gas/distension of cavity (like a tumor)"],["aer/ogen","gas/producer"]],"",[]],["ALB/O-","white",[["albin/ism","white/state of"]],"",["(albo-, leuco-, leuko- all mean white)"]],["ALBUMIN/O-","Egg white",[["albumin/ur/ia","egg white/in urine/refers to"],["albumin/ochol/ia","protein/in bile/refers to"]],"",[]],["-AL","refers to",[["lingu/al","tongue/refers to"]],"-AC, -AR, -ARY, -ATE, -EUM, -IAC, -IC, -ICAL, -ILE, -IS, -IUM, -ORY, -OUS, -UM, -US",[]],["AMBI-","both",[["ambi/later/al","both/sides/refers to"],["ambi/dextr/ous","both/right (dominant hand)/refers to or state of"]],"",["(dextero = right, sinistro = left)"]],["AMINO-","organic compound",[["amino/acid/emia","organic compound/PH below 7/refers to blood"],["amino/acid/uria","amino/acid/urine"]],"",["(amino acid compounds containing Nitrogen (N), Carbon (C), Hydrogen (H), & Oxygen (O))"]],["AMPHI-","both",[["amphi/arthr/osis","both sides/joint/condition of"]],"",[]],["AN-","lack of or without",[["an/orex/ia","lack of or without/appetite/refers to"]],"",[]],["ANTE-","before",[["ante/nat/al","before/birth/pertain to"],["ante/pyrect/ic","before/fever/refers to"]],"",[]],["ANTHROP/O-","human",[["anthropo/metr/ic","human/measurement/refers to"]],"",[]],["ARCHE/O-","first",[["arche/type","first or original/form or shape (it produces other forms)"],["arche/us","first/structure"]],"",[]],["-ARY","refers to",[["capill/ary","little hair/refers to"]],"-AC, -AL, -AR, -ATE, -EUM, -IAC, -IC, -ICAL, -ILE, -IS, -IUM, -ORY, -OUS, -UM, -US",[]],["-AR","refers to or pertains to",[["patell/ar","little dish (kneecap)/refers to"]],"-AC, -AL, -ARY, -ATE, -EUM, -IAC, -IC, -ICAL, -ILE, -IS, -IUM, -ORY, -OUS, -UM, -US",[]],["-ATE","refers to or action",[["pall/ate","roof (plate at top of mouth)/refers to or action"],["satur/ate","penetrating/action or use"]],"-AC, -AL, -AR, -ARY, -EUM, -IAC, -IC, -ICAL, -ILE, -IS, -IUM, -ORY, -OUS, -UM, -US",[]],["AZYGO-","single",[["azyg/ous","single (not paired)/refers to"]],"",[]],["BI-","two",[["bi/ceps","two/headed (muscle)"]],"CO-, BIN-, DI-, DIPLO-, DUO-, DYO-",[]],["BIO-","life",[["bio/log/y","life/science of or study of/process of"],["bio/active","life/affecting"]],"",[]],["-BLAST","beginning or young",[["osteo/blast","bone/beginning or young cells"],["lympho/blast","lymphocyte/beginning or young cells"]],"",["(embryonic primitive cells found in the body systems)"]],["BOSS","swelling",[["boss/ism","swelling/state of"],["boss/elation","swelling/condition of"]],"",[]],["BREVI-","short",[["brev/ity","short/state of"],["brevi/collis","short/neck"]],"",[]],["CAPIT/O-","head",[["capit/al","head/refers to"],["de/capit/ate","away/head/action"]],"CAPUT, CEPHAL/O-",[]],["CAUD/O-","tail or toward tail",[["caud/al","tail or toward tail/refer to"]],"",[]],["CELI/O-","abdomen or belly",[["celi/oma","abdomen or belly/tumor"],["celi/ac","abdomen/pertaining to"]],"",[]],["CENTI-","one-hundredth part (100)",[["centi/meter","one-hundredth part (100)/of meter (METRE- or -METER means to measure & a meter is 39.37 inches)"]],"",[]],["CHLOR/O-","green",[["chlor/emia","green (chlorides)/in blood"]],"",[]],["CIRRH/O-","yellow-orange",[["cirrh/o/sis","yellow-orange (jaundiced) or yellow/condition of (disease or infection causing liver failure: bile pigments remain in the body and blood resulting in color abnormality)"]],"",[]],["-CLAS","breakdown",[["cyto/clas/is","cell/breaking/refers to"]],"-CLAST",[]],["CO-","two",[["co/llater/al liga/ment","two (2 outer knee ligaments)/sides/refers: binding/act of"],["co-operat/ive","two/working/state of"]],"BI-, BIN-, DI-, DIPLO-, DUO-, DYO-",[]],["COM-","together",[["com/press/ion","together/contract/process of com/minuted fracture together/small: break"]],"CON-, SYM- SYN-",[]],["CONVOLO-","to roll together",[["convol/ution","to roll together/pertains to"]],"",[]],["CORTIC/O-","bark, outer bark, rind, or cortex",[["cortico/ster/oid","bark, outer bark, rind, cortex/solid/resemble"]],"",[]],["-CULE","little",[["mole/cule","mass/little (small quantity can be divided without loss of characteristics)"]],"-ICLE, -IOLE, -ULE, -ULA",[]],["CYAN/O-","blue",[["cyan/osis","blue/condition of"]],"",[]],["CYTE-","cell or chamber",[["cyt/olog/y","cell or chamber/study of or science of/process of"]],"CYT-, CYTH-",[]],["DECI-","one tenth (1/10)",[["deci/liter","one tenth (1/10) / liter"]],"",["(DECA- means 10)"]],["DEEP","most inward",[["deep","most inward"]],"",["(structure more internal than another)"]],["DEKA-","ten",[["deka/gram","ten/grams"]],"",["(15.432 grains = 1 gram; 28.35 grams = 1 ounce)"]],["DEXTR/O-","right",[["dextro/card/ia","right/heart/refers to"]],"",["(tilting of heart to the right)"]],["DI-","two or separate",[["di/gest/ion","two/separate or to separate/process of"]],"CO-, BI-, BIN-, DIPLO-, DUO-, DYO-",[]],["DIA-","across, through, total, between",[["dia/phragm","across, through, total, complete, between/petition or wall"],["dia/meter","across/measure"],["dia/gnosis","total/knowledge"],["dia/stole","between/contractions"]],"",[]],["DIST/O-","farther from",[["dist/al","farther from/refer to"]],"",[]],["DOCT/O-","to teach or teacher",[["doct/or (Latin docere)","to teach or teacher/one who"]],"",[]],["DORS/O-","back",[["dors/al","back (posterior)/refers to (e.g. the top or back of a dog, the back of a standing human)"],["dorsi/flex/or","the back/to bend/one who"]],"",[]],["DU/O-","two",[["du/al","two/refers to"]],"CO-, BI-, BIN-, DI-, DIPLO-, DYO-",[]],["DUCT/O-","to draw or to lead away",[["ab/duct/ion","away/to draw or to lead away (motion)/process of"]],"",[]],["-DYNIA","pain",[["coccygo/dynia","tailbone (coccyx)/pain"]],"-AGRA, ALGESIA-, -ALGIA, DOLO-",[]],["DYS-","difficult, faulty, painful",[["dys/toc/ia","difficult or painful/birth/pertains to"],["dys/chondro/plas/ia","faulty/cartilage/development/refers to"],["dys/meno/rrhea","painful/monthly/flow"]],"",[]],["-EAL","refers to",[["pharyg/eal","throat/refers to"]],"",[]],["ECT-","outside, outward, outer, out",[["ect/asia","outward (dilation)/condition or state"]],"EC-, ECTO-",[]],["ECTO-","outside, outward, outer, out",[["ecto/derm","outer/skin"]],"EC-, ECT-",[]],["EM-","in",[["em/py/ema","in/pus/refers to"],["em/bol/ism","within/lump/state"]],"",["(collection of pus in body cavity)"]],["EN-","in",[["en/cephal/itis","in/head (refers to brain)/inflamed"]],"",[]],["EOSIN/O-","rose-red color",[["eosino/phil","rose-red (color)/love of"]],"",["(staining of WBCs)"]],["ERYTHEMAT/O-","red or flushed",[["erythemat/ic","red or flushed/refer to"]],"",[]],["EU-","good or normal",[["eu/toc/ia","good or normal/birth/pertains to"],["eu/gene/tics","good, new or normal/ to produce or form/state of"],["eu/phor/ia","good or normal/feeling (mental)/pertain to"]],"",[]],["EX-","out, outside, outward",[["ex/tens/ion","outward/to stretch/process of"]],"EXO-, EXTRA-",[]],["FACI/O-","face",[["faci/al","face/pertains to"]],"FACET/O-",[]],["FELON","bad or malignant",[["felon","bad or malignant (suppurative 'pus forming' at end of finger or toe - often a nail abscess)"]],"WHITLOW",[]],["FISTUL/O-","pipe or pipe stem",[["pyo/fistula","pus/pipe or pipe stem (pus found within a pipe or tube that opens to body surface)"]],"",[]],["FLEX-","to bend",[["ante/flex/ion","before/to bend or divert/process of"]],"-FLECT",["(to decrease angle of joint)"]],["FOC/O-","center or hearth",[["foc/al","center or hearth/pertains to"]],"",[]],["FULV/O-","brown",[["fulv/us","brown/pertains to"]],"",[]],["FUNGI-","mushroom",[["fungi/form","mushroom or plant/shape"]],"LICHEN/I-",[]],["GER/O-","old or old age",[["ger/iatr/ic","old or old age/treat or cure/study of or science of"]],"",["(studying all aspects of the aging process)"]],["GIG/A-","one billion or one billionth",[["giga/cytes","one billion or one billionth/cells"]],"",[]],["GYNEC/O-","woman",[["gynec/olog/ist","woman/science and study of/specialist alternate spelling: GYN/O-"]],"",[]],["HECT/O-","one hundred",[["hecto/hedron","one hundred/sides"]],"",[]],["HEPT/A-","seven",[["hepta/dactyl/ia","seven/fingers or toes/refers to"]],"",[]],["HETER/O-","other or opposite",[["hetero/gen/ous","other or opposite/form/state of"]],"",[]],["HEX/A-","six",[["hexa/dactyl/ia","six/fingers or toes/refers to"],["hex/agon","six/sided"]],"",[]],["HOMO-","same Homo Sapiens same: wise man",[["homo/sex/ual","same/sex/refers to"]],"HOMEO-",[]],["-IA","refers to, condition, state of",[["esthes/ia","feeling (physical)/refers to, condition, state of"],["dys/phag/ia","difficult/eating or swallowing/refers to"]],"-A",[]],["-ICIAN","one who",[["diet/ician","food/one who (performs)"]],"",[]],["IDIO-","unique to or unknown cause",[["idio/path/ic","unique to or unknown cause/disease/refer to"]],"",["(distinctive or individualized personal health problem)"]],["-ID","state of",[["morb/id","disease/state of"]],"",[]],["IM-","into or not",[["im/plant","into/place or locate"],["im/potent","not/powerful or strong"]],"",["(not capable of having a strong or hard erection)"]],["INFLAM/O-","flame within",[["inflamm/ation","flame within/process of"]],"",[]],["INTER-","between",[["inter/cellul/ar","between/cell or chamber/refers to"]],"",[]],["-IOR","one who is",[["infer/ior","under or below/ one who (is)"]],"-ER, -OR",[]],["-IOUS","state of",[["delir/ious","mental confusion or excitement/state of"]],"",["(illusions and hallucinations)"]],["ISO-","equal or same",[["iso/ton/ic","equal or same/tone/refers to"],["iso/cell/ar","equal/cells/refers to"]],"",["(chamber 'inside cell membrane' pressure)"]],["-IS","refers to",[["rach/is","spine, spinal column, backbone/refers to"]],"-AC, -AL, -AR, -ARY, -ATE, -EUM, -IAC, -IC, -ICAL, -ILE, -IUM, -ORY, -OUS, -UM, -US",[]],["JUXTA-","near, close by, adjoining",[["juxta/position","near, close by, adjoining/place or location"]],"",[]],["KIL/O-","one thousand",[["kilo/gram","one thousand/grams"]],"",["(recording weight of about 2.2 lb.)","note: a milli/gram is one thousandth of a gram"]],["KYM/O-","movement or motion",[["kymo/sis","motion/condition of"]],"KINE-,",[]],["LARVA-","mask",[["larv/al","mask/refers to (stage of disease)"]],"",[]],["LAT-","side",[["lat/eral","side/refers to"],["lat/issimus","side (dorsal chest muscle)/refers to alternate spelling: LATER/O-"]],"",[]],["LEVO-","left",[["levo/card/ia","left (position)/heart/refers to"]],"",[]],["LIVID/O-","blue",[["livid/ity","blue/state of"]],"",[]],["LOCO-","place an object",[["locomotion","place an object/movement"]],"",[]],["-LUCENT","to shine or shining",[["trans/lucent","through or across/to shine or shining"]],"",[]],["LUMP-","small mass",[["lump/ectomy","small mass/excised or removed"]],"",[]],["MAGNI-","large or greater",[["magni/ficat/ion","larger or greater/to make/process of"]],"",[]],["MEDI-","middle",[["medi/an; medi/um; medi/al","middle/refers to"]],"",[]],["MEGA-","great or big",[["mega/colon","great (big)/large intestine"]],"",[]],["META-","beyond or change",[["meta/carp/al","beyond/wrist/pertains to"],["meta/bol/ism","change/lump/state of"],["meta/stasis","change (from)/standing or stoppage"]],"",["(spreading of cancer or bacteria)"]],["MICRO-","small",[["micro/gloss/ia","small/tongue/refers to"],["micro/scop/e","small/viewing/instrument"]],"",[]],["MORPHO-","shape",[["a/morph/ous","without/shape or form/state of or composed of"]],"",[]],["MORT/O-","death",[["mort/al","death/refers to"]],"",[]],["MULTI-","many, multiple, excessive",[["multiple sclera/osis (MS)","many: hardening/condition of (hardening of nerves and myelin sheath around nerves causing paralysis)"]],"PLURI-, POLY-",[]],["MYRIA-","numberless or numerous",[["myria/pod/iasis","numberless or numerous/footed/condition or disease"]],"",["(infestation with multiple arthropods)"]],["NANO-","1 billionth",[["nano/meter","1 billionth/of meter"]],"",["(39.37 inches is a meter)"]],["NECR/O-","death, dead, dying",[["necrot/ic","death, dead, dying/refers to"],["necr/osis","death, dead, dying/condition of"]],"THANAT/O",["(mortification or the death process of any body cells)"]],["NIGRA-","black",[["nigra bodies","black: structures in and around cell nucleus"]],"MELAN/O-",["alternate spelling: NIGRI-, NIGRO-"]],["NIN/O-","nine",[["nin/us","nine/pertains to"]],"NOV-",[]],["NOV-","nine",[["novo/cain","nine/drug"]],"NIN/O-",["(series of numbing chemicals)","alternate spelling: NOVEM -"]],["NUCH/A-","back of neck",[["nuch/al","back of neck/pertains to"]],"",[]],["NULL/I-","none or no",[["nulli/para","none or no (null or voided)/births"]],"",[]],["OCCIPIT/O-","back of head",[["occipit/otomy","back of head/opening (surgical procedure)"],["occipit/al","back of head/pertains to"]],"",[]],["OCT/O-","eight",[["oct/agon","eight/walls alternate spelling: OCTA-"]],"OCTI-",[]],["OCTI-","eight",[["octi/para","eight/given birth to"]],"OCT/O-",[]],["OLEO-","oil",[["oleo/vitamin","oil (fish oil)/life giving (fat soluble vitamins)"]],"",[]],["-OLEUM","oil",[["oleo/infusion","oil/injection"],["petr/oleum","stone/oil"]],"",["(formulation of a drug in oil)"]],["OLIG/O-","few, scanty, slight, little",[["oligo/meno/rrhea","few, scanty, slight, little/monthly/flow"]],"",[]],["-OLOG/Y","science or study of, process of",[["hist/olog/y","web-like or tissue/science of or study of/process of"]],"-LOG-",[]],["OPISTH/O-","backwards (bending)",[["opistho/tonus","backward (bending)/tone (muscle contractions tilting head & spine backward; seen with tetanus and Central Nervous System injuries)"]],"",[]],["-OSIS","condition of or disease",[["scoli/osis","crooked (lateral curve)/condition of or disease"]],"-ASIS, -ESIS, -SIS",[]],["-OUS","state of or refers to carcinomatous",[["cancer or malignancy/state of or refers to","ser/ous liquid/material state or refers to"]],"-AC, -AL, -AR, -ARY, -ATE, -EUM, -IAC, -IC, -ICAL, -ILE, -IS, -IUM, -ORY, -UM, -US",[]],["OX/Y-","sharp or oxygen molecules",[["oxy/op/ia","sharp/vision/refers to"],["oxy/gen","sharp (mentally)/producing, developing, forming"],["oxy/gen/ation","oxygen (molecules)/development/process of alternate spelling: OX/O-"]],"",[]],["PALM/A-","palm or palm of hand",[["palm/ar","palm or palm of hand/refer to (front of the hand 'palms forward' as seen in the human anatomical position)"]],"",[]],["PAN-","all, total, complete",[["pan/dem/ic","all, total, complete/people/pertain to"],["pan/creat/itis","all/flesh/inflamed"]],"",["(spread of disease)"]],["PATH/O-","disease",[["path/o/log/y","disease/science of or study of/process of"]],"",[]],["PEDI-","child",[["ped/iatrics","child/treat"],["ped/ia/tric/ian","child/treats or cures/one who"]],"PEDIA-",[]],["PENT/A-","five",[["pent/agon","five/walls"],["penta/dactyl","five (normal)/fingers and toes on each limb"]],"",[]],["PER-","through",[["per/cutane/ous","through/skin/state of"],["per/meate","through/opening"]],"",[]],["PHENO-","to appear",[["pheno/log/y","to appear (climates effect on health)/study of/process of"]],"",[]],["PHEO-","dusty or dark",[["pheo/chrome","dusty or dark/color"]],"",[]],["-PHILE","love of, to love, love for",[["eosino/phil/ia","rose red (WBC staining)/love of/refers to alternate spelling: -PHILIA"]],"-PHIL",[]],["PICR/O-","bitter",[["picro/toxin","bitter/poison (powerful CNS stimulant: shrub seed substance that stimulates respiration)"]],"",[]],["PLAN/O-","flat or a plane",[["pes plan/us","foot: flat or a plane (flat-footed)"]],"",[]],["PLANT/O-","sole of foot",[["plant/ar","sole of the foot/refer to"]],"",["(plantar warts 'verruca' are found on the bottom of foot)"]],["POLY-","many",[["poly/dipsia","many/thirsts (being thirsty)"]],"MULTI-, PLURI-",[]],["POST-","after or behind",[["post/part/um","after/birth/refers to"],["poster/ior","after or behind/refers to"]],"",[]],["-PRAX/IA","movement or action",[["pharmaco/prax/ia","drug/movement or action/pertain to"],["myo/prax/is","muscle/action/refers to"]],"KINESIO-",[]],["PRE-","before",[["pre/natal","before/birth"]],"ANTE-, PRO-",[]],["PRIM/I-","first",[["prim/ary","first/refers to"]],"PROT/O-",[]],["PRONAT/O-","to bend forward",[["pronat/ion","to bend forward/process of (to lay face down; to lower; to turn hand palm downward or backward)"]],"PRONE-",[]],["PROT/O-","first",[["proto/zoon","first/animals"]],"PRIMI-",["(protozoa - the one cell animal)"]],["PSEUD/O-","false",[["pseudo/membranous","false/skin like/state of"]],"",[]],["-PTOSIS","to drop, fall, displace",[["splanchno/ptosis","viscera or organ/to drop, fall, displace"],["nephro/ptosis","kidney/to drop, fall, displace"]],"",[]],["QUADR/I-","four",[["quadr/ants","four/refers to"]],"",["(4 abdominal divisions around navel '+')","alternate spelling: QUAD-"]],["QUINT/I-","five",[["quintu/plet","five/offspring or folds"]],"",[]],["RETR/O-","back of, behind, backward, after",[["retro/cervic/al","behind/neck/refers to"],["retro/grade","back of, backward, behind, after/movement"],["retro/col/ic","back of/big intestine/refers to"]],"",[]],["RIG/O-","stiff or hard",[["rigor mortis","stiff or hard/one who is: death"]],"",[]],["RUBE/O-","red",[["rube/osis","red/condition of alternate spelling: RUBER/O-"]],"RUBELLO-, RUBEOL-",[]],["SECUND/I-","second",[["secundi/gravida","second/pregnancy alternate spelling: SECOND/O-"]],"",[]],["SEMI-","half",[["semi/conscious","half/aware"]],"DEMI-, HEMI-",[]],["SEPT/I-","seventh",[["septi/para","seventh/child births or born infants"]],"",[]],["SESQU/I-","one and a half",[["sesqui/liter","one and one-half/liter"]],"",[]],["SEXT/I-","six",[["sexti/para","six/child births or born infants"]],"",[]],["-SOL","in solution or solution",[["aero/sol","air/solution"]],"",[]],["SPLANCHN/O-","organ",[["splanchn/o/log/y","organ (viscera)/study of/process of"]],"",[]],["STEAT/O-","fat",[["steato/rrhea","fat/flow"]],"ADIPO-, LIPO-",["(flow from the sebaceous 'oil' glands of hair follicle)"]],["SUB-","beneath, under, less, or lesser",[["sub/lingu/al","under/tongue/pertains to"],["sub/dur/al","under/hard (meninges layer)/refers to"],["sub/lux/ation","lesser/dislocation/process of"]],"",[]],["SULF/O-","sulfur",[["sulfon/amide","sulfur/in protein"]],"THIO-",[]],["SUPER-","above or upon",[["super/cil/ia","above/hairs/refers to"],["super/ficial","on or near/refer to surface"]],"",["(eyelash-like)"]],["SUPINAT/O-","to throw backward",[["supinat/ion","throwing backward/process of"]],"",["(to turn the body or part upward)"]],["SUPRA-","above or upon",[["supra/pelvic","upon or above/pelvis or basin"],["supra/cost/al","above/ribs/pertaining to"]],"",[]],["TELE-","end or outward",[["tele/vis/ion","at end/sight or vision/process of"]],"TEL/O-",[]],["TERT/I-","third",[["terti/para","third/birth tert/iary stage third/state of or condition: phase (3rd stage of a disease like syphilis, which forms gummas or gum-like lesions)"]],"TERT-",[]],["TETR/A-","four",[["tetra/olog/y (of Fallot)","four/science of or study of/process of (combination of four abnormalities seen in a Fallot's Heart)"]],"",[]],["THANAT/O-","death",[["thanato/log/y","death/studying or study of/process of"]],"NECR/O-",[]],["THIO-","sulfur",[["thio/cyan/ate","sulfur/cell/state of"]],"SULF/O-",[]],["-TIC","capable of or state of",[["caus/tic","burning or burn/capable of or state of"]],"",[]],["-TIVE","nature of or quality of",[["in/sensi/tive","not/feeling or to feel/nature of or quality of"]],"",[]],["TOP/O-","location",[["top/al","location/refers to"],["ec/top/ic","outside/location/pertains to (usually a mal-positioned pregnancy in the wombs tube, cervix, on the ovary)"]],"",[]],["TRANS-","across or through",[["trans/fus/ion","across or through/connect/process of"],["trans/verse","across/to draw (horizontal cut creating the top and bottom parts of the body or a structure)"]],"DIA-",[]],["TRI-","three",[["tri/ceps","three/headed"],["tri/gemin/al","three (parts)/form or development of/refer to"]],"",["(muscle in back of arm - extends forearm)"]],["TROPH/O-","development, nourishment, or nutrition",[["hyper/troph/y","increased/development/process of"],["tropho/therapy","nourishment or nutrition/treatment"]],"",[]],["-ULE","small or lesser",[["tub/ule","canal/small or lesser"]],"-CULE, -ICLE,- IOLE, -ULA",[]],["ULTRA-","beyond",[["ultra/sound (US)","beyond (normal hearing levels)/sound (waves)"],["ultra/micro/scop/e","beyond/small/view/instrument (objects invisible through ordinary microscope: side illumination 'darkfield')"]],"",[]],["UNI-","one",[["uni/form","one/shaped"]],"MON/O-",[]],["VISCER/A-","organ",[["e/viscer/ate","out (from)/organ/process of or procedure of"]],"",[]],["VIV/I-","alive, life, living",[["vivi/par/ous","alive, life, living/birth/condition of alternate spelling: VIV/O-"]],"VIT/O-",[]]]];
+
+/* ---------- Decks: each week splits into smaller subdecks (by group name) ---------- */
+const SUBDECKS = {
+  w1: [["Prefixes & colors", ["Prefixes", "Color combining forms"]], ["Suffixes", ["Suffixes: conditions", "Suffixes: procedures"]], ["Roots, word building & plurals", ["Common combining forms", "Word building", "Plurals"]], ["Exam tools & imaging", ["Diagnostic equipment & instruments", "Abbreviations"]], ["Directions & integrated medicine", ["Directions & planes", "Integrated medicine"]]],
+  w2: [["Dosing, routes & units", ["Timing & dosing", "Routes", "Measurements"]], ["Charting", ["Charting"]], ["Settings & labs", ["Settings & specialties", "Labs & tests"]]],
+  w3: [["Word parts", ["Bones & joints", "Muscles & connective tissue", "Suffixes"]], ["Disorders & fractures", ["Disorders", "Fracture types"]], ["Procedures, movement & abbreviations", ["Procedures & tests", "Movement", "Abbreviations"]]],
+  w4: [["Nervous system", ["Nervous system"]], ["Heart anatomy & roots", ["Cardiovascular system", "Heart anatomy"]], ["Heart disorders & procedures", ["Cardiovascular disorders", "Cardiovascular procedures"]], ["Abbreviations", ["Abbreviations"]]],
+  w5: [["Respiratory roots & signs", ["Respiratory system", "Breathing signs & symptoms"]], ["Respiratory disorders & procedures", ["Respiratory disorders", "Respiratory procedures"]], ["Skin roots, layers & lesions", ["Integumentary system", "Skin structure", "Skin lesions"]], ["Skin conditions & procedures", ["Skin conditions", "Skin procedures"]], ["Abbreviations", ["Abbreviations"]]],
+  w6: [["Digestive roots & symptoms", ["Digestive system", "Digestive signs & symptoms"]], ["Digestive disorders & procedures", ["Digestive disorders", "Digestive procedures"]], ["Urinary system", ["Urinary system", "Urinary terms"]], ["Reproductive system", ["Reproductive system", "Male reproductive terms", "Female reproductive terms"]], ["Abbreviations", ["Abbreviations"]]],
+  w7: [["STIs", ["STI word parts", "Sexually transmitted infections"]], ["Endocrine roots & hormones", ["Endocrine system", "Glands & hormones"]], ["Endocrine disorders", ["Endocrine disorders"]], ["Abbreviations", ["Abbreviations"]]]
+};
+
+/* ---------- Build cards ---------- */
+const TYPE_LABEL = { part: "Word part", term: "Term", abbr: "Abbreviation", plural: "Plural" };
+function buildUnitCards(u) {
+  const out = [];
+  Object.entries(u.parts || {}).forEach(([g, rows]) => rows.forEach(([f, b, ex]) => out.push({ type: "part", front: f, back: b, ex, group: g })));
+  Object.entries(u.terms || {}).forEach(([g, rows]) => rows.forEach(([f, b, bd]) => out.push({ type: "term", front: f, back: b, bd, group: g })));
+  (u.plurals || []).forEach(([f, b, rule]) => out.push({ type: "plural", front: f, back: b, ex: rule, group: "Plurals" }));
+  (u.abbr || []).forEach(([f, b]) => out.push({ type: "abbr", front: f, back: b, group: "Abbreviations" }));
+  Object.entries(u.abbrGroups || {}).forEach(([g, rows]) => rows.forEach(([f, b]) => out.push({ type: "abbr", front: f, back: b, group: g })));
+  out.forEach(c => { c.unit = u.id; c.id = u.id + "|" + c.type + "|" + c.front; });
+  return out;
+}
+const UNIT_CARDS = {};
+UNITS.forEach(u => { if (u.id !== "w8") UNIT_CARDS[u.id] = buildUnitCards(u); });
+const CIP_SETS = [
+  { id: "cip1", name: "CIP flashcards 1", sub: "procedures, tools & clinical terms" },
+  { id: "cip2", name: "CIP flashcards 2", sub: "numbers, colors, positions & descriptors" }
+];
+const CIP_CARDS = {};
+CIP_SETS.forEach((set, i) => {
+  CIP_CARDS[set.id] = CIP_RAW[i].map(([term, def, ex, rel, notes]) => ({ type: "part", front: term, back: def, cip: { ex, rel, notes }, group: set.name, unit: set.id, id: set.id + "|" + term }));
+});
+const unitOf = w => w && w.startsWith("cip") ? "cip" : w;
+const ALL = Object.values(UNIT_CARDS).flat().concat(...Object.values(CIP_CARDS));
+const CARD = Object.fromEntries(ALL.map(c => [c.id, c]));
+
+const DECKS = { all: { key: "all", name: "Everything", week: null, cards: ALL, parent: true } };
+const WEEK_DECKS = [];
+UNITS.filter(u => u.id !== "w8").forEach(u => {
+  const wk = { key: u.id, name: "Week " + u.wk, sub: u.name, week: u.id, cards: UNIT_CARDS[u.id], parent: true, kids: [] };
+  DECKS[u.id] = wk; WEEK_DECKS.push(wk);
+  SUBDECKS[u.id].forEach(([name, groups], i) => {
+    const d = { key: u.id + "-" + (i + 1), name, week: u.id, cards: UNIT_CARDS[u.id].filter(c => groups.includes(c.group)), parent: false };
+    DECKS[d.key] = d; wk.kids.push(d);
+  });
+});
+
+const CIP_DECKS = [];
+CIP_SETS.forEach(set => {
+  const cs = CIP_CARDS[set.id]; const parts = Math.ceil(cs.length / 45);
+  const p = { key: set.id, name: set.name, sub: set.sub, week: set.id, cards: cs, parent: true, kids: [] };
+  DECKS[set.id] = p; CIP_DECKS.push(p);
+  for (let i = 0; i < parts; i++) {
+    const chunk = cs.slice(Math.floor(i * cs.length / parts), Math.floor((i + 1) * cs.length / parts));
+    const d = { key: set.id + "-" + (i + 1), name: chunk[0].front + " to " + chunk[chunk.length - 1].front, week: set.id, cards: chunk, parent: false };
+    DECKS[d.key] = d; p.kids.push(d);
+  }
+});
+
+/* ---------- Storage (per viewer; the page works without it) ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("bio163:" + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("bio163:" + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- Spaced repetition ----------
+   The clock counts reviews, not days: a gap of 30 means "show it again after about 30 more cards".
+   Again → 3 cards. Hard → small step. Good on a new card → 30, then the gap grows by the card's ease.
+   Easy on a new card → 60. Cards with a gap of 30 or more count as learned. */
+const LEARNED = 30;
+const srs = store.get("srs", null) || { clock: 0, c: {} };
+(function migrateV1() {
+  const old = store.get("known", null);
+  if (!old || !old.length || Object.keys(srs.c).length) return;
+  old.forEach(id => { if (CARD[id]) srs.c[id] = { g: LEARNED, e: 2.5, d: Math.floor(Math.random() * LEARNED), r: 1, l: 0 }; });
+  store.set("known", []);
+})();
+const saveSrs = () => store.set("srs", srs);
+function nextState(s, rating) {
+  s = s ? Object.assign({}, s) : { g: 0, e: 2.5, r: 0, l: 0 };
+  const fresh = !s.g;
+  if (rating === 1) { s.g = 3; s.e = Math.max(1.3, s.e - 0.2); if (!fresh) s.l++; }
+  else if (rating === 2) { s.g = fresh ? 8 : Math.max(6, Math.round(s.g * 1.2)); s.e = Math.max(1.3, s.e - 0.15); }
+  else if (rating === 3) { s.g = fresh ? LEARNED : Math.max(s.g + 4, Math.round(s.g * s.e)); }
+  else { s.g = fresh ? 60 : Math.max(s.g + 10, Math.round(s.g * s.e * 1.3)); s.e += 0.15; }
+  s.r++;
+  return s;
+}
+function deckCounts(d) {
+  let n = 0, l = 0, due = 0, learned = 0;
+  for (const c of d.cards) {
+    const s = srs.c[c.id];
+    if (!s) n++;
+    else if (s.g < LEARNED) l++;
+    else { learned++; if (s.d <= srs.clock) due++; }
+  }
+  return { n, l, due, learned, total: d.cards.length };
+}
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const unitById = id => UNITS.find(u => u.id === id);
+const isLong = s => s.length > 36;
+function bd(str) {
+  if (!str) return "";
+  return '<span class="bd">' + str.split(" ").map(t => {
+    if (t.startsWith("/")) return '<span class="v">' + esc(t) + "</span>";
+    if (t.startsWith("-")) return '<span class="s">' + esc(t) + "</span>";
+    if (t.endsWith("-")) return '<span class="p">' + esc(t) + "</span>";
+    return '<span class="r">' + esc(t) + "</span>";
+  }).join("") + "</span>";
+}
+const partKind = p => p.trim().startsWith("-") ? "k-s" : p.trim().endsWith("-") ? "k-p" : "k-r";
+const num = (v, cls) => `<span class="num ${v ? cls : "zero"}">${v}</span>`;
+const cardsWord = n => n === 1 ? "1 card" : n + " cards";
+
+/* ---------- App state ---------- */
+const VIEWS = ["decks", "guide", "quiz"];
+const S = {
+  view: VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : store.get("view", "decks"),
+  unit: store.get("unit", "w1"),
+  open: store.get("open", ["w1"]),
+  ask: store.get("ask", "term"),
+  q: "",
+  st: null, // study session
+  qz: { phase: "setup", deck: null, len: 25, pace: false, qs: [], i: 0, picked: null, score: 0, missed: [], timer: null, t0: 0 },
+  reviews: 0
+};
+if (!unitById(S.unit) && S.unit !== "cip") S.unit = "w1";
+
+function setView(v) {
+  S.view = v; store.set("view", v);
+  if (location.hash.slice(1) !== v) { try { history.replaceState(null, "", "#" + v); } catch (e) {} }
+  if (v !== "decks") S.st = null;
+  stopTimer(); render(); window.scrollTo({ top: 0 });
+}
+function setUnit(id) {
+  S.unit = id; store.set("unit", id); S.q = "";
+  stopTimer(); S.qz.phase = "setup"; S.qz.deck = null;
+  render();
+}
+
+/* ---------- Decks view ---------- */
+function renderDecks() {
+  const row = (d, cls) => {
+    const k = deckCounts(d);
+    return `<button class="drow ${cls}" data-study="${d.key}">
+      <span class="name">${cls === "root" ? `<b>Everything</b><small>all ${ALL.length} cards, for the final</small>` : cls === "sub" ? `<span>${esc(d.name)}</span>` : `<b>${esc(d.name)}</b><small>${esc(d.sub)}</small>`}</span>
+      ${num(k.n, "n-new")}${num(k.l, "n-learn")}${num(k.due, "n-due")}</button>`;
+  };
+  const group = list => list.map(w => {
+    const open = S.open.includes(w.key); const k = deckCounts(w);
+    return `<div class="wk">
+      <div class="wkhead"><button class="chev" data-toggle="${w.key}" aria-expanded="${open}" aria-label="${open ? "Collapse" : "Expand"} ${esc(w.name)}"><span>▶</span></button>${row(w, "week")}</div>
+      <div class="meter" title="${k.learned} of ${k.total} learned"><i style="width:${k.total ? k.learned / k.total * 100 : 0}%"></i></div>
+      ${open ? `<div class="kids">${w.kids.map(d => row(d, "sub")).join("")}</div>` : ""}
+      <div style="height:8px"></div>
+    </div>`;
+  }).join("");
+  const weeks = group(WEEK_DECKS) + `<div class="tsec">From your CIP flashcards</div>` + group(CIP_DECKS);
+  const tot = deckCounts(DECKS.all);
+  $("#view").innerHTML = `<section class="decks">
+    <div class="tree">
+      <div class="thead"><span>Deck</span><span class="n-new">New</span><span class="n-learn">Learn</span><span class="n-due">Due</span></div>
+      <div class="wk">${row(DECKS.all, "root")}</div>
+      ${weeks}
+    </div>
+    <aside class="aside">
+      <p class="margin-note">Tap a week to study all of it, or open it for smaller decks.<br><br><b class="a">Again</b> = back in 3 cards<br><b class="g">Good</b> = back in ~30<br><b class="e">Easy</b> = back in ~60<br>Every time you get it right, the gap grows.</p>
+      <div class="stats"><b>${tot.learned}<span style="font-size:18px;color:var(--ink-3)"> / ${tot.total}</span></b>cards learned so far<br><b>${srs.clock}</b>reviews done</div>
+    </aside>
+  </section>`;
+}
+
+/* ---------- Study session ---------- */
+function openStudy(key) {
+  const d = DECKS[key];
+  const order = d.parent ? shuffle(d.cards.map(c => c.id)) : d.cards.map(c => c.id);
+  S.st = { key, order, cur: null, kind: null, shown: false, ahead: false, undo: null, armed: false, done: 0 };
+  pickNext(); renderStudy(); window.scrollTo({ top: 0 });
+}
+function pickNext() {
+  const st = S.st; const C = srs.clock; const last = st.cur;
+  const due = [], ahead = []; let fresh = null;
+  for (const id of st.order) {
+    const s = srs.c[id];
+    if (!s) { if (!fresh && id !== last) fresh = id; continue; }
+    if (s.d <= C) due.push(id); else ahead.push(id);
+  }
+  const notLast = arr => arr.length > 1 ? arr.filter(id => id !== last) : arr;
+  const byDue = (a, b) => srs.c[a].d - srs.c[b].d;
+  let pick = null, kind = null;
+  const d = notLast(due).sort(byDue);
+  if (d.length && !(d[0] === last && fresh)) { pick = d[0]; kind = srs.c[pick].g < LEARNED ? "learn" : "due"; }
+  else if (fresh) { pick = fresh; kind = "new"; }
+  else if (ahead.length) {
+    if (!st.ahead) { st.cur = null; st.kind = "finished"; return; }
+    pick = notLast(ahead).sort(byDue)[0]; kind = srs.c[pick].g < LEARNED ? "learn" : "due";
+  } else if (due.length) { pick = due[0]; kind = "learn"; }
+  st.cur = pick; st.kind = kind; st.shown = false;
+}
+function sideFor(id) {
+  if (S.ask === "term") return "front";
+  if (S.ask === "meaning") return "back";
+  let h = 0; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) | 0;
+  return (h + srs.clock) % 2 ? "front" : "back";
+}
+function renderStudy() {
+  const st = S.st; const d = DECKS[st.key]; const k = deckCounts(d);
+  const path = d.key === "all" ? "Everything" : d.parent ? `${esc(d.name)} <span>${esc(d.sub)}</span>` : `${esc(DECKS[d.week].name)} <span>/ ${esc(d.name)}</span>`;
+  const cnt = (v, cls, kind) => `<span class="${v ? cls : "zero"} ${st.kind === kind ? "cur" : ""}" title="${kind === "new" ? "New" : kind === "learn" ? "Learning" : "Due"}">${v}</span>`;
+  const head = `<div class="crumbs">
+      <button class="link" data-back>← Decks</button>
+      <span class="path">${path}</span>
+      <span class="counts">${cnt(k.n, "n-new", "new")}<span class="plus">+</span>${cnt(k.l, "n-learn", "learn")}<span class="plus">+</span>${cnt(k.due, "n-due", "due")}</span>
+    </div>`;
+  let body;
+  if (st.kind === "finished" || !st.cur) {
+    body = `<div class="congrats">
+      <h3>Done for now</h3>
+      <p>No new or due cards left in this deck. The ${k.learned} you've learned will come back as you keep reviewing. You can keep going to review early, or switch to another deck.</p>
+      <div class="row" style="justify-content:center"><button class="btn solid" id="st-ahead">Keep reviewing early</button><button class="btn" data-back>Back to decks</button><button class="btn" data-quizdeck="${d.key}">Quiz this deck</button></div>
+    </div>`;
+  } else {
+    const c = CARD[st.cur]; const side = sideFor(c.id);
+    const qTxt = side === "front" ? c.front : c.back;
+    const aTxt = side === "front" ? c.back : c.front;
+    const where = st.key === "all" || d.parent ? `${unitById(c.unit) ? "Week " + unitById(c.unit).wk + ", " : ""}${c.group}` : c.group;
+    const pre = c.type === "plural" ? (side === "front" ? "plural of" : "singular of") : (side === "back" ? (c.type === "abbr" ? "abbreviation for" : c.type === "part" ? "word part for" : "term for") : "");
+    let ans = "";
+    if (st.shown) {
+      let extra = "";
+      if (c.type === "term" && c.bd) extra += bd(c.bd);
+      if (c.type === "part" && c.ex) extra += `<span class="a-sub">e.g. <b>${esc(c.ex)}</b></span>`;
+      if (c.type === "plural" && c.ex) extra += `<span class="a-sub">${esc(c.ex)}</span>`;
+      if (c.cip) extra += cipExtra(c);
+      ans = `<hr class="redline"><div class="a ${isLong(aTxt) ? "" : "big"}">${esc(aTxt)}</div>${extra}`;
+    }
+    const ivl = r => { const g = nextState(srs.c[c.id], r).g; return cardsWord(g); };
+    const controls = st.shown
+      ? `<div class="rate" role="group" aria-label="How well did you know it?">
+          <button class="r1" data-rate="1"><span class="ivl">${ivl(1)}</span>Again</button>
+          <button class="r2" data-rate="2"><span class="ivl">${ivl(2)}</span>Hard</button>
+          <button class="r3" data-rate="3"><span class="ivl">${ivl(3)}</span>Good</button>
+          <button class="r4" data-rate="4"><span class="ivl">${ivl(4)}</span>Easy</button>
+        </div>
+        <p class="keys"><kbd>1</kbd> Again · <kbd>2</kbd> Hard · <kbd>3</kbd> or <kbd>Space</kbd> Good · <kbd>4</kbd> Easy</p>`
+      : `<button class="reveal" id="st-show">Show answer</button><p class="keys"><kbd>Space</kbd> shows the answer</p>`;
+    body = `<article class="card" aria-live="polite">
+        <span class="kind"><b>${TYPE_LABEL[c.type]}</b> · ${esc(where)}</span>
+        ${pre ? `<span class="q-pre">${pre}</span>` : ""}
+        <div class="q ${isLong(qTxt) ? "long" : ""}">${esc(qTxt)}</div>
+        ${ans}
+      </article>${controls}`;
+  }
+  $("#view").innerHTML = `<section class="study">${head}${body}
+    <div class="foot">
+      <label for="st-ask">Ask with <select id="st-ask"><option value="term" ${S.ask === "term" ? "selected" : ""}>Term</option><option value="meaning" ${S.ask === "meaning" ? "selected" : ""}>Meaning</option><option value="mix" ${S.ask === "mix" ? "selected" : ""}>Both, mixed</option></select></label>
+      <span class="row">${st.undo ? `<button class="link" id="st-undo">Undo</button>` : ""}<button class="reset ${st.armed ? "armed" : ""}" id="st-reset">${st.armed ? "Tap again to reset this deck" : "Reset deck"}</button></span>
+    </div>
+  </section>`;
+}
+function rate(r) {
+  const st = S.st; if (!st || !st.cur || !st.shown) return;
+  const id = st.cur;
+  st.undo = { id, prev: srs.c[id] ? Object.assign({}, srs.c[id]) : null, kind: st.kind };
+  const s = nextState(srs.c[id], r);
+  s.d = srs.clock + s.g;
+  srs.c[id] = s; srs.clock++; saveSrs();
+  st.done++; st.armed = false;
+  pickNext(); renderStudy();
+}
+function undo() {
+  const st = S.st; if (!st || !st.undo) return;
+  const u = st.undo;
+  if (u.prev) srs.c[u.id] = u.prev; else delete srs.c[u.id];
+  srs.clock = Math.max(0, srs.clock - 1); saveSrs();
+  st.cur = u.id; st.kind = u.kind; st.shown = true; st.undo = null;
+  renderStudy();
+}
+function showAnswer() { if (S.st && S.st.cur && !S.st.shown) { S.st.shown = true; renderStudy(); } }
+
+function cipExtra(c) {
+  const x = c.cip;
+  return `<div class="cipx">${x.ex.map(([w, m]) => `<div><b>${esc(w)}</b><span>${esc(m)}</span></div>`).join("")}
+    ${x.rel ? `<p class="rel">Related: ${esc(x.rel)}</p>` : ""}${x.notes.map(n => `<p class="cnote">${esc(n)}</p>`).join("")}</div>`;
+}
+
+/* ---------- Study guide ---------- */
+function weekPicker() {
+  const u = unitById(S.unit);
+  return `<div class="weeks" role="group" aria-label="Week"><span class="lbl">Week</span>${UNITS.map(x => `<button data-unit="${x.id}" aria-pressed="${x.id === S.unit}" title="${esc(x.title)}">${x.wk}</button>`).join("")}<button class="wide" data-unit="cip" aria-pressed="${S.unit === "cip"}" title="Your CIP flashcards">CIP</button></div>`;
+}
+function renderGuide() {
+  if (S.unit === "cip") return renderCipGuide();
+  const u = unitById(S.unit);
+  const nCards = u.id === "w8" ? ALL.length : UNIT_CARDS[u.id].length;
+  const secs = [];
+  const tableFor = rows => `<div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th><th>Example</th></tr></thead><tbody>${rows.map(([p, m, ex]) => `<tr data-f="${esc((p + " " + m + " " + ex).toLowerCase())}"><td><span class="wp ${partKind(p)}">${esc(p)}</span></td><td>${esc(m)}</td><td class="ex">${esc(ex)}</td></tr>`).join("")}</tbody></table></div>`;
+
+  if (u.notes && u.notes.length) secs.push({ id: "key", h: u.id === "w8" ? "How to prepare" : "Key ideas", html: `<div class="notes">${u.notes.map(n => `<div class="note"><h5>${esc(n.h)}</h5><ul>${n.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div>`).join("")}</div>` });
+  const pg = Object.entries(u.parts || {});
+  if (pg.length) secs.push({ id: "parts", h: "Word parts", html: `<div class="legend"><span><b class="p">prefix-</b></span><span><b class="r">root</b><span class="v">/o</span> (combining form)</span><span><b class="s">-suffix</b></span></div>` + pg.map(([g, rows]) => `<h4>${esc(g)}</h4>${tableFor(rows)}`).join("") });
+  const tg = Object.entries(u.terms || {});
+  if (tg.length) secs.push({ id: "terms", h: "Key terms", html: tg.map(([g, rows]) => `<h4>${esc(g)}</h4><div class="terms">${rows.map(([t, d, b]) => `<div class="term" data-f="${esc((t + " " + d).toLowerCase())}"><b>${esc(t)}</b>${bd(b)}<p>${esc(d)}</p></div>`).join("")}</div>`).join("") });
+  if (u.plurals) secs.push({ id: "plurals", h: "Plurals", html: `<div class="tablewrap"><table><thead><tr><th>Singular</th><th>Plural</th><th>Rule</th></tr></thead><tbody>${u.plurals.map(([s, p, r]) => `<tr data-f="${esc((s + " " + p).toLowerCase())}"><td>${esc(s)}</td><td><b>${esc(p)}</b></td><td class="ex">${esc(r)}</td></tr>`).join("")}</tbody></table></div>` });
+  const ab = u.abbrGroups ? Object.entries(u.abbrGroups) : (u.abbr && u.abbr.length ? [["", u.abbr]] : []);
+  if (ab.length) secs.push({ id: "abbr", h: "Abbreviations", html: ab.map(([g, rows]) => `${g ? `<h4>${esc(g)}</h4>` : ""}<div class="tablewrap"><table><thead><tr><th>Abbreviation</th><th>Meaning</th></tr></thead><tbody>${rows.map(([a, m]) => `<tr data-f="${esc((a + " " + m).toLowerCase())}"><td><b>${esc(a)}</b></td><td>${esc(m)}</td></tr>`).join("")}</tbody></table></div>`).join("") });
+  if (u.watch && u.watch.length) secs.push({ id: "watch", h: "Easy to mix up", html: `<div class="watch">${u.watch.map(([a, b]) => `<div data-f="${esc((a + " " + b).toLowerCase())}"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join("")}</div>` });
+  if (u.id === "w8") {
+    const rows = WEEK_DECKS.concat(CIP_DECKS).map(w => { const k = deckCounts(w); return `<tr><td>${esc(w.name)}</td><td>${esc(unitById(w.key) ? unitById(w.key).title : w.sub)}</td><td style="font-variant-numeric:tabular-nums">${k.learned} / ${k.total}</td></tr>`; }).join("");
+    secs.push({ id: "status", h: "Where you stand", html: `<div class="tablewrap"><table><thead><tr><th>Week</th><th>Unit</th><th>Learned</th></tr></thead><tbody>${rows}</tbody></table></div>` });
+  }
+  const studyKey = u.id === "w8" ? "all" : u.id;
+  $("#view").innerHTML = `${weekPicker()}<section class="guide">
+    <div class="ghead">
+      <span class="src">Week ${u.wk}, ${esc(u.cip)}</span>
+      <h2>${esc(u.title)}</h2>
+      <p class="lede">${esc(u.overview)}</p>
+    </div>
+    <div class="due"><b>Due this week</b><ul>${u.due.map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>
+    <div class="gtools">
+      ${u.id === "w8" ? "" : `<label class="search" for="gsearch"><span aria-hidden="true">⌕</span><input id="gsearch" type="search" placeholder="Filter this week, e.g. itis or kidney" value="${esc(S.q)}" autocomplete="off"></label>`}
+      <div class="row"><button class="btn solid" data-study="${studyKey}">Study ${nCards} cards</button><button class="btn" data-quizdeck="${studyKey}">Quiz me</button></div>
+    </div>
+    ${secs.length > 2 ? `<nav class="jump" aria-label="On this page">${secs.map(s => `<a href="#" data-jump="${s.id}">${esc(s.h)}</a>`).join("")}</nav>` : ""}
+    ${secs.map(s => `<section class="sec" id="sec-${s.id}"><h3>${esc(s.h)}</h3>${s.html}</section>`).join("")}
+  </section>`;
+  if (S.q) applyFilter();
+}
+function renderCipGuide() {
+  const secs = CIP_DECKS.map(p => ({ id: p.key, h: p.name, html: `<p class="lede" style="font-size:16px">${p.cards.length} word parts: ${esc(p.sub)}.</p>
+    <div class="tablewrap"><table class="ciptable"><thead><tr><th>Word part</th><th>Meaning</th><th>Examples</th></tr></thead><tbody>${p.cards.map(c => `<tr data-f="${esc((c.front + " " + c.back + " " + c.cip.ex.map(e => e.join(" ")).join(" ") + " " + c.cip.rel).toLowerCase())}">
+      <td><span class="wp ${partKind(c.front)}">${esc(c.front)}</span></td><td>${esc(c.back)}${c.cip.rel ? `<br><small>Related: ${esc(c.cip.rel)}</small>` : ""}</td>
+      <td>${c.cip.ex.map(([w, m]) => `<b>${esc(w)}</b> <span class="ex">${esc(m)}</span>`).join("<br>")}${c.cip.notes.map(n => `<br><small>${esc(n)}</small>`).join("")}</td></tr>`).join("")}</tbody></table></div>` }));
+  $("#view").innerHTML = `${weekPicker()}<section class="guide">
+    <div class="ghead">
+      <span class="src">From the two CIP flashcard PDFs you uploaded</span>
+      <h2>Your CIP flashcards</h2>
+      <p class="lede">All ${CIP_DECKS.reduce((n, p) => n + p.cards.length, 0)} word parts from the course flashcards, with CIP's own definitions and worked examples. Search to look up any part, or study them as decks.</p>
+    </div>
+    <div class="gtools">
+      <label class="search" for="gsearch"><span aria-hidden="true">⌕</span><input id="gsearch" type="search" placeholder="Search word parts, e.g. scop or white" value="${esc(S.q)}" autocomplete="off"></label>
+      <div class="row">${CIP_DECKS.map(p => `<button class="btn ${p.key === "cip1" ? "solid" : ""}" data-study="${p.key}">Study set ${p.key.slice(-1)}</button>`).join("")}<button class="btn" data-quizdeck="cip1">Quiz me</button></div>
+    </div>
+    <nav class="jump" aria-label="On this page">${secs.map(s => `<a href="#" data-jump="${s.id}">${esc(s.h)}</a>`).join("")}</nav>
+    ${secs.map(s => `<section class="sec" id="sec-${s.id}"><h3>${esc(s.h)}</h3>${s.html}</section>`).join("")}
+  </section>`;
+  if (S.q) applyFilter();
+}
+function applyFilter() {
+  const q = S.q.trim().toLowerCase();
+  document.querySelectorAll("#view [data-f]").forEach(el => { el.hidden = !!q && !el.dataset.f.includes(q); });
+  document.querySelectorAll("#view .tablewrap").forEach(t => { t.hidden = !!q && !t.querySelector("tr[data-f]:not([hidden])"); });
+  document.querySelectorAll("#view .terms, #view .watch, #view .notes").forEach(t => { if (t.querySelector("[data-f]")) t.hidden = !!q && !t.querySelector("[data-f]:not([hidden])"); });
+  document.querySelectorAll("#view h4").forEach(h => { const n = h.nextElementSibling; h.hidden = !!(n && n.hidden); });
+}
+
+/* ---------- Quiz ---------- */
+const GRADE = [[90, "A"], [85, "B+"], [80, "B"], [75, "C+"], [70, "C"], [65, "D+"], [60, "D"], [0, "F"]];
+const letter = pct => GRADE.find(([m]) => pct >= m)[1];
+const PACE = 120 * 60 / 220; // seconds per question on the real final
+function quizDeckKey() {
+  const def = S.unit === "w8" ? "all" : S.unit === "cip" ? "cip1" : S.unit;
+  const k = S.qz.deck;
+  if (!k || !DECKS[k]) return def;
+  if (S.unit === "w8") return k;
+  return unitOf(DECKS[k].week) === S.unit ? k : def;
+}
+function makeQuestion(c, pool) {
+  const forward = c.type === "term" ? Math.random() < 0.55 : Math.random() < 0.5;
+  const ans = forward ? c.back : c.front;
+  const norm = s => s.toLowerCase().trim();
+  const pickFrom = src => shuffle(src.filter(x => x.type === c.type && norm(x.back) !== norm(c.back) && norm(x.front) !== norm(c.front)));
+  let cands = pickFrom(pool);
+  if (cands.length < 3) cands = cands.concat(pickFrom(ALL.filter(x => x.unit !== c.unit)));
+  const opts = []; const seen = new Set([norm(ans)]);
+  for (const x of cands) { const t = forward ? x.back : x.front; if (!seen.has(norm(t))) { seen.add(norm(t)); opts.push(t); } if (opts.length === 3) break; }
+  const options = shuffle([ans, ...opts]);
+  const labels = {
+    part: forward ? "What does this word part mean?" : "Which word part means…",
+    term: forward ? "Which definition fits this term?" : "Which term matches this definition?",
+    abbr: forward ? "What does this abbreviation stand for?" : "Which abbreviation means…",
+    plural: forward ? "What is the plural of…" : "What is the singular of…"
+  };
+  const prompt = forward ? c.front : c.back;
+  return { card: c, label: labels[c.type], prompt, long: isLong(prompt), options, correct: options.indexOf(ans) };
+}
+function startQuiz() {
+  const pool = DECKS[quizDeckKey()].cards;
+  const n = Math.min(S.qz.len, pool.length);
+  Object.assign(S.qz, { phase: "q", qs: shuffle(pool).slice(0, n).map(c => makeQuestion(c, pool)), i: 0, picked: null, score: 0, missed: [] });
+  renderQuiz(); startTimer();
+}
+function stopTimer() { if (S.qz.timer) { clearInterval(S.qz.timer); S.qz.timer = null; } }
+function startTimer() {
+  stopTimer(); if (!S.qz.pace) return;
+  S.qz.t0 = Date.now();
+  S.qz.timer = setInterval(() => {
+    const left = PACE - (Date.now() - S.qz.t0) / 1000;
+    const bar = $("#qtimer"); const lbl = $("#qtime");
+    if (bar) { bar.querySelector("i").style.width = Math.max(0, left / PACE * 100) + "%"; bar.classList.toggle("low", left < 8); }
+    if (lbl) lbl.textContent = Math.max(0, Math.ceil(left)) + " s left";
+    if (left <= 0) answer(-1);
+  }, 250);
+}
+function answer(idx) {
+  const qz = S.qz; if (qz.picked !== null) return;
+  stopTimer();
+  const q = qz.qs[qz.i]; qz.picked = idx;
+  if (idx === q.correct) qz.score++; else qz.missed.push(q);
+  renderQuiz();
+  const nx = $("#q-next"); if (nx) nx.focus({ preventScroll: true });
+}
+function nextQ() {
+  const qz = S.qz;
+  if (qz.i + 1 >= qz.qs.length) { qz.phase = "done"; renderQuiz(); return; }
+  qz.i++; qz.picked = null; renderQuiz(); startTimer();
+}
+function renderQuiz() {
+  const qz = S.qz; const u = unitById(S.unit) || { id: "cip", wk: "", title: "Your CIP flashcards" }; const dk = quizDeckKey(); const pool = DECKS[dk].cards;
+  let html;
+  if (qz.phase === "setup") {
+    const lens = [10, 25, 50].filter(n => n < pool.length);
+    lens.push(dk === "all" ? 220 : pool.length);
+    if (!lens.includes(qz.len)) qz.len = lens.includes(25) ? 25 : lens[lens.length - 1];
+    const choices = u.id === "w8"
+      ? [["all", `Everything (${ALL.length} cards)`], ...WEEK_DECKS.concat(CIP_DECKS).map(w => [w.key, `${w.name}: ${w.sub} (${w.cards.length})`])]
+      : u.id === "cip" ? CIP_DECKS.flatMap(p => [[p.key, `${p.name}, all ${p.cards.length} cards`], ...p.kids.map(d => [d.key, `${p.name}: ${d.name} (${d.cards.length})`])])
+      : [[u.id, `All of week ${u.wk} (${UNIT_CARDS[u.id].length} cards)`], ...DECKS[u.id].kids.map(d => [d.key, `${d.name} (${d.cards.length})`])];
+    html = `<div class="panel">
+      <h2>${u.id === "w8" ? "Practice final" : esc(u.title)}</h2>
+      <p>Multiple choice in both directions, term to meaning and meaning to term.${dk === "all" ? " The 220-question option matches the real final." : ""}</p>
+      <label class="field" for="qz-deck"><span>Deck</span><select id="qz-deck">${choices.map(([k, l]) => `<option value="${k}" ${k === dk ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
+      <div class="field"><span>Questions</span><div class="seg" role="group" aria-label="Number of questions">${lens.map(n => `<button data-len="${n}" aria-pressed="${qz.len === n}">${n === pool.length && n !== 220 ? "All " + n : n}</button>`).join("")}</div></div>
+      <label class="check" for="qz-pace"><input type="checkbox" id="qz-pace" ${qz.pace ? "checked" : ""}> Exam pace: ${Math.round(PACE)} seconds a question, like the real final</label>
+      <div class="row"><button class="btn solid" id="qz-start">Start quiz</button></div>
+      <p class="scale">Graded on the syllabus scale: A 90+, B+ 85, B 80, C+ 75, C 70, D+ 65, D 60.</p>
+    </div>`;
+  } else if (qz.phase === "q") {
+    const q = qz.qs[qz.i]; const answered = qz.picked !== null;
+    const fb = !answered ? "" : `<div class="feedback" role="status">
+      ${qz.picked === q.correct ? `<span class="ok">Correct</span>` : `<span class="no">${qz.picked === -1 ? "Out of time" : "Not quite"}</span><span>Answer: <b>${esc(q.options[q.correct])}</b></span>`}
+      <span><b>${esc(q.card.front)}</b>: ${esc(q.card.back)}</span>${q.card.bd ? bd(q.card.bd) : ""}${q.card.cip && q.card.cip.ex[0] ? `<span>e.g. <b>${esc(q.card.cip.ex[0][0])}</b> = ${esc(q.card.cip.ex[0][1])}</span>` : ""}
+    </div>`;
+    html = `<div class="panel">
+      <div class="qhead"><span>Question ${qz.i + 1} of ${qz.qs.length}</span><span>${qz.score} right${qz.pace ? `, <span id="qtime">${Math.round(PACE)} s left</span>` : ""}</span></div>
+      ${qz.pace ? `<div class="timer" id="qtimer" aria-hidden="true"><i style="width:${answered ? 0 : 100}%"></i></div>` : ""}
+      <div><p class="qlabel">${esc(q.label)}</p><div class="qprompt ${q.long ? "long" : ""}">${esc(q.prompt)}</div></div>
+      <div class="options">${q.options.map((o, i) => {
+        let cls = "opt"; if (answered) { if (i === q.correct) cls += " right"; else if (i === qz.picked) cls += " wrong"; }
+        return `<button class="${cls}" data-opt="${i}" ${answered ? "disabled" : ""}><kbd>${i + 1}</kbd><span>${esc(o)}</span></button>`;
+      }).join("")}</div>
+      ${fb}
+      <div class="row" style="justify-content:space-between"><button class="link" id="qz-quit">End quiz</button>${answered ? `<button class="btn solid" id="q-next">${qz.i + 1 >= qz.qs.length ? "See results" : "Next question"}</button>` : ""}</div>
+    </div>`;
+  } else {
+    const answered = qz.i + (qz.picked !== null ? 1 : 0);
+    const total = Math.max(1, answered);
+    const pct = Math.round(qz.score / total * 100);
+    html = `<div class="panel">
+      <h2>Results</h2>
+      <div class="score"><span class="num">${pct}%</span><span class="grade">${letter(pct)}</span><span>${qz.score} of ${answered} right</span></div>
+      ${qz.missed.length ? `<div class="missed">${qz.missed.map(q => `<div><b>${esc(q.card.front)}</b>: ${esc(q.card.back)}</div>`).join("")}</div>` : `<p>Nothing missed. Try more questions or turn on exam pace.</p>`}
+      <div class="row">${qz.missed.length ? `<button class="btn solid" id="qz-review">Study the ${qz.missed.length} I missed</button>` : ""}<button class="btn" id="qz-again">New quiz</button></div>
+      ${qz.missed.length ? `<p class="scale">Studying your misses marks them Again, so they come up first in the deck.</p>` : ""}
+    </div>`;
+  }
+  $("#view").innerHTML = `${weekPicker()}<section class="quiz">${html}</section>`;
+}
+
+/* ---------- Render root ---------- */
+function render() {
+  document.querySelectorAll(".nav button").forEach(b => b.toggleAttribute("aria-current", b.dataset.view === S.view));
+  document.querySelectorAll(".nav button[aria-current]").forEach(b => b.setAttribute("aria-current", "page"));
+  if (S.view === "decks") { if (S.st) renderStudy(); else renderDecks(); }
+  else if (S.view === "guide") renderGuide();
+  else renderQuiz();
+}
+
+/* ---------- Events ---------- */
+document.addEventListener("click", e => {
+  const t = e.target.closest("button, a[data-jump]"); if (!t) return;
+  if (t.dataset.view) { if (t.dataset.view === "decks") S.st = null; return setView(t.dataset.view); }
+  if (t.dataset.unit) return setUnit(t.dataset.unit);
+  if (t.dataset.jump) { e.preventDefault(); const s = document.getElementById("sec-" + t.dataset.jump); if (s) s.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); return; }
+  if (t.dataset.toggle) {
+    const k = t.dataset.toggle; S.open = S.open.includes(k) ? S.open.filter(x => x !== k) : S.open.concat(k);
+    store.set("open", S.open); return renderDecks();
+  }
+  if (t.dataset.study) {
+    const k = t.dataset.study; const w = DECKS[k].week;
+    if (w) { S.unit = unitOf(w); store.set("unit", S.unit); if (!S.open.includes(w)) { S.open = S.open.concat(w); store.set("open", S.open); } }
+    S.view = "decks"; store.set("view", "decks"); try { history.replaceState(null, "", "#decks"); } catch (err) {}
+    document.querySelectorAll(".nav button").forEach(b => { if (b.dataset.view === "decks") b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+    return openStudy(k);
+  }
+  if (t.dataset.quizdeck) {
+    const k = t.dataset.quizdeck; S.qz.deck = k; S.qz.phase = "setup";
+    S.unit = k === "all" ? "w8" : unitOf(DECKS[k].week); store.set("unit", S.unit);
+    return setView("quiz");
+  }
+  if (t.hasAttribute("data-back")) { S.st = null; return renderDecks(); }
+  // study
+  if (t.id === "st-show") return showAnswer();
+  if (t.dataset.rate) return rate(+t.dataset.rate);
+  if (t.id === "st-undo") return undo();
+  if (t.id === "st-ahead") { S.st.ahead = true; pickNext(); return renderStudy(); }
+  if (t.id === "st-reset") {
+    const st = S.st;
+    if (!st.armed) { st.armed = true; renderStudy(); setTimeout(() => { if (S.st === st && st.armed) { st.armed = false; renderStudy(); } }, 4000); return; }
+    DECKS[st.key].cards.forEach(c => delete srs.c[c.id]); saveSrs();
+    return openStudy(st.key);
+  }
+  // quiz
+  if (t.dataset.len) { S.qz.len = +t.dataset.len; return renderQuiz(); }
+  if (t.id === "qz-start") return startQuiz();
+  if (t.dataset.opt != null) return answer(+t.dataset.opt);
+  if (t.id === "q-next") return nextQ();
+  if (t.id === "qz-quit") { stopTimer(); S.qz.phase = "done"; return renderQuiz(); }
+  if (t.id === "qz-again") { S.qz.phase = "setup"; return renderQuiz(); }
+  if (t.id === "qz-review") {
+    S.qz.missed.forEach(q => { const s = srs.c[q.card.id] || { g: 0, e: 2.5, r: 0, l: 0 }; srs.c[q.card.id] = Object.assign({}, s, { g: 3, d: srs.clock, e: Math.max(1.3, (s.e || 2.5) - 0.2) }); });
+    saveSrs();
+    const k = quizDeckKey();
+    S.view = "decks"; store.set("view", "decks"); try { history.replaceState(null, "", "#decks"); } catch (err) {}
+    render(); return openStudy(k);
+  }
+});
+document.addEventListener("change", e => {
+  if (e.target.id === "st-ask") { S.ask = e.target.value; store.set("ask", S.ask); if (S.st) { S.st.shown = false; renderStudy(); } }
+  if (e.target.id === "qz-pace") S.qz.pace = e.target.checked;
+  if (e.target.id === "qz-deck") { S.qz.deck = e.target.value; renderQuiz(); }
+});
+document.addEventListener("input", e => { if (e.target.id === "gsearch") { S.q = e.target.value; applyFilter(); } });
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input, textarea, select") || e.metaKey || e.ctrlKey || e.altKey) return;
+  const onButton = !!e.target.closest("button");
+  if (S.view === "decks" && S.st) {
+    const st = S.st;
+    if (e.key === "Escape") { S.st = null; return renderDecks(); }
+    if ((e.key === "z" || e.key === "u") && st.undo) { e.preventDefault(); return undo(); }
+    if (!st.cur) return;
+    if (!st.shown) {
+      if ((e.key === " " || e.key === "Enter") && !onButton) { e.preventDefault(); showAnswer(); }
+    } else {
+      if (/^[1-4]$/.test(e.key)) { e.preventDefault(); rate(+e.key); }
+      else if ((e.key === " " || e.key === "Enter") && !onButton) { e.preventDefault(); rate(3); }
+    }
+  } else if (S.view === "quiz" && S.qz.phase === "q") {
+    if (onButton && (e.key === " " || e.key === "Enter")) return;
+    const q = S.qz.qs[S.qz.i];
+    if (S.qz.picked === null && /^[1-4]$/.test(e.key) && +e.key <= q.options.length) { e.preventDefault(); answer(+e.key - 1); }
+    else if (S.qz.picked !== null && e.key === "Enter") { e.preventDefault(); nextQ(); }
+  }
+});
+window.addEventListener("hashchange", () => { const v = location.hash.slice(1); if (VIEWS.includes(v) && v !== S.view) setView(v); });
+
+render();
+</script>
+</body>
+</html>
