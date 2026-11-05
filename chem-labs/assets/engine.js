@@ -96,19 +96,20 @@
   }
   CL.makeD = makeD;
 
-  function makeCtx(lab) {
-    const S = CL.labSetup(lab);
-    const st = CL.loadState(lab.id);
+  function makeCtx(lab, opt) {
+    opt = opt || {};
+    const S = opt.S || CL.labSetup(lab);
+    const st = opt.st || CL.loadState(lab.id);
     const ctx = {
-      lab, S, st, D: makeD(st), listeners: [],
-      save() { st.updated = Date.now(); LS.set(stateKey(lab.id), st); ctx.listeners.forEach(f => f()); },
+      lab, S, st, D: makeD(st), listeners: [], quiet: !!opt.quiet,
+      save() { st.updated = Date.now(); if (!opt.st) LS.set(stateKey(lab.id), st); ctx.listeners.forEach(f => f()); },
       log(e) {
         const entry = Object.assign({ t: Date.now() }, e);
         if (!entry.k) entry.k = 'obs_' + (st.log.length + 1) + '_' + Math.floor(Math.random() * 1e4);
         const i = st.log.findIndex(x => x.k === entry.k);
         if (i >= 0) st.log[i] = entry; else st.log.push(entry);
         ctx.save();
-        CL.toast(`Recorded: ${entry.l} = ${fmtVal(entry)}`);
+        if (!ctx.quiet) CL.toast(`Recorded: ${entry.l} = ${fmtVal(entry)}`);
       },
       onChange(f) { ctx.listeners.push(f); }
     };
@@ -128,6 +129,7 @@
   // ---------------- toast ----------------
   let toastTimer;
   CL.toast = function (msg) {
+    if (CL.quiet) return;
     let t = document.getElementById('toast');
     if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
     t.textContent = msg; t.classList.add('show');
@@ -375,7 +377,7 @@
     const p = CL.profile || {};
     return `<form class="profile" id="profile" autocomplete="off">
       <div class="pf-row"><label>Your full name<input id="pname" required maxlength="60" value="${esc(p.name || '')}" placeholder="First Last"></label>
-      <label>Class code <span class="muted">(from your instructor)</span><input id="psec" maxlength="30" value="${esc(p.section || '')}" placeholder="e.g. CHEM101-F26"></label>
+      <label>Class code<input id="psec" maxlength="30" value="${esc(p.section || '')}" placeholder="from your instructor, e.g. CHEM101-F26"></label>
       <button class="btn" type="submit">${CL.profile ? 'Update' : 'Start'}</button></div>
       <p class="small muted">Your name and class code generate your personal unknowns, so use them exactly the same way every time. Your work is saved in this browser.</p>
       ${CL.profile ? `<p class="small">Signed in as <b>${esc(p.name)}</b>${p.section ? ' — class code <b>' + esc(p.section) + '</b>' : ''}.</p>` : ''}
@@ -514,7 +516,7 @@
       `<div class="next"><button class="btn" data-goto="data">Review my data →</button></div>`;
     (lab.parts || []).forEach((p, i) => {
       const host = CL.$(`[data-part="${i}"]`, el);
-      const sims = Array.isArray(p.sim) ? p.sim : (p.sim ? [p.sim] : []);
+      const sim0 = resolve(p.sim, ctx.S); const sims = Array.isArray(sim0) ? sim0 : (sim0 ? [sim0] : []);
       sims.forEach((s, j) => {
         const cfg = resolve(s, ctx.S);
         const box = document.createElement('div');
@@ -621,9 +623,41 @@
       <section class="hero slim"><h1>Instructor answer key</h1><p class="lead">Every student's unknowns are generated from their <b>class code + name</b>. Enter them exactly as the student did to see that student's unknowns and the expected answers.</p>
       <form class="profile" id="keyf"><div class="pf-row"><label>Student name<input id="kname" required value="${esc(saved.name || '')}"></label><label>Class code<input id="ksec" value="${esc(saved.section || '')}"></label>
       <label>Course<select id="kcourse"><option value="">All courses</option>${CL.courses.map(c => `<option value="${c.id}" ${saved.course === c.id ? 'selected' : ''}>${esc(c.title)}</option>`).join('')}</select></label><button class="btn">Show key</button></div>
-      <p class="small muted">Answers that depend on a student's own measurements are shown as the ideal (noise-free) value; the checker grades students against their own recorded data.</p></form></section>
+      <p class="small muted">Open a lab to see this student's unknowns, the pre-lab key, and expected analysis results.</p></form></section>
       <section id="keyout"></section></main>`;
     bindHeader();
+    const unitOf = q => (q.unit ? ' ' + esc(q.unit) : '');
+    const qtext = (q, S) => { const t = String(resolve(q.q, S, () => NaN) || '').replace(/<[^>]+>/g, ''); return esc(t.length > 90 ? t.slice(0, 88) + '…' : t); };
+    const ansList = (lab, S, D, sim) => (lab.questions || []).filter(q => !q.h).map(q => {
+      let a;
+      try {
+        if (q.text) a = '<span class="muted">free response — instructor graded</span>';
+        else if (q.choices) { const ch = resolve(q.choices, S); const ai = resolve(q.ans, S, D); a = '<b>' + (Array.isArray(ai) ? ai : [ai]).map(i => ch[i]).join(' / ') + '</b>'; }
+        else {
+          const v = resolve(q.ans, S, D);
+          const tv = q.truth != null ? resolve(q.truth, S, D) : NaN;
+          if (isFinite(v)) a = (sim ? '≈ ' : '') + '<b>' + CL.sig(v, 4) + '</b>' + unitOf(q) + (isFinite(tv) && Math.abs(tv - v) > 1e-9 * Math.abs(tv) ? ` <span class="muted">(true value ${CL.sig(tv, 4)})</span>` : '');
+          else if (isFinite(tv)) a = '≈ <b>' + CL.sig(tv, 4) + '</b>' + unitOf(q) + ' <span class="muted">(true value)</span>';
+          else a = '<span class="muted">from student data</span>';
+        }
+      } catch (err) { a = '<span class="muted">from student data</span>'; }
+      return `<li><span class="kq">${qtext(q, S)}</span><br>${a}</li>`;
+    }).join('');
+    // Run every instrument of a lab off-screen like a careful student, to produce typical data.
+    async function simulate(lab, S) {
+      const st = blankState();
+      const ctx = makeCtx(lab, { S, st, quiet: true });
+      const host = document.createElement('div');
+      host.style.cssText = 'position:absolute;left:-10000px;top:0;width:1000px;visibility:hidden';
+      document.body.appendChild(host);
+      CL.quiet = true;
+      try {
+        const boxes = [];
+        (lab.parts || []).forEach((p, i) => { (sl => Array.isArray(sl) ? sl : sl ? [sl] : [])(resolve(p.sim, S)).forEach((sm, j) => { const cfg = resolve(sm, S); const box = document.createElement('div'); host.appendChild(box); if (CL.sims[cfg.type]) { CL.sims[cfg.type](box, cfg, ctx, `k${i}_${j}`); boxes.push(box); } }); });
+        for (const b of boxes) if (b.__auto) await b.__auto();
+      } finally { CL.quiet = false; document.body.removeChild(host); }
+      return ctx.D;
+    }
     const go = e => {
       if (e) e.preventDefault();
       const prof = { name: CL.$('#kname').value, section: CL.$('#ksec').value };
@@ -631,33 +665,26 @@
       LS.set('vcl:keyq', Object.assign({ course }, prof));
       if (!prof.name.trim()) return;
       const out = CL.$('#keyout');
+      const emptyD = makeD(blankState());
       out.innerHTML = CL.courses.filter(c => !course || c.id === course).map(c => `<h2 class="keyc">${esc(c.title)}</h2>` + labsOf(c.id).map(lab => {
         ensureIds(lab);
         const S = CL.labSetup(lab, prof);
-        const ideal = lab.ideal ? lab.ideal(S) : {};
-        const Dk = k => (k in ideal ? ideal[k] : NaN); Dk.has = k => k in ideal; Dk.text = () => ''; Dk.series = () => null; Dk.sum = (...ks) => ks.reduce((s, k) => s + Dk(k), 0); Dk.mean = (...ks) => ks.reduce((s, k) => s + Dk(k), 0) / ks.length; Dk.meanAny = Dk.mean;
         const keyRows = lab.key ? lab.key(S) : [];
-        let qn = 0;
-        const qs = (lab.questions || []).filter(q => !q.h).map(q => {
-          qn++;
-          let a = '';
-          try {
-            if (q.text) a = '<span class="muted">free response</span>';
-            else if (q.choices) { const ch = resolve(q.choices, S); const ai = resolve(q.ans, S, Dk); a = (Array.isArray(ai) ? ai : [ai]).map(i => ch[i]).join(' / '); }
-            else {
-              const v = resolve(q.ans, S, Dk);
-              const tv = q.truth != null ? resolve(q.truth, S, Dk) : NaN;
-              a = isFinite(v) ? CL.sig(v, 4) + (q.unit ? ' ' + esc(q.unit) : '') : isFinite(tv) ? '≈ ' + CL.sig(tv, 4) + (q.unit ? ' ' + esc(q.unit) : '') + ' <span class="muted">(true value; graded against student data)</span>' : '<span class="muted">from student data</span>';
-            }
-          } catch (err) { a = '<span class="muted">from student data</span>'; }
-          return `<li>${a}</li>`;
-        }).join('');
-        let pn = 0;
-        const ps = (lab.prelab || []).filter(q => !q.h).map(q => { pn++; let a; if (q.choices) { const ch = resolve(q.choices, S); a = ch[resolve(q.ans, S)]; } else { const v = resolve(q.ans, S, Dk); a = isFinite(v) ? CL.sig(v, 4) + (q.unit ? ' ' + esc(q.unit) : '') : '—'; } return `<li>${a}</li>`; }).join('');
-        return `<details class="keylab"><summary><b>Lab ${lab.n}:</b> ${esc(lab.title)}</summary><div class="keyin">
-          ${keyRows.length ? `<table class="data compact"><tbody>${keyRows.map(r => `<tr><th>${esc(r[0])}</th><td>${r[1]}</td></tr>`).join('')}</tbody></table>` : ''}
-          <div class="keycols"><div><h4>Pre-lab</h4><ol>${ps}</ol></div><div><h4>Analysis</h4><ol>${qs}</ol></div></div></div></details>`;
+        const ps = (lab.prelab || []).filter(q => !q.h).map(q => { let a; if (q.choices) { const ch = resolve(q.choices, S); a = ch[resolve(q.ans, S)]; } else { const v = resolve(q.ans, S, emptyD); a = isFinite(v) ? CL.sig(v, 4) + unitOf(q) : '—'; } return `<li><span class="kq">${qtext(q, S)}</span><br><b>${a}</b></li>`; }).join('');
+        return `<details class="keylab" data-lab="${lab.id}"><summary><b>Lab ${lab.n}:</b> ${esc(lab.title)}</summary><div class="keyin">
+          ${keyRows.length ? `<h4>This student's unknowns</h4><table class="data compact"><tbody>${keyRows.map(r => `<tr><th>${esc(r[0])}</th><td>${r[1]}</td></tr>`).join('')}</tbody></table>` : ''}
+          <div class="keycols"><div><h4>Pre-lab</h4><ol>${ps}</ol></div><div><h4>Analysis</h4><p class="small muted" data-note>Simulating a careful run of this lab…</p><ol data-ans>${ansList(lab, S, emptyD, false)}</ol></div></div></div></details>`;
       }).join('')).join('');
+      CL.$$('details.keylab', out).forEach(det => det.addEventListener('toggle', async () => {
+        if (!det.open || det.dataset.done) return;
+        det.dataset.done = '1';
+        const lab = CL.byId[det.dataset.lab], S = CL.labSetup(lab, prof);
+        try {
+          const D = await simulate(lab, S);
+          CL.$('[data-ans]', det).innerHTML = ansList(lab, S, D, true);
+          CL.$('[data-note]', det).textContent = 'Values marked ≈ come from a simulated careful run with realistic noise. Students are graded against their own recorded data, so their numbers will differ slightly.';
+        } catch (err) { console.error(err); CL.$('[data-note]', det).textContent = 'Could not simulate this lab: ' + err.message; }
+      }));
     };
     CL.$('#keyf').addEventListener('submit', go);
     if (saved.name) go();
@@ -680,6 +707,7 @@
   }
 
   function route() {
+    const tst = document.getElementById('toast'); if (tst) tst.classList.toggle('show', false);
     const parts = (location.hash.replace(/^#\/?/, '') || '').split('/').filter(Boolean);
     if (!parts.length) home();
     else if (parts[0] === 'course') coursePage(parts[1]);

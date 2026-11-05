@@ -148,8 +148,8 @@
         ${cfg.ph ? `<div class="lcd"><span class="lcd-l">pH meter</span><span class="lcd-v" data-ph>—</span></div>` : ''}
         <div class="readbox"><div class="zoom" data-zoom></div>
           <div class="recrow"><label class="ctl"><span>Your buret reading (mL)</span><input type="text" inputmode="decimal" data-rd placeholder="e.g. 12.34"></label>
-          <div class="acts"><button class="btn sm" data-rec="Vi">Record initial</button><button class="btn sm" data-rec="Vf">Record final</button></div></div>
-          <p class="small muted">Read the bottom of the meniscus to ±0.01 mL (estimate one digit past the 0.1 mL marks).</p></div>
+          <div class="acts"><button class="btn sm" data-rec="Vi">Record initial</button><button class="btn sm" data-rec="Vf">Record final</button></div>
+          <p class="small muted">Read the bottom of the meniscus to ±0.01 mL (estimate one digit past the 0.1 mL marks). Numbers increase downward.</p></div></div>
         <div class="acts"><button class="btn sm ghost" data-reset>Refill buret &amp; new flask</button></div>
         <div class="msg small" data-msg aria-live="polite"></div>
       </div></div>
@@ -169,7 +169,7 @@
         <path d="M70 300 L130 300 L130 312 L172 380 Q176 392 162 392 L38 392 Q24 392 28 380 L70 312 Z" class="glass-o" fill="none"/>
         <rect x="70" y="392" width="60" height="6" rx="2" class="metal"/></svg>`;
       // magnified meniscus
-      const lo = r - 0.8, hi = r + 0.8, H = 160, Y = v => (v - lo) / (hi - lo) * H;
+      const lo = r - 1.05, hi = r + 1.05, H = 190, Y = v => (v - lo) / (hi - lo) * H;
       let ticks = '';
       for (let v = Math.ceil(lo * 10) / 10; v <= hi + 1e-9; v += 0.1) {
         const vv = Math.round(v * 10) / 10; if (vv < 0 || vv > 50) continue;
@@ -222,6 +222,7 @@
       const which = b.dataset.rec;
       ctx.log({ k: `${t.tr.k}_${which}`, l: `${t.tr.l}: ${which === 'Vi' ? 'initial' : 'final'} buret reading`, v: CL.round(typed, 2), u: 'mL', dp: 2 });
       $('[data-rd]', el).value = '';
+      msg.innerHTML = `<span class="good">${which === 'Vi' ? 'Initial' : 'Final'} reading recorded: ${CL.round(typed, 2).toFixed(2)} mL.</span>`;
     }));
     $('[data-reset]', el).addEventListener('click', () => { delete T[cur]; msg.textContent = 'New flask prepared and buret refilled.'; show(); });
     el.__auto = async () => {
@@ -665,7 +666,7 @@
     const ch = {};
     const rec = (st.synth[cfg.k] = st.synth[cfg.k] || { title: cfg.title, attempts: 0, summary: 'not run' });
     const smMass = resolve(cfg.sm.mass, S);
-    el.innerHTML = head(cfg, 'Synthesis') + `<div class="synth"><div class="sm card"><b>Starting material:</b> ${cfg.sm.label || esc(cfg.sm.name)} — you will weigh about ${smMass.toFixed(2)} g (MW ${cfg.sm.MW} g/mol).${cfg.reagents ? `<div class="small muted">${cfg.reagents}</div>` : ''}</div>
+    el.innerHTML = head(cfg, 'Synthesis') + `<div class="synth"><div class="sm card"><b>Starting material:</b> ${cfg.sm.label || esc(cfg.sm.name)} — you will weigh about ${smMass.toFixed(2)} g${cfg.sm.MW ? ` (MW ${cfg.sm.MW} g/mol)` : ''}.${cfg.reagents ? `<div class="small muted">${cfg.reagents}</div>` : ''}</div>
       <ol class="steps">${cfg.steps.map(s => `<li><label class="ctl"><span>${s.l}</span><select data-st="${s.k}"><option value="">— choose —</option>${s.opts.map(o => `<option value="${esc(o.v)}">${esc(o.l)}</option>`).join('')}</select></label></li>`).join('')}</ol>
       <div class="acts"><button class="btn" data-run>Run the procedure</button><span class="small muted" data-att>${rec.attempts ? 'Attempts so far: ' + rec.attempts : ''}</span></div>
       <div class="notebook" data-nb aria-live="polite"></div></div>`;
@@ -752,10 +753,10 @@
       const ligPos = pos.filter((_, i) => !lpIdx.includes(i)), lpPos = lpIdx.map(i => pos[i]);
       const rot = ([x, y, z]) => { const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch); const x1 = cy * x + sy * z, z1 = -sy * x + cy * z; const y1 = cp * y - sp * z1, z2 = sp * y + cp * z1; return [x1, y1, z2]; };
       const items = [];
-      const C = 160, Lb = 95;
-      items.push({ z: 0, s: `<circle cx="${C}" cy="${C}" r="26" fill="${ECOL[m.center] || '#c9c'}" class="atom"/><text x="${C}" y="${C + 5}" text-anchor="middle" class="alabel ${['C', 'I', 'Br', 'N'].includes(m.center) ? 'light' : ''}">${m.center}</text>` });
+      const C = 160, Lb = 108;
+      items.push({ z: 0, s: `<circle cx="${C}" cy="${C}" r="30" fill="${ECOL[m.center] || '#c9c'}" class="atom"/><text x="${C}" y="${C + 5}" text-anchor="middle" class="alabel ${['C', 'I', 'Br', 'N'].includes(m.center) ? 'light' : ''}">${m.center}</text>` });
       ligPos.forEach((p, i) => {
-        const [x, y, z] = rot(p); const el2 = m.lig[i]; const r = el2 === 'H' ? 14 : 20;
+        const [x, y, z] = rot(p); const el2 = m.lig[i]; const r = el2 === 'H' ? 16 : 23;
         const X = C + x * Lb, Y = C - y * Lb;
         items.push({ z: z / 2 - 0.01, s: `<line x1="${C}" y1="${C}" x2="${X}" y2="${Y}" class="bond"/>` });
         items.push({ z, s: `<circle cx="${X}" cy="${Y}" r="${r * (1 + z * 0.12)}" fill="${ECOL[el2] || '#c9c'}" class="atom"/><text x="${X}" y="${Y + 4}" text-anchor="middle" class="alabel ${['C', 'I', 'Br', 'N'].includes(el2) ? 'light' : ''}" style="font-size:${el2.length > 1 ? 11 : 13}px">${el2}</text>` });
